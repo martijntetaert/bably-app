@@ -1,6 +1,9 @@
 /* The page-content of the web portal layout; the tab bar is Ionic's, so only the top has to
    clear the status bar. */
 .component-portal-page-component {
+    /* The web layout reserves room for its own tab bar; Ionic's sits outside the scroll area. */
+    --portal-nav-height: 0px;
+
     @apply flex min-h-full flex-col;
 
     .page-content {

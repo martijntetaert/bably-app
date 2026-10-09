@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useCloseOnBack } from '@/composables/useCloseOnBack';
 import {
     AlertDialogAction,
     AlertDialogCancel,
@@ -25,6 +26,8 @@ withDefaults(
 );
 
 const open = defineModel<boolean>('open', { required: true });
+
+useCloseOnBack(open);
 
 const emit = defineEmits<{
     confirm: [];

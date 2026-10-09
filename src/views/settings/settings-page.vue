@@ -1,112 +1,71 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import {
-    IonBackButton,
-    IonButtons,
-    IonContent,
-    IonHeader,
-    IonPage,
-    IonRefresher,
-    IonRefresherContent,
-    IonSkeletonText,
-    IonTitle,
-    IonToolbar,
-    onIonViewWillEnter,
-    RefresherCustomEvent,
-} from '@ionic/vue';
+import { onIonViewWillEnter } from '@ionic/vue';
 import { stores as storesApi } from '@/api/bably';
 import { useSession } from '@/composables/useSession';
 import { useToast } from '@/composables/useToast';
+import PortalPageComponent from '@/components/portal-page-component.vue';
 import { StoreInterface } from '@/interfaces/StoreInterface';
-import AboutComponent from '@/views/settings/components/about-component.vue';
-import IntegrationsComponent from '@/views/settings/components/integrations-component.vue';
-import NotificationsComponent from '@/views/settings/components/notifications-component.vue';
-import ProfileComponent from '@/views/settings/components/profile-component.vue';
-import StoresComponent from '@/views/settings/components/stores-component.vue';
+import SettingsHeader from '@/views/settings/sections/settings-header.vue';
+import Integrations from '@/views/settings/sections/integrations.vue';
+import Stores from '@/views/settings/sections/stores.vue';
+import Notifications from '@/views/settings/sections/notifications.vue';
+import Profile from '@/views/settings/sections/profile.vue';
+import About from '@/views/settings/sections/about.vue';
 
 const session = useSession();
 const toast = useToast();
 
-const stores = ref<StoreInterface[]>([]);
+const storeList = ref<StoreInterface[]>([]);
 
 const loadStores = async (): Promise<void> => {
-    stores.value = await storesApi.list();
+    storeList.value = await storesApi.list();
 };
 
-const load = async (): Promise<void> => {
+const reload = async (): Promise<void> => {
     try {
         await Promise.all([session.refreshProfile(), loadStores()]);
     } catch (error) {
-        await toast.failure(error);
+        toast.failure(error);
     }
-};
-
-const refresh = async (event: RefresherCustomEvent): Promise<void> => {
-    await load();
-    await event.target.complete();
 };
 
 const reloadStores = async (): Promise<void> => {
     try {
         await loadStores();
     } catch (error) {
-        await toast.failure(error);
+        toast.failure(error);
     }
 };
 
-onIonViewWillEnter(load);
+onIonViewWillEnter(reload);
 </script>
 <template>
-    <ion-page>
-        <ion-header>
-            <ion-toolbar>
-                <ion-buttons slot="start">
-                    <ion-back-button default-href="/tabs/dashboard" text="Vandaag"></ion-back-button>
-                </ion-buttons>
-                <ion-title>Instellingen</ion-title>
-            </ion-toolbar>
-        </ion-header>
-        <ion-content>
-            <ion-refresher slot="fixed" @ion-refresh="refresh($event)">
-                <ion-refresher-content></ion-refresher-content>
-            </ion-refresher>
-
+    <portal-page-component :refresh="reload">
+        <div id="page-portal-settings-overview">
+            <settings-header></settings-header>
             <template v-if="session.profile.value">
-                <profile-component :profile="session.profile.value"></profile-component>
-                <notifications-component
-                    :wants-task-reminder="session.profile.value.wantsTaskReminder"
-                ></notifications-component>
-                <integrations-component :calendar-url="session.profile.value.calendarUrl"></integrations-component>
-                <stores-component :stores="stores" @changed="reloadStores()"></stores-component>
-                <about-component></about-component>
+                <profile
+                    :profile="session.profile.value.user"
+                    :is-last-member="session.profile.value.isLastMember"
+                ></profile>
+                <notifications :wants-task-reminder="session.profile.value.wantsTaskReminder"></notifications>
+                <integrations :calendar-url="session.profile.value.calendarUrl"></integrations>
+                <stores :stores="storeList" @changed="reloadStores()"></stores>
+                <about></about>
             </template>
-            <div v-else class="loading" aria-busy="true">
-                <ion-skeleton-text animated class="skeleton"></ion-skeleton-text>
-                <ion-skeleton-text animated class="skeleton"></ion-skeleton-text>
-                <ion-skeleton-text animated class="skeleton"></ion-skeleton-text>
-            </div>
-        </ion-content>
-    </ion-page>
+            <template v-else>
+                <div class="skeleton" aria-busy="true"></div>
+                <div class="skeleton" aria-busy="true"></div>
+                <div class="skeleton" aria-busy="true"></div>
+            </template>
+        </div>
+    </portal-page-component>
 </template>
 <style scoped>
-ion-content {
-    --padding-bottom: 1.5rem;
-}
-
-ion-content :deep(ion-list[inset]) {
-    border-radius: var(--bably-radius-card);
-}
-
-.loading {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-}
+@import '@css/pages/portal/settings/overview.css';
 
 .skeleton {
-    height: 7rem;
-    margin: 0;
-    border-radius: var(--bably-radius-card);
+    @apply rounded-card bg-muted h-28 animate-pulse;
 }
 </style>

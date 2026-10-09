@@ -1,34 +1,18 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import {
-    IonContent,
-    IonFooter,
-    IonHeader,
-    IonLabel,
-    IonPage,
-    IonProgressBar,
-    IonRefresher,
-    IonRefresherContent,
-    IonSegment,
-    IonSegmentButton,
-    IonSkeletonText,
-    IonTitle,
-    IonToolbar,
-    onIonViewDidEnter,
-    onIonViewWillEnter,
-    onIonViewWillLeave,
-    type RefresherCustomEvent,
-} from '@ionic/vue';
+import { onIonViewDidEnter, onIonViewWillEnter, onIonViewWillLeave } from '@ionic/vue';
 import { ApiError } from '@/api/client';
 import { useToast } from '@/composables/useToast';
-import AddItemComponent from '@/views/shopping/components/add-item-component.vue';
-import AddStapleComponent from '@/views/shopping/components/add-staple-component.vue';
-import GroceryListComponent from '@/views/shopping/components/grocery-list-component.vue';
-import PantryComponent from '@/views/shopping/components/pantry-component.vue';
-import RegularGroceriesComponent from '@/views/shopping/components/regular-groceries-component.vue';
-import StorePickerComponent from '@/views/shopping/components/store-picker-component.vue';
 import { useKeepAwake } from '@/composables/useKeepAwake';
+import PortalPageComponent from '@/components/portal-page-component.vue';
+import SegmentedControlComponent from '@/components/segmented-control-component.vue';
+import ShoppingHeader from '@/views/shopping/sections/shopping-header.vue';
+import GroceryList from '@/views/shopping/sections/grocery-list.vue';
+import Pantry from '@/views/shopping/sections/pantry.vue';
+import AddItem from '@/views/shopping/sections/add-item.vue';
+import StorePicker from '@/views/shopping/sections/store-picker.vue';
+import RegularGroceries from '@/views/shopping/sections/regular-groceries.vue';
 import { useOfflineChecks } from '@/views/shopping/composables/useOfflineChecks';
 import { ShoppingPart, useShoppingData } from '@/views/shopping/composables/useShoppingData';
 
@@ -41,10 +25,15 @@ const toast = useToast();
 const { list, products, suggestions, stock, stores, activeTrip, restoreCachedList, refresh } = useShoppingData();
 const { checkedState, onSynced } = useOfflineChecks();
 
-const tab = ref<Tab>('list');
+const tabs: { value: Tab; label: string }[] = [
+    { value: 'list', label: 'Lijst' },
+    { value: 'pantry', label: 'Voorraad' },
+];
+
+const activeTab = ref<Tab>('list');
 const isVisible = ref(false);
 const isPickerOpen = ref(false);
-const addItem = ref<InstanceType<typeof AddItemComponent> | null>(null);
+const addItem = ref<InstanceType<typeof AddItem> | null>(null);
 let pollTimer: number | undefined;
 
 useKeepAwake(computed(() => isVisible.value && activeTrip.value !== null));
@@ -57,19 +46,18 @@ const displayedGroups = computed(() =>
             ...item,
             checked: item.identifiers.every((identifier) => checkedState(identifier, item.checked)),
         })),
-    })),
+    }))
 );
 
 const items = computed(() => displayedGroups.value.flatMap((group) => group.items));
 const checkedCount = computed(() => items.value.filter((item) => item.checked).length);
-const showsList = computed(() => activeTrip.value !== null || tab.value === 'list');
 
 const subtitle = computed(() => {
-    if (activeTrip.value !== null) {
+    if (activeTrip.value) {
         return `${activeTrip.value.store.name} · in de volgorde waarin jij ze pakt`;
     }
 
-    if (tab.value === 'pantry') {
+    if (activeTab.value === 'pantry') {
         const running = stock.value.filter((product) => product.level !== 'in').length;
 
         return `${running} van ${stock.value.length} producten bijna op of op`;
@@ -78,22 +66,21 @@ const subtitle = computed(() => {
     return `${items.value.length} ${items.value.length === 1 ? 'product' : 'producten'} op de lijst`;
 });
 
-const progress = computed(() => (items.value.length === 0 ? 0 : checkedCount.value / items.value.length));
+const progress = computed(() => (activeTrip.value ? { done: checkedCount.value, total: items.value.length } : null));
 
 const load = async (parts?: ShoppingPart[], quietly = false): Promise<void> => {
     try {
         await refresh(parts);
     } catch (error) {
-        if (!quietly && !(error instanceof ApiError && error.isOffline && list.value !== null)) {
-            await toast.failure(error);
+        const isOfflineWithList = error instanceof ApiError && error.isOffline && list.value !== null;
+
+        if (!quietly && !isOfflineWithList) {
+            toast.failure(error);
         }
     }
 };
 
-const pullToRefresh = async (event: RefresherCustomEvent): Promise<void> => {
-    await load();
-    await event.target.complete();
-};
+const reload = (): Promise<void> => load();
 
 const stopPolling = (): void => {
     window.clearInterval(pollTimer);
@@ -126,7 +113,7 @@ onIonViewWillEnter(async () => {
     await restoreCachedList();
     await load();
 
-    if (route.query.start !== undefined && activeTrip.value === null) {
+    if (route.query.start !== undefined && !activeTrip.value) {
         isPickerOpen.value = true;
     }
 });
@@ -134,7 +121,7 @@ onIonViewWillEnter(async () => {
 // The "Zet iets op de lijst" button on the push that someone went shopping lands here.
 onIonViewDidEnter(() => {
     if (route.query.focus === 'add') {
-        tab.value = 'list';
+        activeTab.value = 'list';
         window.setTimeout(() => addItem.value?.focus(), 150);
     }
 });
@@ -144,86 +131,54 @@ onIonViewWillLeave(() => {
 });
 </script>
 <template>
-    <ion-page>
-        <ion-header>
-            <ion-toolbar>
-                <ion-title>Boodschappen</ion-title>
-                <span v-if="activeTrip" slot="end" class="progress-label">{{ checkedCount }}/{{ items.length }} in de kar</span>
-            </ion-toolbar>
-            <ion-progress-bar v-if="activeTrip" :value="progress" color="success"></ion-progress-bar>
-            <ion-toolbar v-else class="segment-toolbar">
-                <ion-segment v-model="tab" aria-label="Boodschappen">
-                    <ion-segment-button value="list"><ion-label>Lijst</ion-label></ion-segment-button>
-                    <ion-segment-button value="pantry"><ion-label>Voorraad</ion-label></ion-segment-button>
-                </ion-segment>
-            </ion-toolbar>
-        </ion-header>
-        <ion-content class="ion-padding">
-            <ion-refresher slot="fixed" @ion-refresh="pullToRefresh">
-                <ion-refresher-content></ion-refresher-content>
-            </ion-refresher>
-            <p class="subtitle">{{ subtitle }}</p>
+    <portal-page-component :refresh="reload">
+        <div id="page-portal-shopping-overview">
+            <shopping-header :subtitle="subtitle" :progress="progress"></shopping-header>
+            <segmented-control-component v-if="!activeTrip" v-model="activeTab" :options="tabs" label="Boodschappen" />
             <div v-if="list === null" class="skeleton" aria-busy="true">
-                <ion-skeleton-text v-for="row in 5" :key="row" animated class="skeleton-row"></ion-skeleton-text>
+                <span v-for="row in 5" :key="row" class="row"></span>
             </div>
-            <template v-else-if="showsList">
-                <regular-groceries-component
-                    v-if="!activeTrip && suggestions.length > 0"
+            <template v-else>
+                <regular-groceries
+                    v-if="!activeTrip && activeTab === 'list' && suggestions.length > 0"
                     :suggestions="suggestions"
-                    @changed="load(['list', 'suggestions', 'products'])"
-                ></regular-groceries-component>
-                <grocery-list-component :groups="displayedGroups" :trip="activeTrip" @changed="load(['list', 'stock', 'suggestions'])"></grocery-list-component>
+                    @changed="load"
+                ></regular-groceries>
+                <grocery-list
+                    v-if="activeTrip || activeTab === 'list'"
+                    :groups="displayedGroups"
+                    :shopping="activeTrip !== null"
+                    :trip="activeTrip"
+                    @changed="load"
+                ></grocery-list>
+                <pantry v-else v-model:stock="stock" @changed="load"></pantry>
             </template>
-            <pantry-component v-else v-model:stock="stock" @changed="load(['stock', 'list', 'suggestions'])"></pantry-component>
-        </ion-content>
-        <ion-footer>
-            <add-item-component
-                v-if="showsList"
+            <add-item
                 ref="addItem"
+                v-if="activeTrip || activeTab === 'list'"
                 :shopping="activeTrip !== null"
                 :products="products"
-                @added="load(['list', 'products', 'suggestions'])"
-                @finished="load()"
                 @start-shopping="isPickerOpen = true"
-            ></add-item-component>
-            <add-staple-component v-else @added="load(['stock', 'list', 'suggestions'])"></add-staple-component>
-        </ion-footer>
-        <store-picker-component v-model:open="isPickerOpen" :stores="stores" @started="load(['list', 'stores'])"></store-picker-component>
-    </ion-page>
+                @changed="load"
+            ></add-item>
+            <store-picker
+                v-model:open="isPickerOpen"
+                :stores="stores"
+                @started="load(['list', 'stores'])"
+            ></store-picker>
+        </div>
+    </portal-page-component>
 </template>
 <style scoped>
-.progress-label {
-    padding-inline-end: 1rem;
-    color: var(--ion-color-success);
-    font-size: 0.875rem;
-    font-weight: 600;
-}
+@import '@css/pages/portal/shopping/overview.css';
 
-.segment-toolbar {
-    --min-height: auto;
-    padding: 0 1rem 0.5rem;
-}
+#page-portal-shopping-overview {
+    .skeleton {
+        @apply flex flex-col gap-1.5;
 
-ion-segment {
-    background: var(--bably-muted);
-    border-radius: 0.875rem;
-}
-
-.subtitle {
-    margin: 0 0.375rem 0.75rem;
-    color: var(--bably-muted-text);
-    font-size: 0.875rem;
-}
-
-.skeleton {
-    display: flex;
-    flex-direction: column;
-    gap: 0.375rem;
-}
-
-.skeleton-row {
-    height: 3.25rem;
-    margin: 0;
-    border-radius: var(--bably-radius-row);
+        .row {
+            @apply rounded-row bg-muted h-13 animate-pulse;
+        }
+    }
 }
 </style>

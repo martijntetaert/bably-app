@@ -1,46 +1,37 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { DateTime } from 'luxon';
-import {
-    IonButton,
-    IonButtons,
-    IonContent,
-    IonHeader,
-    IonLabel,
-    IonPage,
-    IonRefresher,
-    IonRefresherContent,
-    IonSegment,
-    IonSegmentButton,
-    IonSkeletonText,
-    IonTitle,
-    IonToolbar,
-    onIonViewWillEnter,
-    type RefresherCustomEvent,
-} from '@ionic/vue';
-import { chevronBack, chevronForward } from '@/lib/icons';
+import { onIonViewWillEnter, onIonViewWillLeave } from '@ionic/vue';
 import { household, meals, recipes as recipesApi } from '@/api/bably';
 import { useToast } from '@/composables/useToast';
+import PortalPageComponent from '@/components/portal-page-component.vue';
+import SegmentedControlComponent from '@/components/segmented-control-component.vue';
 import { CookingInterface } from '@/interfaces/CookingInterface';
 import { MealInterface } from '@/interfaces/MealInterface';
 import { RecipeDraftInterface, RecipeInterface } from '@/interfaces/RecipeInterface';
 import { UserInterface } from '@/interfaces/UserInterface';
 import { WeekMenuInterface } from '@/interfaces/WeekMenuInterface';
-import CookModeComponent from '@/views/meals/components/cook-mode-component.vue';
-import MealPickerComponent from '@/views/meals/components/meal-picker-component.vue';
-import MealSheetComponent from '@/views/meals/components/meal-sheet-component.vue';
-import RecipeEditorComponent from '@/views/meals/components/recipe-editor-component.vue';
-import RecipeImportComponent from '@/views/meals/components/recipe-import-component.vue';
-import RecipeListComponent from '@/views/meals/components/recipe-list-component.vue';
-import WeekMenuComponent from '@/views/meals/components/week-menu-component.vue';
+import MealsHeader from '@/views/meals/sections/meals-header.vue';
+import WeekMenu from '@/views/meals/sections/week-menu.vue';
+import Recipes from '@/views/meals/sections/recipes.vue';
+import RecipeBar from '@/views/meals/sections/recipe-bar.vue';
+import MealSheet from '@/views/meals/sections/meal-sheet.vue';
+import MealPicker from '@/views/meals/sections/meal-picker.vue';
+import RecipeEditor from '@/views/meals/sections/recipe-editor.vue';
+import CookMode from '@/views/meals/sections/cook-mode.vue';
 
 type Tab = 'menu' | 'recipes';
 
 const toast = useToast();
 
+const tabs: { value: Tab; label: string }[] = [
+    { value: 'menu', label: 'Weekmenu' },
+    { value: 'recipes', label: 'Recepten' },
+];
+
 const activeTab = ref<Tab>('menu');
 const week = ref<WeekMenuInterface | null>(null);
-const recipes = ref<RecipeInterface[]>([]);
+const recipeList = ref<RecipeInterface[]>([]);
 const members = ref<UserInterface[]>([]);
 const hasLoaded = ref(false);
 
@@ -55,7 +46,9 @@ const isCooking = ref(false);
 
 // The sheet follows the week, so a change made in it shows right away after the reload.
 const openMeal = computed(
-    () => week.value?.days.flatMap((day) => day.meals).find((meal) => meal.identifier === openMealIdentifier.value) ?? null,
+    () =>
+        week.value?.days.flatMap((day) => day.meals).find((meal) => meal.identifier === openMealIdentifier.value) ??
+        null
 );
 
 watch(openMeal, (meal) => {
@@ -64,11 +57,9 @@ watch(openMeal, (meal) => {
     }
 });
 
-const isThisWeek = computed(() => week.value !== null && DateTime.fromISO(week.value.today).startOf('week').toISODate() === week.value.weekStart);
-
 const subtitle = computed(() => {
     if (activeTab.value === 'recipes') {
-        return `${recipes.value.length} ${recipes.value.length === 1 ? 'recept' : 'recepten'}`;
+        return `${recipeList.value.length} ${recipeList.value.length === 1 ? 'recept' : 'recepten'}`;
     }
 
     if (week.value === null) {
@@ -85,55 +76,51 @@ const loadWeek = async (weekStart?: string): Promise<void> => {
 };
 
 const loadRecipes = async (): Promise<void> => {
-    recipes.value = await recipesApi.list();
+    recipeList.value = await recipesApi.list();
 };
 
-const loadAll = async (): Promise<void> => {
+const reload = async (): Promise<void> => {
     try {
         const [, , people] = await Promise.all([loadWeek(week.value?.weekStart), loadRecipes(), household.members()]);
         members.value = people;
     } catch (error) {
-        await toast.failure(error);
+        toast.failure(error);
     } finally {
         hasLoaded.value = true;
     }
 };
 
-onIonViewWillEnter(() => {
-    void loadAll();
-});
-
-const refresh = async (event: RefresherCustomEvent): Promise<void> => {
-    await loadAll();
-    await event.target.complete();
-};
-
-const showWeek = async (offset: number | null): Promise<void> => {
-    const target =
-        offset === null || week.value === null ? undefined : (DateTime.fromISO(week.value.weekStart).plus({ weeks: offset }).toISODate() ?? undefined);
-
+const showWeek = async (weekStart: string | undefined): Promise<void> => {
     try {
-        await loadWeek(target);
+        await loadWeek(weekStart);
     } catch (error) {
-        await toast.failure(error);
+        toast.failure(error);
     }
 };
 
-const reloadWeek = async (): Promise<void> => {
-    try {
-        await loadWeek(week.value?.weekStart);
-    } catch (error) {
-        await toast.failure(error);
-    }
-};
+const reloadWeek = (): Promise<void> => showWeek(week.value?.weekStart);
 
 const reloadAfterRecipeChange = async (): Promise<void> => {
     try {
         await Promise.all([loadRecipes(), loadWeek(week.value?.weekStart)]);
     } catch (error) {
-        await toast.failure(error);
+        toast.failure(error);
     }
 };
+
+const closeAll = (): void => {
+    isMealOpen.value = false;
+    isPickerOpen.value = false;
+    isEditorOpen.value = false;
+    isCooking.value = false;
+};
+
+onIonViewWillEnter(() => {
+    void reload();
+});
+
+onIonViewWillLeave(closeAll);
+
 
 const showMeal = (meal: MealInterface): void => {
     openMealIdentifier.value = meal.identifier;
@@ -153,10 +140,41 @@ const editRecipe = (draft: RecipeDraftInterface): void => {
 };
 
 const editRecipeByIdentifier = (identifier: string): void => {
-    const recipe = recipes.value.find((candidate) => candidate.identifier === identifier);
+    const recipe = recipeList.value.find((candidate) => candidate.identifier === identifier);
 
     if (recipe) {
         editRecipe({ ...recipe });
+    }
+};
+
+const cook = (dish: CookingInterface): void => {
+    cooking.value = dish;
+    isMealOpen.value = false;
+    isEditorOpen.value = false;
+    isCooking.value = true;
+};
+
+const cookMeal = (meal: MealInterface): void => {
+    cook({
+        name: meal.name,
+        servings: meal.portions,
+        photoUrl: meal.photoUrl,
+        ingredients: meal.ingredients,
+        steps: meal.steps,
+    });
+};
+
+const cookRecipe = (identifier: string): void => {
+    const recipe = recipeList.value.find((candidate) => candidate.identifier === identifier);
+
+    if (recipe) {
+        cook({
+            name: recipe.name,
+            servings: recipe.baseServings,
+            photoUrl: recipe.photoUrl,
+            ingredients: recipe.ingredients,
+            steps: recipe.steps,
+        });
     }
 };
 
@@ -171,107 +189,70 @@ const newRecipe = (): void => {
         ingredients: [],
     });
 };
-
-const cook = (dish: CookingInterface): void => {
-    cooking.value = dish;
-    isMealOpen.value = false;
-    isEditorOpen.value = false;
-    isCooking.value = true;
-};
-
-const cookMeal = (meal: MealInterface): void => {
-    cook({ name: meal.name, servings: meal.portions, photoUrl: meal.photoUrl, ingredients: meal.ingredients, steps: meal.steps });
-};
-
-const cookRecipe = (identifier: string): void => {
-    const recipe = recipes.value.find((candidate) => candidate.identifier === identifier);
-
-    if (recipe) {
-        cook({ name: recipe.name, servings: recipe.baseServings, photoUrl: recipe.photoUrl, ingredients: recipe.ingredients, steps: recipe.steps });
-    }
-};
 </script>
 <template>
-    <ion-page>
-        <ion-header>
-            <ion-toolbar>
-                <ion-title>Eten</ion-title>
-                <ion-buttons v-if="activeTab === 'menu'" slot="end">
-                    <ion-button aria-label="Vorige week" @click="showWeek(-1)">
-                        <i slot="icon-only" :class="chevronBack" aria-hidden="true"></i>
-                    </ion-button>
-                    <ion-button v-if="!isThisWeek" @click="showWeek(null)">Deze week</ion-button>
-                    <ion-button aria-label="Volgende week" @click="showWeek(1)">
-                        <i slot="icon-only" :class="chevronForward" aria-hidden="true"></i>
-                    </ion-button>
-                </ion-buttons>
-            </ion-toolbar>
-            <ion-toolbar>
-                <ion-segment v-model="activeTab" aria-label="Eten">
-                    <ion-segment-button value="menu">
-                        <ion-label>Weekmenu</ion-label>
-                    </ion-segment-button>
-                    <ion-segment-button value="recipes">
-                        <ion-label>Recepten</ion-label>
-                    </ion-segment-button>
-                </ion-segment>
-            </ion-toolbar>
-        </ion-header>
-        <ion-content class="ion-padding">
-            <ion-refresher slot="fixed" @ion-refresh="refresh($event)">
-                <ion-refresher-content />
-            </ion-refresher>
-
-            <p class="subtitle">{{ subtitle }}</p>
-
+    <portal-page-component :refresh="reload">
+        <div id="page-portal-meals-overview">
+            <meals-header
+                :subtitle="subtitle"
+                :week-start="week?.weekStart ?? ''"
+                :today="week?.today ?? ''"
+                :shows-week="activeTab === 'menu' && week !== null"
+                @show-week="showWeek"
+            ></meals-header>
+            <segmented-control-component v-model="activeTab" :options="tabs" label="Eten" />
             <template v-if="activeTab === 'menu'">
-                <week-menu-component v-if="week" :days="week.days" :today="week.today" @show="showMeal" @plan="planOn" @changed="reloadWeek()" />
+                <week-menu
+                    v-if="week"
+                    :days="week.days"
+                    :today="week.today"
+                    @show="showMeal"
+                    @plan="planOn"
+                    @changed="reloadWeek()"
+                ></week-menu>
                 <div v-else-if="!hasLoaded" class="skeleton" aria-hidden="true">
-                    <ion-skeleton-text v-for="day in 7" :key="day" :animated="true" class="skeleton-day" />
+                    <div v-for="day in 7" :key="day" class="skeleton-day"></div>
                 </div>
             </template>
-            <div v-else class="recipes">
-                <recipe-import-component @imported="editRecipe" @new-recipe="newRecipe" />
-                <recipe-list-component v-if="hasLoaded" :recipes="recipes" @edit="(recipe) => editRecipe({ ...recipe })" />
-            </div>
+            <template v-else>
+                <recipes v-if="hasLoaded" :recipes="recipeList" @edit="(recipe) => editRecipe({ ...recipe })"></recipes>
+                <recipe-bar @imported="editRecipe" @new-recipe="newRecipe"></recipe-bar>
+            </template>
 
-        </ion-content>
-
-        <meal-sheet-component
-            v-model:open="isMealOpen"
-            :meal="openMeal"
-            :members="members"
-            @edit-recipe="editRecipeByIdentifier"
-            @cook="cookMeal"
-            @changed="reloadWeek()"
-        />
-        <meal-picker-component v-model:open="isPickerOpen" :date="pickerDate" :recipes="recipes" @planned="reloadAfterRecipeChange()" @new-recipe="newRecipe" />
-        <recipe-editor-component v-model:open="isEditorOpen" :draft="recipeDraft" @saved="reloadAfterRecipeChange()" @cook="cookRecipe" />
-        <cook-mode-component v-model:open="isCooking" :cooking="cooking" />
-    </ion-page>
+            <meal-sheet
+                v-model:open="isMealOpen"
+                :meal="openMeal"
+                :members="members"
+                @edit-recipe="editRecipeByIdentifier"
+                @cook="cookMeal"
+                @changed="reloadWeek()"
+            ></meal-sheet>
+            <meal-picker
+                v-model:open="isPickerOpen"
+                :date="pickerDate"
+                :recipes="recipeList"
+                @planned="reloadAfterRecipeChange()"
+                @new-recipe="newRecipe"
+            ></meal-picker>
+            <recipe-editor
+                v-model:open="isEditorOpen"
+                :draft="recipeDraft"
+                @saved="reloadAfterRecipeChange()"
+                @cook="cookRecipe"
+            ></recipe-editor>
+            <cook-mode v-model:open="isCooking" :cooking="cooking"></cook-mode>
+        </div>
+    </portal-page-component>
 </template>
 <style scoped>
-.subtitle {
-    margin: 0 0 0.75rem;
-    font-size: 0.9rem;
-    color: var(--bably-muted-text);
-}
+@import '@css/pages/portal/meals/overview.css';
+
 
 .skeleton {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
+    @apply flex flex-col gap-2.5;
 }
 
 .skeleton-day {
-    height: 4.25rem;
-    margin: 0;
-    border-radius: var(--bably-radius-card);
-}
-
-.recipes {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    @apply rounded-row bg-muted h-17 animate-pulse;
 }
 </style>
