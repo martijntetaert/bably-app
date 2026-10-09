@@ -1,0 +1,7 @@
+{
+  "name": "bably-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}

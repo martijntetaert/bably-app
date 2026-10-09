@@ -1,0 +1,121 @@
+/* The Bably palette of the web portal, as hex because Ionic derives its rgb and shade
+   variables from these. Iris is the purple of the logo; the section colours follow the web:
+   olive for the list, clay for food, dusk for the house. */
+:root {
+    --ion-font-family: 'Figtree Variable', system-ui, sans-serif;
+    --bably-font-display: 'Bricolage Grotesque Variable', 'Figtree Variable', system-ui, sans-serif;
+
+    --ion-color-primary: #6062aa;
+    --ion-color-primary-rgb: 96, 98, 170;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-primary-contrast-rgb: 255, 255, 255;
+    --ion-color-primary-shade: #4e4e8d;
+    --ion-color-primary-tint: #7072b3;
+
+    --ion-color-success: #428874;
+    --ion-color-success-rgb: 66, 136, 116;
+    --ion-color-success-contrast: #ffffff;
+    --ion-color-success-contrast-rgb: 255, 255, 255;
+    --ion-color-success-shade: #3a7866;
+    --ion-color-success-tint: #559482;
+
+    --ion-color-warning: #904a37;
+    --ion-color-warning-rgb: 144, 74, 55;
+    --ion-color-warning-contrast: #ffffff;
+    --ion-color-warning-contrast-rgb: 255, 255, 255;
+    --ion-color-warning-shade: #7f4130;
+    --ion-color-warning-tint: #9b5c4b;
+
+    --ion-color-danger: #c92e3b;
+    --ion-color-danger-rgb: 201, 46, 59;
+    --ion-color-danger-contrast: #ffffff;
+    --ion-color-danger-contrast-rgb: 255, 255, 255;
+    --ion-color-danger-shade: #b12834;
+    --ion-color-danger-tint: #ce434f;
+
+    --ion-color-medium: #6d6d7d;
+    --ion-color-medium-rgb: 109, 109, 125;
+    --ion-color-medium-contrast: #ffffff;
+    --ion-color-medium-contrast-rgb: 255, 255, 255;
+    --ion-color-medium-shade: #60606e;
+    --ion-color-medium-tint: #7c7c8a;
+
+    --ion-background-color: #f8f8fe;
+    --ion-background-color-rgb: 248, 248, 254;
+    --ion-text-color: #333448;
+    --ion-text-color-rgb: 51, 52, 72;
+    --ion-toolbar-background: #f8f8fe;
+    --ion-tab-bar-background: #ffffff;
+    --ion-tab-bar-color-selected: #6062aa;
+    --ion-item-background: #ffffff;
+    --ion-card-background: #ffffff;
+    --ion-border-color: #e2e2eb;
+
+    --bably-card: #ffffff;
+    --bably-muted: #f1f2f9;
+    --bably-border: #e2e2eb;
+    --bably-muted-text: #6d6d7d;
+    --bably-accent-soft: #e9ebff;
+    --bably-today: #6062aa;
+    --bably-groceries: #55612e;
+    --bably-meals: #904a37;
+    --bably-home: #2e5c8a;
+    --bably-radius-card: 1.25rem;
+    --bably-radius-row: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ion-color-primary: #9ea2e7;
+        --ion-color-primary-rgb: 158, 162, 231;
+        --ion-color-primary-contrast: #1b1b24;
+        --ion-color-primary-contrast-rgb: 27, 27, 36;
+        --ion-color-primary-shade: #8b8fcb;
+        --ion-color-primary-tint: #a8abe9;
+
+        --ion-color-success: #84d3bd;
+        --ion-color-success-rgb: 132, 211, 189;
+        --ion-color-success-contrast: #1b1b24;
+        --ion-color-success-contrast-rgb: 27, 27, 36;
+
+        --ion-color-danger: #ea6a64;
+        --ion-color-danger-rgb: 234, 106, 100;
+
+        --ion-color-medium: #a3a3b1;
+        --ion-color-medium-rgb: 163, 163, 177;
+
+        --ion-background-color: #1b1b24;
+        --ion-background-color-rgb: 27, 27, 36;
+        --ion-text-color: #efeff8;
+        --ion-text-color-rgb: 239, 239, 248;
+        --ion-toolbar-background: #1b1b24;
+        --ion-tab-bar-background: #262730;
+        --ion-tab-bar-color-selected: #9ea2e7;
+        --ion-item-background: #262730;
+        --ion-card-background: #262730;
+        --ion-border-color: #393944;
+
+        --bably-card: #262730;
+        --bably-muted: #2f2f39;
+        --bably-border: #393944;
+        --bably-muted-text: #a3a3b1;
+        --bably-accent-soft: #2b2c50;
+        --bably-today: #babff8;
+        --bably-groceries: #bfd29b;
+        --bably-meals: #f3bca6;
+        --bably-home: #accaee;
+    }
+}
+
+h1,
+h2,
+h3,
+ion-title,
+.display {
+    font-family: var(--bably-font-display);
+    letter-spacing: -0.02em;
+}
+
+ion-title {
+    font-weight: 700;
+}
