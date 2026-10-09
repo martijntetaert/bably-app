@@ -313,3 +313,14 @@ ion-skeleton-text {
     --border-radius: 0.5rem;
     --background: var(--bably-track);
 }
+
+/* Android draws the status bar over the app, so scrolled content would show through it. The
+   reka-ui sheets and dialogs sit above this strip and still dim it. */
+ion-app::before {
+    content: '';
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 15;
+    height: env(safe-area-inset-top);
+    background: var(--background);
+}
