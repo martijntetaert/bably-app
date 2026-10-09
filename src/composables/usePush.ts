@@ -5,6 +5,7 @@ import { devices } from '@/api/bably';
 import router from '@/router';
 
 const DEVICE_TOKEN_KEY = 'bably.device-token';
+const OPT_OUT_KEY = 'bably.push-opt-out';
 
 /**
  * The server sends the portal path of what a push is about; the app opens its own screen
@@ -16,12 +17,13 @@ export function appPathFor(portalUrl: string): string {
         '/portal/shopping': '/tabs/shopping',
         '/portal/meals': '/tabs/meals',
         '/portal/household/tasks': '/tabs/household',
-        '/portal/household/users': '/tabs/household',
+        '/portal/household/users': '/tabs/household?segment=members',
+        '/portal/household/insights': '/tabs/household?segment=insights',
         '/portal/settings': '/settings',
     };
     const screen = screens[path] ?? '/tabs/dashboard';
 
-    return query === undefined ? screen : `${screen}?${query}`;
+    return query === undefined ? screen : `${screen}${screen.includes('?') ? '&' : '?'}${query}`;
 }
 
 let listening = false;
@@ -53,6 +55,14 @@ export function usePush() {
     const isAllowed = async (): Promise<boolean> =>
         isAvailable && (await PushNotifications.checkPermissions()).receive === 'granted';
 
+    const hasOptedOut = async (): Promise<boolean> => (await Preferences.get({ key: OPT_OUT_KEY })).value !== null;
+
+    /**
+     * Android keeps the permission after switching pushes off in Bably, so that choice is
+     * remembered on its own.
+     */
+    const isEnabled = async (): Promise<boolean> => (await isAllowed()) && !(await hasOptedOut());
+
     /**
      * Asks once; Android 13 and up show the system question, older versions allow it.
      */
@@ -61,6 +71,7 @@ export function usePush() {
             return false;
         }
 
+        await Preferences.remove({ key: OPT_OUT_KEY });
         await listen();
         await PushNotifications.createChannel({ id: 'default', name: 'Bably', importance: 4 });
 
@@ -76,7 +87,7 @@ export function usePush() {
     };
 
     const resume = async (): Promise<void> => {
-        if (await isAllowed()) {
+        if (await isEnabled()) {
             await enable();
         }
     };
@@ -94,5 +105,10 @@ export function usePush() {
         }
     };
 
-    return { isAvailable, isAllowed, enable, resume, forget };
+    const disable = async (): Promise<void> => {
+        await forget();
+        await Preferences.set({ key: OPT_OUT_KEY, value: '1' });
+    };
+
+    return { isAvailable, isAllowed, isEnabled, enable, disable, resume, forget };
 }
