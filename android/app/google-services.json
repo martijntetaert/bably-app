@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "764289210806",
+    "project_id": "bably-9f1a9",
+    "storage_bucket": "bably-9f1a9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:764289210806:android:b52c7e6298df9dce1d0917",
+        "android_client_info": {
+          "package_name": "be.bably.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBm9oFq6N3i5tdRQ_v7d6g2JUucLSiMAIg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
