@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
-import { IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonToggle } from '@ionic/vue';
-import { checkboxOutline, notificationsOutline } from 'ionicons/icons';
+import { IonItem, IonLabel, IonList, IonListHeader, IonToggle } from '@ionic/vue';
+import { checkboxOutline, notificationsOutline } from '@/lib/icons';
 import { profile as profileApi } from '@/api/bably';
 import { usePush } from '@/composables/usePush';
 import { useSession } from '@/composables/useSession';
@@ -88,7 +88,7 @@ const setTaskReminder = async (wanted: boolean): Promise<void> => {
                 <ion-label>Meldingen</ion-label>
             </ion-list-header>
             <ion-item :lines="isEnabled ? undefined : 'none'">
-                <ion-icon slot="start" :icon="notificationsOutline" aria-hidden="true"></ion-icon>
+                <i slot="start" :class="notificationsOutline" aria-hidden="true"></i>
                 <ion-toggle
                     v-if="push.isAvailable"
                     :checked="isEnabled"
@@ -106,7 +106,7 @@ const setTaskReminder = async (wanted: boolean): Promise<void> => {
                 </ion-label>
             </ion-item>
             <ion-item v-if="isEnabled" lines="none">
-                <ion-icon slot="start" :icon="checkboxOutline" aria-hidden="true"></ion-icon>
+                <i slot="start" :class="checkboxOutline" aria-hidden="true"></i>
                 <ion-toggle :checked="wantsReminder" @ion-change="setTaskReminder($event.detail.checked)">
                     <ion-label>
                         <h3>Taken 's ochtends</h3>
@@ -130,7 +130,7 @@ p {
     white-space: normal;
 }
 
-ion-icon {
+i {
     color: var(--ion-color-primary);
 }
 </style>

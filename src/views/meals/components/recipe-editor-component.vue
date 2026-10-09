@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
-import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonModal, IonSpinner, IonTextarea, IonTitle, IonToolbar } from '@ionic/vue';
-import { add, arrowDown, arrowUp, camera, close, flame, trashOutline } from 'ionicons/icons';
+import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonModal, IonSpinner, IonTextarea, IonTitle, IonToolbar } from '@ionic/vue';
+import { add, arrowDown, arrowUp, camera, close, flame, trashOutline } from '@/lib/icons';
 import { recipes } from '@/api/bably';
 import { ApiError } from '@/api/client';
 import { useConfirm } from '@/composables/useConfirm';
@@ -243,11 +243,11 @@ const destroy = async (): Promise<void> => {
                     <div class="photo-actions">
                         <button type="button" class="photo-button" :disabled="isProcessingPhoto" @click="choosePhoto()">
                             <ion-spinner v-if="isProcessingPhoto" name="dots" />
-                            <ion-icon v-else :icon="camera" aria-hidden="true" />
+                            <i v-else :class="camera" aria-hidden="true"></i>
                             {{ photoPreview ? 'Andere foto' : 'Foto toevoegen' }}
                         </button>
                         <button v-if="photoPreview" type="button" class="photo-button" @click="removePhoto()">
-                            <ion-icon :icon="trashOutline" aria-hidden="true" />
+                            <i :class="trashOutline" aria-hidden="true"></i>
                             Foto weghalen
                         </button>
                     </div>
@@ -288,7 +288,7 @@ const destroy = async (): Promise<void> => {
                                 :aria-label="`Hoeveelheid van ${ingredient.name}`"
                             />
                             <button type="button" class="icon" :aria-label="`${ingredient.name} weghalen`" @click="removeIngredient(index)">
-                                <ion-icon :icon="close" aria-hidden="true" />
+                                <i :class="close" aria-hidden="true"></i>
                             </button>
                         </li>
                     </ul>
@@ -316,7 +316,7 @@ const destroy = async (): Promise<void> => {
                             @keydown.enter.prevent="addIngredient()"
                         />
                         <button type="button" class="icon is-add" aria-label="Ingrediënt toevoegen" @click="addIngredient()">
-                            <ion-icon :icon="add" aria-hidden="true" />
+                            <i :class="add" aria-hidden="true"></i>
                         </button>
                     </div>
                     <p v-if="hasIngredientError" class="error">Elk ingrediënt heeft een naam nodig.</p>
@@ -330,7 +330,7 @@ const destroy = async (): Promise<void> => {
                             <ion-textarea v-model="steps[index]" class="text" :auto-grow="true" :rows="2" :aria-label="`Stap ${index + 1}`" />
                             <div class="step-actions">
                                 <button type="button" class="icon" :disabled="index === 0" :aria-label="`Stap ${index + 1} naar boven`" @click="moveStep(index, -1)">
-                                    <ion-icon :icon="arrowUp" aria-hidden="true" />
+                                    <i :class="arrowUp" aria-hidden="true"></i>
                                 </button>
                                 <button
                                     type="button"
@@ -339,10 +339,10 @@ const destroy = async (): Promise<void> => {
                                     :aria-label="`Stap ${index + 1} naar beneden`"
                                     @click="moveStep(index, 1)"
                                 >
-                                    <ion-icon :icon="arrowDown" aria-hidden="true" />
+                                    <i :class="arrowDown" aria-hidden="true"></i>
                                 </button>
                                 <button type="button" class="icon" :aria-label="`Stap ${index + 1} weghalen`" @click="removeStep(index)">
-                                    <ion-icon :icon="close" aria-hidden="true" />
+                                    <i :class="close" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </li>
@@ -357,7 +357,7 @@ const destroy = async (): Promise<void> => {
                             aria-label="Nieuwe stap"
                         />
                         <button type="button" class="icon is-add" aria-label="Stap toevoegen" @click="addStep()">
-                            <ion-icon :icon="add" aria-hidden="true" />
+                            <i :class="add" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
@@ -365,7 +365,7 @@ const destroy = async (): Promise<void> => {
                 <div class="actions">
                     <ion-button type="submit" expand="block" :disabled="isSaving || name.trim() === ''">Recept bewaren</ion-button>
                     <ion-button v-if="draft?.identifier" expand="block" fill="outline" @click="emit('cook', draft.identifier)">
-                        <ion-icon slot="start" :icon="flame" aria-hidden="true" />
+                        <i slot="start" :class="flame" aria-hidden="true"></i>
                         Koken
                     </ion-button>
                     <ion-button v-if="draft?.identifier" expand="block" fill="clear" color="danger" @click="destroy()">Recept verwijderen</ion-button>

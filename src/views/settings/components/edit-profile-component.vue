@@ -151,7 +151,7 @@ const removePhoto = async (): Promise<void> => {
         <ion-content class="ion-padding">
             <p class="description">De anderen zien je voornaam en je foto.</p>
             <div v-if="user" class="photo">
-                <avatar-component :name="user.firstname" :photo-url="user.photoUrl" size="lg"></avatar-component>
+                <avatar-component :name="user.firstname" :photo="user.photoUrl" size="lg"></avatar-component>
                 <div class="photo-actions">
                     <ion-button fill="outline" size="small" :disabled="isProcessingPhoto" @click="choosePhoto()">
                         <ion-spinner v-if="isProcessingPhoto" name="crescent"></ion-spinner>

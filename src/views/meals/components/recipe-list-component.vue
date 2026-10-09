@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { IonIcon } from '@ionic/vue';
-import { chevronForward, restaurantOutline } from 'ionicons/icons';
+import { chevronForward, restaurantOutline } from '@/lib/icons';
 import { RecipeInterface } from '@/interfaces/RecipeInterface';
 
 defineProps<{
@@ -19,13 +18,13 @@ const meta = (recipe: RecipeInterface): string =>
         <button v-for="recipe in recipes" :key="recipe.identifier" type="button" class="recipe" @click="emit('edit', recipe)">
             <img v-if="recipe.photoUrl" class="thumbnail" :src="recipe.photoUrl" alt="" loading="lazy" />
             <span v-else class="thumbnail is-empty">
-                <ion-icon :icon="restaurantOutline" aria-hidden="true" />
+                <i :class="restaurantOutline" aria-hidden="true"></i>
             </span>
             <span class="what">
                 <span class="name">{{ recipe.name }}</span>
                 <span class="meta">{{ meta(recipe) }}</span>
             </span>
-            <ion-icon class="chevron" :icon="chevronForward" aria-hidden="true" />
+            <i class="chevron" :class="chevronForward" aria-hidden="true"></i>
         </button>
         <p v-if="recipes.length === 0" class="empty">Nog geen recepten. Plak hierboven een link naar een recept, of maak er zelf een.</p>
     </section>

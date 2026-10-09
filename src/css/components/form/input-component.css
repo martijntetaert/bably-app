@@ -1,0 +1,13 @@
+.component-input-component {
+    input {
+        @apply rounded-field border-input bg-card text-foreground placeholder:text-faint h-12 w-full border px-3.5 text-[0.9375rem];
+
+        &:focus-visible {
+            @apply border-accent outline-none;
+        }
+
+        &:disabled {
+            @apply opacity-50;
+        }
+    }
+}

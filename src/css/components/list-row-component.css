@@ -1,0 +1,42 @@
+.component-list-row-component {
+    @apply rounded-row border-border/50 bg-card text-card-foreground flex items-center gap-3.25 border px-3.5 py-3.25 transition-colors;
+
+    -webkit-tap-highlight-color: transparent;
+
+    .leading,
+    .trailing {
+        @apply flex shrink-0 items-center gap-1.5;
+    }
+
+    .body {
+        @apply min-w-0 flex-1;
+
+        .title {
+            @apply text-[0.96875rem] font-semibold tracking-[-0.006rem];
+        }
+
+        .meta {
+            @apply text-muted-foreground mt-0.75 flex items-center gap-1.5 text-[0.78125rem];
+        }
+    }
+
+    &.is-clickable {
+        @apply cursor-pointer;
+
+        &:hover {
+            @apply border-border;
+        }
+    }
+
+    &.is-grouped {
+        @apply rounded-none border-0 px-4 py-3.75;
+
+        &.is-clickable:hover {
+            @apply bg-foreground/[0.025] border-0;
+        }
+    }
+
+    &.is-grouped + &.is-grouped {
+        @apply border-border/50 border-t;
+    }
+}

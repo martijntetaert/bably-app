@@ -1,0 +1,23 @@
+#layout-portal {
+    --portal-nav-height: calc(
+        3.75rem + max(0.5rem, env(safe-area-inset-bottom))
+    );
+
+    @apply bg-background flex min-h-dvh flex-col lg:grid lg:grid-cols-[15rem_1fr] lg:[--portal-nav-height:0px];
+
+    padding-top: env(safe-area-inset-top);
+
+    .page-content {
+        @apply mx-auto flex w-full max-w-6xl flex-1 flex-col pt-6 pr-[calc(0.875rem+env(safe-area-inset-right))] pb-6 pl-[calc(0.875rem+env(safe-area-inset-left))] lg:col-start-2 lg:row-start-1 lg:px-10 lg:py-10;
+    }
+
+    .bottom-bar {
+        @apply bg-background/94 lg:bg-card sticky bottom-0 z-10 mt-auto w-full shadow-[inset_0_1px_0_var(--border)] backdrop-blur-[14px] lg:top-0 lg:col-start-1 lg:row-start-1 lg:mt-0 lg:h-dvh lg:shadow-[inset_-1px_0_0_var(--border)];
+    }
+}
+
+/* The toasts are rendered by vue-sonner, outside the scope of this layout. No width here:
+   on a phone vue-sonner subtracts the side offsets from the toast's width itself. */
+:deep(.portal-toast) {
+    @apply bg-foreground text-background flex items-center gap-3 rounded-[1.125rem] px-4 py-3.5 text-[0.84375rem] leading-snug shadow-[0_14px_34px_oklch(0.24_0.026_88/0.26)];
+}

@@ -6,7 +6,6 @@ import {
     IonButtons,
     IonContent,
     IonHeader,
-    IonIcon,
     IonPage,
     IonRefresher,
     IonRefresherContent,
@@ -15,7 +14,7 @@ import {
     onIonViewWillEnter,
     RefresherCustomEvent,
 } from '@ionic/vue';
-import { cart, settingsOutline } from 'ionicons/icons';
+import { cart, settingsOutline } from '@/lib/icons';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { dashboard as dashboardApi, tasks } from '@/api/bably';
 import WordmarkComponent from '@/components/wordmark-component.vue';
@@ -95,7 +94,7 @@ const dismissStart = async (): Promise<void> => {
                 <wordmark-component slot="start" class="brand"></wordmark-component>
                 <ion-buttons slot="end">
                     <ion-button router-link="/settings" aria-label="Instellingen">
-                        <ion-icon slot="icon-only" :icon="settingsOutline"></ion-icon>
+                        <i slot="icon-only" :class="settingsOutline" aria-hidden="true"></i>
                     </ion-button>
                 </ion-buttons>
             </ion-toolbar>
@@ -136,7 +135,7 @@ const dismissStart = async (): Promise<void> => {
                     @finish="(task, finished) => setFinished(task, finished)"
                 ></tasks-today-component>
                 <ion-button class="start-shopping" expand="block" router-link="/tabs/shopping?start=1">
-                    <ion-icon slot="start" :icon="cart"></ion-icon>
+                    <i slot="start" :class="cart" aria-hidden="true"></i>
                     Ik begin met winkelen
                 </ion-button>
             </div>

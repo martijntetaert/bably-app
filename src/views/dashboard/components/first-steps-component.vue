@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { IonIcon, IonRippleEffect } from '@ionic/vue';
-import { checkmark, chevronForward } from 'ionicons/icons';
+import { IonRippleEffect } from '@ionic/vue';
+import { checkmark, chevronForward } from '@/lib/icons';
 
 const props = defineProps<{
     steps: { invite: boolean; store: boolean; meal: boolean };
@@ -45,13 +45,13 @@ const items = computed(() => [
             <li v-for="item in items" :key="item.key" :class="{ 'is-done': item.done }">
                 <router-link class="step ion-activatable" :to="item.to">
                     <span class="check">
-                        <ion-icon v-if="item.done" :icon="checkmark" aria-hidden="true"></ion-icon>
+                        <i v-if="item.done" :class="checkmark" aria-hidden="true"></i>
                     </span>
                     <span class="what">
                         <span class="title">{{ item.title }}</span>
                         <span class="meta">{{ item.meta }}</span>
                     </span>
-                    <ion-icon class="chevron" :icon="chevronForward" aria-hidden="true"></ion-icon>
+                    <i class="chevron" :class="chevronForward" aria-hidden="true"></i>
                     <ion-ripple-effect></ion-ripple-effect>
                 </router-link>
             </li>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { IonButton, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonToggle } from '@ionic/vue';
-import { calendarOutline, copyOutline, refreshOutline, shareSocialOutline } from 'ionicons/icons';
+import { IonButton, IonItem, IonLabel, IonList, IonListHeader, IonToggle } from '@ionic/vue';
+import { calendarOutline, copyOutline, refreshOutline, shareSocialOutline } from '@/lib/icons';
 import { Share } from '@capacitor/share';
 import { profile as profileApi } from '@/api/bably';
 import { useConfirm } from '@/composables/useConfirm';
@@ -108,7 +108,7 @@ const shareLink = async (): Promise<void> => {
                 <ion-label>Koppelingen</ion-label>
             </ion-list-header>
             <ion-item :lines="props.calendarUrl ? undefined : 'none'">
-                <ion-icon slot="start" :icon="calendarOutline" aria-hidden="true"></ion-icon>
+                <i slot="start" :class="calendarOutline" aria-hidden="true"></i>
                 <ion-toggle :checked="isLinked" :disabled="isBusy" @ion-change="setLinked($event.detail.checked)">
                     <ion-label>
                         <h3>Agenda</h3>
@@ -127,15 +127,15 @@ const shareLink = async (): Promise<void> => {
                     <p class="url">{{ props.calendarUrl }}</p>
                     <div class="link-actions">
                         <ion-button size="small" @click="shareLink()">
-                            <ion-icon slot="start" :icon="shareSocialOutline"></ion-icon>
+                            <i slot="start" :class="shareSocialOutline" aria-hidden="true"></i>
                             Delen
                         </ion-button>
                         <ion-button size="small" fill="outline" @click="copyLink()">
-                            <ion-icon slot="start" :icon="copyOutline"></ion-icon>
+                            <i slot="start" :class="copyOutline" aria-hidden="true"></i>
                             Kopiëren
                         </ion-button>
                         <ion-button size="small" fill="outline" :disabled="isBusy" @click="createLink()">
-                            <ion-icon slot="start" :icon="refreshOutline"></ion-icon>
+                            <i slot="start" :class="refreshOutline" aria-hidden="true"></i>
                             Nieuwe link
                         </ion-button>
                     </div>
@@ -161,7 +161,7 @@ p {
     white-space: normal;
 }
 
-ion-icon[slot='start'] {
+i[slot='start'] {
     color: var(--ion-color-primary);
 }
 

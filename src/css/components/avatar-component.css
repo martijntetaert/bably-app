@@ -1,0 +1,35 @@
+.component-avatar-component {
+    @apply flex shrink-0;
+
+    .avatar-root {
+        @apply bg-accent text-accent-foreground inline-flex size-9.5 overflow-hidden rounded-full;
+
+        .avatar-image {
+            @apply h-full w-full object-cover;
+        }
+
+        .avatar-fallback {
+            @apply flex h-full w-full items-center justify-center text-[0.9375rem] font-semibold;
+        }
+    }
+
+    &.component-avatar-component-sm .avatar-root {
+        @apply ring-background size-8 ring-2;
+
+        .avatar-fallback {
+            @apply text-[0.78125rem];
+        }
+    }
+
+    &.component-avatar-component-lg .avatar-root {
+        @apply size-16;
+
+        .avatar-fallback {
+            @apply text-2xl;
+        }
+    }
+
+    &.is-pending .avatar-root {
+        @apply bg-muted text-faint;
+    }
+}

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { IonButton, IonIcon, IonSkeletonText } from '@ionic/vue';
+import { IonButton, IonSkeletonText } from '@ionic/vue';
 import { DateTime } from 'luxon';
-import { chevronBack, chevronForward } from 'ionicons/icons';
+import { chevronBack, chevronForward } from '@/lib/icons';
 import { household } from '@/api/bably';
 import { useToast } from '@/composables/useToast';
 import { InsightsInterface } from '@/interfaces/HouseholdOverviewInterface';
@@ -45,11 +45,11 @@ void load();
     <div class="insights">
         <div class="period">
             <ion-button fill="clear" aria-label="Vorige maand" :disabled="isLoading" @click="step(-1)">
-                <ion-icon slot="icon-only" :icon="chevronBack"></ion-icon>
+                <i slot="icon-only" :class="chevronBack" aria-hidden="true"></i>
             </ion-button>
             <span class="month display">{{ title }}</span>
             <ion-button fill="clear" aria-label="Volgende maand" :disabled="isLoading || isCurrentMonth" @click="step(1)">
-                <ion-icon slot="icon-only" :icon="chevronForward"></ion-icon>
+                <i slot="icon-only" :class="chevronForward" aria-hidden="true"></i>
             </ion-button>
         </div>
 
@@ -62,7 +62,7 @@ void load();
                 <h2 class="label">Taken afgewerkt</h2>
                 <ul class="bars">
                     <li v-for="member in insights.tasks" :key="member.identifier">
-                        <avatar-component :name="member.firstname" :photo-url="member.photoUrl" size="sm"></avatar-component>
+                        <avatar-component :name="member.firstname" :photo="member.photoUrl" size="sm"></avatar-component>
                         <span class="who">{{ member.displayName }}</span>
                         <span class="bar">
                             <span class="fill" :style="{ width: `${(member.count / mostTasks) * 100}%` }"></span>

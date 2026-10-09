@@ -1,0 +1,26 @@
+.section-portal-shopping-item-note {
+}
+
+.form {
+    @apply flex flex-col gap-3.5 pb-1;
+
+    .error {
+        @apply text-destructive text-[0.8125rem];
+    }
+
+    .actions {
+        @apply flex gap-2;
+
+        .wipe {
+            @apply shrink-0;
+
+            :deep(button) {
+                @apply w-auto px-4.5;
+            }
+        }
+
+        .save {
+            @apply flex-1;
+        }
+    }
+}

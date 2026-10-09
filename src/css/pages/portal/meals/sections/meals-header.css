@@ -1,0 +1,23 @@
+.section-portal-meals-meals-header {
+    @apply pb-2;
+
+    .weeks {
+        @apply flex items-center gap-1;
+
+        a {
+            @apply text-secondary-foreground flex h-9 min-w-9 items-center justify-center rounded-[0.6875rem] px-2 text-[0.8125rem] font-semibold;
+
+            &:hover {
+                @apply bg-muted text-foreground;
+            }
+
+            &:focus-visible {
+                @apply outline-ring outline-2 outline-offset-2;
+            }
+        }
+
+        .this-week {
+            @apply text-accent;
+        }
+    }
+}

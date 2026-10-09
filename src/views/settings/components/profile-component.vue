@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { IonIcon, IonItem, IonLabel, IonList, IonListHeader, useIonRouter } from '@ionic/vue';
-import { logOutOutline } from 'ionicons/icons';
+import { IonItem, IonLabel, IonList, IonListHeader, useIonRouter } from '@ionic/vue';
+import { logOutOutline } from '@/lib/icons';
 import { usePush } from '@/composables/usePush';
 import { useSession } from '@/composables/useSession';
 import { ProfileInterface } from '@/interfaces/ProfileInterface';
@@ -40,7 +40,7 @@ const signOut = async (): Promise<void> => {
                 <avatar-component
                     slot="start"
                     :name="props.profile.user.firstname"
-                    :photo-url="props.profile.user.photoUrl"
+                    :photo="props.profile.user.photoUrl"
                 ></avatar-component>
                 <ion-label>
                     <h3>{{ props.profile.user.name }}</h3>
@@ -60,7 +60,7 @@ const signOut = async (): Promise<void> => {
             </ion-item>
             <ion-item button @click="signOut()">
                 <ion-label>Afmelden</ion-label>
-                <ion-icon slot="end" :icon="logOutOutline" aria-hidden="true"></ion-icon>
+                <i slot="end" :class="logOutOutline" aria-hidden="true"></i>
             </ion-item>
             <ion-item button lines="none" @click="isDeletingAccount = true">
                 <ion-label color="danger">Account verwijderen</ion-label>
@@ -88,7 +88,7 @@ h3 {
     letter-spacing: 0;
 }
 
-ion-icon {
+i {
     color: var(--bably-muted-text);
 }
 </style>

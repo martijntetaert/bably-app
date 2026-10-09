@@ -1,0 +1,9 @@
+.section-portal-settings-notifications {
+    .badge {
+        @apply bg-accent-soft text-accent-strong flex size-8.5 items-center justify-center rounded-[0.6875rem];
+    }
+}
+
+.section-portal-settings-notifications .reminder {
+    @apply mt-2;
+}

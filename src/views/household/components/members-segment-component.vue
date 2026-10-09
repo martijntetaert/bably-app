@@ -3,7 +3,6 @@ import { computed, ref } from 'vue';
 import {
     alertController,
     IonButton,
-    IonIcon,
     IonInput,
     IonItem,
     IonLabel,
@@ -15,7 +14,7 @@ import {
     useIonRouter,
 } from '@ionic/vue';
 import { Share } from '@capacitor/share';
-import { close, exitOutline, pencil } from 'ionicons/icons';
+import { close, exitOutline, pencil } from '@/lib/icons';
 import { household } from '@/api/bably';
 import { ApiError, apiUrl } from '@/api/client';
 import { useConfirm } from '@/composables/useConfirm';
@@ -207,13 +206,13 @@ void refresh();
         <template v-else>
             <button type="button" class="name" aria-label="Naam van het huishouden wijzigen" @click="isRenaming = true">
                 <span class="display">{{ overview.household.name }}</span>
-                <ion-icon :icon="pencil" aria-hidden="true"></ion-icon>
+                <i :class="pencil" aria-hidden="true"></i>
                 <span class="count">{{ memberCount }} {{ memberCount === 1 ? 'lid' : 'leden' }}</span>
             </button>
 
             <ion-list class="card" lines="full">
                 <ion-item v-for="member in overview.members" :key="member.identifier">
-                    <avatar-component slot="start" :name="member.firstname" :photo-url="member.photoUrl"></avatar-component>
+                    <avatar-component slot="start" :name="member.firstname" :photo="member.photoUrl"></avatar-component>
                     <ion-label>
                         <h3>{{ member.name }}</h3>
                         <p>{{ memberMeta(member) }}</p>
@@ -226,7 +225,7 @@ void refresh();
                         :aria-label="`${member.name} uit het huishouden halen`"
                         @click="removeMember(member)"
                     >
-                        <ion-icon slot="icon-only" :icon="close"></ion-icon>
+                        <i slot="icon-only" :class="close" aria-hidden="true"></i>
                     </ion-button>
                 </ion-item>
                 <ion-item v-for="invitation in overview.invitations" :key="invitation.identifier" class="is-pending">
@@ -242,7 +241,7 @@ void refresh();
                         :aria-label="`Uitnodiging voor ${invitation.email} intrekken`"
                         @click="cancelInvitation(invitation)"
                     >
-                        <ion-icon slot="icon-only" :icon="close"></ion-icon>
+                        <i slot="icon-only" :class="close" aria-hidden="true"></i>
                     </ion-button>
                 </ion-item>
             </ion-list>
@@ -286,7 +285,7 @@ void refresh();
                     </ion-toggle>
                 </ion-item>
                 <ion-item v-if="memberCount > 1" button :detail="false" @click="leave">
-                    <ion-icon slot="start" :icon="exitOutline" color="danger"></ion-icon>
+                    <i slot="start" :class="exitOutline" aria-hidden="true"></i>
                     <ion-label color="danger">Huishouden verlaten</ion-label>
                 </ion-item>
             </ion-list>
@@ -341,7 +340,7 @@ void refresh();
     font-weight: 700;
 }
 
-.name ion-icon {
+.name i {
     color: var(--bably-muted-text);
     font-size: 1rem;
 }

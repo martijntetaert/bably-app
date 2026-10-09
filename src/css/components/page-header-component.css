@@ -1,0 +1,19 @@
+.component-page-header-component {
+    @apply flex items-end justify-between gap-3;
+
+    .titles {
+        @apply flex min-w-0 flex-col gap-0.75;
+
+        .title {
+            @apply font-display text-foreground text-[1.6875rem] font-bold tracking-[-0.044rem];
+        }
+
+        .subtitle {
+            @apply text-muted-foreground text-[0.8125rem];
+        }
+    }
+
+    .right {
+        @apply shrink-0;
+    }
+}

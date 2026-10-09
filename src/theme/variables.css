@@ -54,6 +54,8 @@
     --bably-card: #ffffff;
     --bably-muted: #f1f2f9;
     --bably-border: #e2e2eb;
+    --bably-track: #e8e8f1;
+    --bably-faint: #a5a5b6;
     --bably-muted-text: #6d6d7d;
     --bably-accent-soft: #e9ebff;
     --bably-today: #6062aa;
@@ -98,6 +100,8 @@
         --bably-card: #262730;
         --bably-muted: #2f2f39;
         --bably-border: #393944;
+        --bably-track: #2f2f39;
+        --bably-faint: #7c7c8c;
         --bably-muted-text: #a3a3b1;
         --bably-accent-soft: #2b2c50;
         --bably-today: #babff8;

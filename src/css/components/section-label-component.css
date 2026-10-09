@@ -1,0 +1,3 @@
+.component-section-label-component {
+    @apply text-muted-foreground text-[0.71875rem] font-semibold tracking-[0.056rem] uppercase;
+}

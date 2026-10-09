@@ -1,0 +1,21 @@
+.section-portal-household-users-invite-member {
+    .label {
+        @apply px-1.5 pt-3 pb-2;
+    }
+
+    .form {
+        @apply flex items-center gap-2;
+    }
+
+    .input {
+        @apply min-w-0 flex-1;
+    }
+
+    :deep(.component-button-component button) {
+        @apply rounded-field h-12 w-auto px-4.5 text-[0.90625rem];
+    }
+
+    .error {
+        @apply text-destructive mt-2 px-1.5 text-[0.8125rem];
+    }
+}

@@ -1,0 +1,7 @@
+#page-portal-settings-overview {
+    @apply gap-page flex flex-col;
+
+    :deep(.label) {
+        @apply px-1.5 pt-3 pb-2;
+    }
+}

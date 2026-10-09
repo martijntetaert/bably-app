@@ -1,0 +1,13 @@
+.section-portal-household-tasks-create-task {
+    @apply sticky z-10 mt-auto -mb-6 lg:-mb-10;
+
+    bottom: var(--portal-nav-height);
+
+    .form {
+        @apply flex items-center gap-2;
+    }
+
+    .input {
+        @apply min-w-0 flex-1;
+    }
+}

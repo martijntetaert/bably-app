@@ -1,0 +1,129 @@
+.section-portal-shopping-pantry {
+    @apply flex flex-1 flex-col gap-1.5;
+
+    .group-header {
+        @apply flex items-center gap-2.5 px-1.5 pt-1.5 pb-2;
+
+        h2 {
+            @apply font-display flex-1 text-[0.9375rem] font-semibold tracking-[-0.0125rem];
+        }
+
+        span {
+            @apply text-faint text-[0.78125rem];
+        }
+    }
+
+    .rows {
+        @apply flex flex-col gap-1.5;
+    }
+
+    .is-low :deep(.meta) {
+        @apply text-warning;
+    }
+
+    .is-out :deep(.meta) {
+        @apply text-destructive;
+    }
+
+    .group-probably-low :deep(.meta) {
+        @apply text-warning;
+    }
+
+    .ask {
+        @apply flex h-8.5 cursor-pointer items-center rounded-[0.6875rem] px-3 text-[0.8125rem] font-semibold whitespace-nowrap;
+
+        &.still-enough {
+            @apply bg-foreground/5 text-secondary-foreground;
+
+            &:hover {
+                @apply bg-foreground/10;
+            }
+        }
+
+        &.to-list {
+            @apply bg-accent text-accent-foreground;
+
+            &:hover {
+                @apply opacity-90;
+            }
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+
+    .states {
+        @apply flex gap-1.25;
+
+        button {
+            @apply bg-foreground/5 flex size-8.5 cursor-pointer items-center justify-center rounded-[0.6875rem];
+
+            .dot {
+                @apply bg-foreground/18 size-3.25 rounded-full;
+            }
+
+            &:focus-visible {
+                @apply outline-ring outline-2 outline-offset-2;
+            }
+        }
+
+        .state-in.is-active {
+            @apply bg-success-soft;
+
+            .dot {
+                @apply bg-success;
+            }
+        }
+
+        .state-low.is-active {
+            @apply bg-warning-soft;
+
+            .dot {
+                @apply bg-warning;
+            }
+        }
+
+        .state-out.is-active {
+            @apply bg-destructive-soft;
+
+            .dot {
+                @apply bg-destructive;
+            }
+        }
+    }
+
+    .hint {
+        @apply text-faint mt-4 px-6 text-center text-[0.78125rem] leading-normal;
+    }
+
+    .remove {
+        @apply text-faint flex size-8.5 cursor-pointer items-center justify-center rounded-[0.6875rem] text-sm;
+
+        &:hover {
+            @apply bg-destructive-soft text-destructive;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+
+    .empty {
+        @apply text-muted-foreground px-6 py-6 text-center text-[0.84375rem] leading-normal;
+    }
+
+    .add-bar {
+        @apply sticky z-10 mt-auto -mb-6 lg:-mb-10;
+
+        bottom: var(--portal-nav-height);
+    }
+
+    .form {
+        @apply flex items-center gap-2;
+    }
+
+    .input {
+        @apply min-w-0 flex-1;
+    }
+}

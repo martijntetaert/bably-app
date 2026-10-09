@@ -1,0 +1,78 @@
+.section-portal-shopping-store-picker {
+}
+
+.picker {
+    @apply flex flex-col gap-3.5 pb-1;
+}
+
+.locating {
+    @apply flex justify-center py-8;
+
+    .pin {
+        @apply bg-accent-soft text-accent flex size-13.5 animate-pulse items-center justify-center rounded-full text-xl motion-reduce:animate-none;
+    }
+}
+
+.route {
+    @apply rounded-row border-border/50 bg-card text-secondary-foreground border px-4 py-3.5 text-[0.8125rem] leading-normal;
+}
+
+.form {
+    @apply flex flex-col gap-3.5;
+
+    .field {
+        @apply flex flex-col gap-1.75;
+    }
+
+    .error {
+        @apply text-destructive text-[0.8125rem];
+    }
+}
+
+.toggle-other {
+    @apply rounded-row text-secondary-foreground h-12 cursor-pointer text-[0.90625rem] font-semibold;
+
+    &:hover {
+        @apply bg-foreground/5;
+    }
+}
+
+.other-stores {
+    @apply flex flex-col gap-2;
+
+    .store {
+        @apply rounded-row border-border/50 bg-card flex cursor-pointer items-center gap-3.25 border px-4 py-3.5 text-left;
+
+        &:hover {
+            @apply border-border;
+        }
+
+        &:disabled {
+            @apply opacity-50;
+        }
+
+        .what {
+            @apply flex min-w-0 flex-1 flex-col;
+        }
+
+        .name {
+            @apply text-foreground text-[0.96875rem] font-semibold;
+        }
+
+        .place {
+            @apply text-muted-foreground mt-0.5 text-[0.78125rem];
+        }
+
+        .start {
+            @apply text-accent text-[0.8125rem] font-semibold whitespace-nowrap;
+        }
+    }
+
+    .add {
+        @apply rounded-row border-accent/40 bg-card text-accent flex cursor-pointer items-center justify-center gap-2.25 border border-dashed px-4 py-3.5 text-[0.9375rem] font-semibold;
+
+        &:hover {
+            @apply bg-accent-soft;
+        }
+    }
+}

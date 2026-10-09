@@ -1,0 +1,29 @@
+#page-portal-dashboard-overview {
+    @apply gap-page grid grid-cols-1 lg:grid-cols-4 lg:gap-5;
+
+    .split {
+        @apply gap-page grid grid-cols-2 lg:col-span-2 lg:gap-5;
+    }
+
+    /* With a mouse there is no start shopping button beside it, so it takes the whole row. */
+    .section-portal-dashboard-dashboard-header {
+        @apply lg:col-span-3 lg:mb-3 lg:pointer-fine:col-span-4;
+    }
+
+    .section-portal-dashboard-first-steps,
+    .section-portal-dashboard-today-meal,
+    .section-portal-dashboard-tasks-today {
+        @apply lg:col-span-2;
+    }
+
+    .section-portal-dashboard-start-shopping {
+        @apply lg:col-start-4 lg:row-start-1 lg:mb-3 lg:self-center;
+    }
+
+    .section-portal-dashboard-today-meal {
+        :deep(a),
+        :deep(.component-portlet-component) {
+            @apply lg:h-full;
+        }
+    }
+}

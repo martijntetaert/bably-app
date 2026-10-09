@@ -1,0 +1,5 @@
+.section-portal-dashboard-start-shopping {
+    /* Shopping happens with a phone in hand; behind a mouse and keyboard the button only
+       starts a trip nobody is on. */
+    @apply pointer-fine:hidden;
+}

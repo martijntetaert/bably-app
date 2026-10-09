@@ -1,0 +1,9 @@
+.section-portal-household-users-agreements {
+    .label {
+        @apply px-1.5 pt-3 pb-2;
+    }
+
+    .leave {
+        @apply text-destructive;
+    }
+}

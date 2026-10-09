@@ -1,0 +1,46 @@
+.section-portal-settings-integrations {
+    .badge {
+        @apply bg-info-soft text-info flex size-8.5 items-center justify-center rounded-[0.6875rem];
+    }
+
+    .calendar-link {
+        @apply border-border/50 flex flex-col gap-3 border-t px-4 py-3.5;
+
+        .url {
+            @apply bg-muted text-secondary-foreground truncate rounded-[0.6875rem] px-3 py-2 font-mono text-[0.75rem];
+        }
+
+        .link-actions {
+            @apply flex flex-wrap gap-1.75;
+
+            a,
+            button {
+                @apply border-input bg-card text-secondary-foreground inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-2 text-[0.8125rem] font-semibold transition-colors;
+
+                &:hover {
+                    @apply border-accent text-accent;
+                }
+
+                &:disabled {
+                    @apply cursor-default opacity-60;
+                }
+
+                &:focus-visible {
+                    @apply outline-ring outline-2 outline-offset-2;
+                }
+            }
+
+            .primary {
+                @apply border-primary bg-primary text-primary-foreground;
+
+                &:hover {
+                    @apply bg-primary-hover text-primary-foreground;
+                }
+            }
+        }
+
+        .hint {
+            @apply text-muted-foreground text-[0.78125rem] leading-normal;
+        }
+    }
+}

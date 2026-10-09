@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { IonApp, IonRouterOutlet } from '@ionic/vue';
+import { Toaster } from 'vue-sonner';
 import { App as CapacitorApp } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
 import { SplashScreen } from '@capacitor/splash-screen';
@@ -10,6 +11,13 @@ import { profile } from '@/api/bably';
 import { usePush } from '@/composables/usePush';
 import { useSession } from '@/composables/useSession';
 import router from '@/router';
+
+// Clears the tab bar and the action bar above it, which is where the eye already is.
+const toastOffset = {
+    bottom: 'calc(3.75rem + max(0.5rem, env(safe-area-inset-bottom)) + 9rem)',
+    left: '0.875rem',
+    right: '0.875rem',
+};
 
 const session = useSession();
 const push = usePush();
@@ -52,5 +60,11 @@ onMounted(async () => {
 <template>
     <ion-app>
         <ion-router-outlet />
+        <Toaster
+            position="bottom-center"
+            :offset="toastOffset"
+            :mobile-offset="toastOffset"
+            :toast-options="{ unstyled: true, class: 'portal-toast' }"
+        />
     </ion-app>
 </template>

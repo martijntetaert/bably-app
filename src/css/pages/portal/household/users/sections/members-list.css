@@ -1,0 +1,21 @@
+.section-portal-household-users-members-list {
+    .is-pending :deep(.meta) {
+        @apply text-warning;
+    }
+
+    .is-pending :deep(.title) {
+        @apply truncate;
+    }
+
+    .withdraw {
+        @apply text-faint flex size-7.5 cursor-pointer items-center justify-center rounded-[0.625rem] transition-colors;
+
+        &:hover {
+            @apply bg-destructive-soft text-destructive;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+}

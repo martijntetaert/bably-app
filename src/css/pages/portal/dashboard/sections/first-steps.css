@@ -1,0 +1,55 @@
+.section-portal-dashboard-first-steps {
+    .dismiss {
+        @apply text-muted-foreground cursor-pointer text-[0.78125rem] font-semibold;
+
+        &:hover {
+            @apply text-foreground;
+        }
+    }
+
+    .steps {
+        @apply flex flex-col gap-1;
+    }
+
+    .step {
+        @apply -mx-2 flex items-center gap-3 rounded-[0.875rem] px-2 py-2.5 transition-colors;
+
+        &:hover {
+            @apply bg-muted;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+
+    .check {
+        @apply border-input text-primary-foreground flex size-6 shrink-0 items-center justify-center rounded-full border-2 text-[0.6875rem];
+    }
+
+    .what {
+        @apply flex min-w-0 flex-1 flex-col;
+    }
+
+    .title {
+        @apply text-foreground text-[0.90625rem] font-semibold;
+    }
+
+    .meta {
+        @apply text-muted-foreground text-[0.78125rem];
+    }
+
+    .chevron {
+        @apply text-faint text-xs;
+    }
+
+    .is-done {
+        .check {
+            @apply border-primary bg-primary;
+        }
+
+        .title {
+            @apply text-muted-foreground line-through;
+        }
+    }
+}

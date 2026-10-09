@@ -1,0 +1,15 @@
+.component-wordmark-component {
+    @apply inline-flex w-fit;
+
+    img {
+        @apply h-[1.4em] w-auto;
+    }
+
+    .light {
+        @apply dark:hidden;
+    }
+
+    .dark {
+        @apply hidden dark:block;
+    }
+}

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { IonButton, IonIcon, IonInput, IonSpinner } from '@ionic/vue';
-import { add, repeat } from 'ionicons/icons';
+import { IonButton, IonInput, IonSpinner } from '@ionic/vue';
+import { add, repeat } from '@/lib/icons';
 import { tasks } from '@/api/bably';
 import { ApiError } from '@/api/client';
 import { useToast } from '@/composables/useToast';
@@ -60,11 +60,11 @@ const openDetail = (): void => {
             :error-text="error ?? undefined"
         ></ion-input>
         <ion-button fill="outline" aria-label="Met herhaling" @click="openDetail">
-            <ion-icon slot="icon-only" :icon="repeat"></ion-icon>
+            <i slot="icon-only" :class="repeat" aria-hidden="true"></i>
         </ion-button>
         <ion-button type="submit" aria-label="Taak toevoegen" :disabled="busy || title.trim() === ''">
             <ion-spinner v-if="busy" name="crescent"></ion-spinner>
-            <ion-icon v-else slot="icon-only" :icon="add"></ion-icon>
+            <i v-else slot="icon-only" :class="add" aria-hidden="true"></i>
         </ion-button>
     </form>
 </template>

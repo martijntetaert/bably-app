@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { IonIcon, IonItem, IonLabel, IonList, IonListHeader } from '@ionic/vue';
-import { add } from 'ionicons/icons';
+import { IonItem, IonLabel, IonList, IonListHeader } from '@ionic/vue';
+import { add } from '@/lib/icons';
 import { StoreInterface } from '@/interfaces/StoreInterface';
 import EditStoreComponent from '@/views/settings/components/edit-store-component.vue';
 
@@ -51,7 +51,7 @@ const meta = (store: StoreInterface): string => {
                 </ion-label>
             </ion-item>
             <ion-item button lines="none" class="add" @click="openStore(null)">
-                <ion-icon slot="start" :icon="add" aria-hidden="true"></ion-icon>
+                <i slot="start" :class="add" aria-hidden="true"></i>
                 <ion-label>Winkel toevoegen</ion-label>
             </ion-item>
         </ion-list>
@@ -76,7 +76,7 @@ h3 {
     font-weight: 600;
 }
 
-.add ion-icon {
+.add i {
     color: var(--ion-color-primary);
 }
 </style>

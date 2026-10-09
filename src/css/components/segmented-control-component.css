@@ -1,0 +1,21 @@
+.component-segmented-control-component {
+    @apply rounded-field bg-track flex gap-1 p-1;
+
+    button {
+        @apply text-muted-foreground flex-1 cursor-pointer rounded-[0.6875rem] py-2.5 text-center text-[0.8125rem] font-semibold whitespace-nowrap transition-colors;
+
+        -webkit-tap-highlight-color: transparent;
+
+        &:hover {
+            @apply text-foreground;
+        }
+
+        &.is-active {
+            @apply bg-card text-foreground shadow-[0_1px_3px_oklch(0.24_0.026_88/0.12)];
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+}

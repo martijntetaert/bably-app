@@ -1,0 +1,31 @@
+.section-portal-dashboard-shopping-now {
+    @apply lg:col-span-4;
+
+    a {
+        @apply rounded-card bg-accent-soft text-accent-strong flex items-center gap-3 px-4 py-3.5;
+
+        &:hover {
+            @apply bg-accent-soft-hover;
+        }
+    }
+
+    .pin {
+        @apply bg-accent text-accent-foreground flex size-9 shrink-0 items-center justify-center rounded-xl;
+    }
+
+    .what {
+        @apply flex min-w-0 flex-1 flex-col;
+    }
+
+    .title {
+        @apply font-semibold;
+    }
+
+    .subtitle {
+        @apply text-[0.8125rem] opacity-80;
+    }
+
+    .chevron {
+        @apply text-xs;
+    }
+}

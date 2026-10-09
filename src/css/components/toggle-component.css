@@ -1,0 +1,23 @@
+.component-toggle-component {
+    @apply flex shrink-0;
+
+    .switch {
+        @apply bg-foreground/16 flex h-7.5 w-12.5 cursor-pointer items-center rounded-full p-0.75 transition-colors;
+
+        &[data-state='checked'] {
+            @apply bg-accent;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+
+        .thumb {
+            @apply block size-6 rounded-full bg-white shadow-[0_1px_3px_oklch(0.24_0.026_88/0.25)] transition-transform;
+
+            &[data-state='checked'] {
+                @apply translate-x-5;
+            }
+        }
+    }
+}

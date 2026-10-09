@@ -1,0 +1,122 @@
+.drawer-overlay {
+    @apply bg-overlay fixed inset-0 z-20 backdrop-blur-[2px];
+
+    &[data-state='open'] {
+        animation: drawer-fade-in 300ms ease-out;
+    }
+
+    &[data-state='closed'] {
+        animation: drawer-fade-out 250ms ease-in;
+    }
+}
+
+.drawer-content {
+    --bleed: 48px;
+
+    @apply rounded-t-sheet bg-background fixed inset-x-0 z-20 flex w-full flex-col gap-4 pt-2.5 shadow-[0_-12px_40px_oklch(0.24_0.026_88/0.2)] outline-none sm:mx-auto sm:max-w-md;
+
+    padding-left: calc(1.25rem + env(safe-area-inset-left));
+    padding-right: calc(1.25rem + env(safe-area-inset-right));
+
+    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom) + var(--bleed));
+    margin-bottom: calc(-1 * var(--bleed));
+
+    /* Sits on top of the on-screen keyboard and never grows past what is visible above it,
+       so the rest of the sheet scrolls instead of hiding behind the keys (lib/keyboardInset). */
+    bottom: var(--keyboard-inset, 0px);
+    max-height: calc(
+        min(88dvh, var(--visible-height, 100dvh) - 1rem) + var(--bleed)
+    );
+
+    /* The drag offset lives on transform; the enter and exit keyframes use the separate
+       translate property so the two compose instead of overwriting each other. */
+    transform: translateY(var(--drawer-swipe-movement-y, 0px));
+    transition: transform 450ms cubic-bezier(0.32, 0.72, 0, 1);
+
+    /* Panning is allowed document wide, which would hand a downward drag to the browser
+       instead of to the sheet. Only the scrollable body needs it back. */
+    touch-action: none;
+
+    &[data-state='open'] {
+        animation: drawer-slide-in 450ms cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    /* The primitive keeps the offset of the last swipe around, so a drawer that is open and
+       no longer being dragged has to ignore it: without this the next open starts where the
+       previous swipe ended. Dropping the transform is what animates the rubber-band back on
+       release; the closed state keeps the offset so the exit slides on from the drag. */
+    &[data-state='open']:not([data-swiping]) {
+        transform: none;
+    }
+
+    &[data-state='closed'] {
+        animation: drawer-slide-out 450ms cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    /* While the finger is down the sheet tracks it, so it may not lag behind a transition. */
+    &[data-swiping] {
+        transition-duration: 0ms;
+    }
+
+    /* The keyboard already covers the home indicator, so its padding would only leave a
+       gap between the last field and the keys. */
+    :root[data-keyboard] & {
+        padding-bottom: calc(0.75rem + var(--bleed));
+    }
+
+    .handle {
+        @apply bg-foreground/15 mx-auto h-1 w-10.5 shrink-0 rounded-full;
+    }
+
+    .titles {
+        @apply flex flex-col gap-1;
+
+        .title {
+            @apply font-display text-foreground text-[1.3125rem] font-bold tracking-[-0.025rem];
+        }
+
+        .description {
+            @apply text-muted-foreground text-[0.8125rem];
+        }
+    }
+
+    .body {
+        @apply flex-1 overflow-y-auto;
+
+        touch-action: pan-y;
+    }
+}
+
+/* The bleed already sits below the edge, so the sheet only travels its height minus the
+   bleed to clear the screen. */
+@keyframes drawer-slide-in {
+    from {
+        translate: 0 calc(100% - var(--bleed));
+    }
+}
+
+@keyframes drawer-slide-out {
+    to {
+        translate: 0 calc(100% - var(--bleed));
+    }
+}
+
+@keyframes drawer-fade-in {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes drawer-fade-out {
+    to {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .drawer-overlay,
+    .drawer-content {
+        animation-duration: 1ms;
+        transition-duration: 1ms;
+    }
+}

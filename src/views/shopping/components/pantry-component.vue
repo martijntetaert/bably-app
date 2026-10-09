@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { IonIcon } from '@ionic/vue';
-import { close } from 'ionicons/icons';
+import { close } from '@/lib/icons';
 import { shopping } from '@/api/bably';
 import { useConfirm } from '@/composables/useConfirm';
 import { useToast } from '@/composables/useToast';
@@ -117,7 +116,7 @@ const askToRemove = async (product: StockItemInterface): Promise<void> => {
                             </button>
                         </div>
                         <button type="button" class="remove" :aria-label="`${product.name} niet meer bijhouden`" @click="askToRemove(product)">
-                            <ion-icon :icon="close" aria-hidden="true"></ion-icon>
+                            <i :class="close" aria-hidden="true"></i>
                         </button>
                     </template>
                 </div>

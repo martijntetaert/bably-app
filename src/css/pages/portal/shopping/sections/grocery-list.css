@@ -1,0 +1,146 @@
+.section-portal-shopping-grocery-list {
+    @apply flex flex-col gap-1.5;
+
+    .waiting {
+        @apply rounded-row bg-warning-soft text-warning flex items-center gap-2.5 px-4 py-3 text-[0.8125rem] font-semibold;
+    }
+
+    .group-header {
+        @apply flex items-center gap-2.5 px-1.5 pt-3.5 pb-2;
+
+        h2 {
+            @apply font-display flex-1 text-[0.9375rem] font-semibold tracking-[-0.0125rem];
+        }
+
+        span {
+            @apply text-faint text-[0.78125rem];
+        }
+    }
+
+    .rows {
+        @apply flex flex-col gap-1.5;
+    }
+
+    .meta-stack {
+        @apply flex flex-col items-start gap-1.5;
+    }
+
+    .asked {
+        @apply bg-primary/10 text-primary inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-semibold;
+
+        i {
+            @apply text-[0.625rem];
+        }
+    }
+
+    .note {
+        @apply bg-accent-soft text-accent-strong inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-semibold;
+
+        i {
+            @apply text-[0.625rem];
+        }
+    }
+
+    .quantity {
+        @apply text-secondary-foreground text-[0.875rem] font-semibold whitespace-nowrap;
+    }
+
+    .edit-note {
+        @apply text-faint flex size-8.5 cursor-pointer items-center justify-center rounded-[0.6875rem] text-[0.8125rem];
+
+        &.has-note {
+            @apply text-accent;
+        }
+
+        &:hover {
+            @apply bg-muted text-foreground;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+
+    .remove {
+        @apply text-faint flex size-8.5 cursor-pointer items-center justify-center rounded-[0.6875rem] text-sm;
+
+        &:hover {
+            @apply bg-destructive-soft text-destructive;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+
+    .missing {
+        @apply text-faint flex size-11 cursor-pointer items-center justify-center rounded-[0.75rem] text-base;
+
+        &.is-active {
+            @apply text-warning;
+        }
+
+        &:hover {
+            @apply bg-muted text-foreground;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+
+    .is-missing {
+        @apply bg-warning-soft/40;
+    }
+
+    .basket {
+        @apply mt-3 flex flex-col gap-1.5;
+
+        summary {
+            @apply text-muted-foreground flex cursor-pointer list-none items-center gap-2.5 px-1.5 py-2 text-[0.9375rem] font-semibold;
+
+            &::-webkit-details-marker {
+                @apply hidden;
+            }
+
+            &:focus-visible {
+                @apply outline-ring rounded-lg outline-2 outline-offset-2;
+            }
+        }
+
+        .rows {
+            @apply mt-1.5;
+        }
+    }
+
+    .is-checked {
+        @apply bg-card/50 opacity-50;
+
+        :deep(.title) {
+            @apply line-through;
+        }
+    }
+
+    &.is-shopping {
+        .group .rows :deep(.component-list-row-component) {
+            @apply min-h-18 py-4.75;
+        }
+
+        .group .rows :deep(.title) {
+            @apply text-xl;
+        }
+
+        .rows :deep(.box) {
+            @apply size-8 rounded-[0.625rem];
+        }
+
+        .quantity {
+            @apply text-[0.96875rem];
+        }
+    }
+
+    .empty,
+    .hint {
+        @apply text-faint mt-4 px-6 text-center text-[0.78125rem] leading-normal;
+    }
+}

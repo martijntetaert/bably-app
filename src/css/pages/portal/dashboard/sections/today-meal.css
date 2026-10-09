@@ -1,0 +1,25 @@
+.section-portal-dashboard-today-meal {
+    a {
+        @apply rounded-card block;
+
+        &:hover {
+            @apply opacity-95;
+        }
+    }
+
+    .label {
+        @apply text-[0.71875rem] font-semibold tracking-[0.056rem] uppercase opacity-75;
+    }
+
+    .meal {
+        @apply font-display mt-1.75 text-[1.3125rem] leading-tight font-bold tracking-[-0.03rem];
+    }
+
+    .for {
+        @apply mt-1.5 text-[0.8125rem] opacity-80;
+    }
+
+    .dish + .dish {
+        @apply border-primary-foreground/20 mt-3 border-t pt-3;
+    }
+}

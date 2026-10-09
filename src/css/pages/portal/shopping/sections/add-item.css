@@ -1,0 +1,55 @@
+.section-portal-shopping-add-item {
+    @apply sticky z-10 mt-auto -mb-6 lg:-mb-10;
+
+    bottom: var(--portal-nav-height);
+
+    .form {
+        @apply flex items-center gap-2;
+    }
+
+    .input {
+        @apply rounded-field border-input bg-card text-foreground placeholder:text-faint h-12 w-full min-w-0 flex-1 border px-3.5 text-[0.9375rem];
+
+        &:focus-visible {
+            @apply border-accent outline-none;
+        }
+    }
+
+    .suggestions {
+        @apply rounded-row border-border/50 bg-card flex flex-col overflow-hidden border shadow-[0_8px_24px_oklch(0.24_0.026_88/0.12)];
+
+        li {
+            @apply cursor-pointer px-4 py-3 text-[0.9375rem] font-semibold;
+
+            &:hover {
+                @apply bg-muted;
+            }
+
+            &.is-highlighted {
+                @apply bg-accent-soft text-accent-strong;
+            }
+
+            & + li {
+                @apply border-border/50 border-t;
+            }
+        }
+
+        .new {
+            @apply text-accent flex items-center gap-2 font-medium;
+
+            i {
+                @apply text-xs;
+            }
+        }
+    }
+
+    .error {
+        @apply text-destructive px-1.5 text-[0.8125rem];
+    }
+
+    /* Shopping happens with a phone in hand; behind a mouse and keyboard the button only
+       starts a trip nobody is on. */
+    .start {
+        @apply pointer-fine:hidden;
+    }
+}

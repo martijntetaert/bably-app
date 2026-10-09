@@ -1,0 +1,11 @@
+.component-portlet-component {
+    @apply rounded-card border-border/50 bg-card text-card-foreground border p-4;
+
+    .header {
+        @apply mb-2.5 flex items-baseline justify-between gap-2.5;
+    }
+
+    &.component-portlet-component-dark {
+        @apply bg-primary text-primary-foreground border-transparent p-4.5;
+    }
+}

@@ -1,0 +1,23 @@
+.component-tasks-task-item-component {
+    @apply flex items-center gap-3 py-2.25;
+
+    .component-checkbox-component {
+        @apply min-w-0 flex-1;
+    }
+
+    .title {
+        @apply text-[0.90625rem] font-semibold;
+    }
+
+    .owner {
+        @apply text-muted-foreground shrink-0 text-[0.78125rem] whitespace-nowrap;
+    }
+
+    &.is-finished {
+        @apply opacity-50;
+
+        .title {
+            @apply line-through;
+        }
+    }
+}

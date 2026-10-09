@@ -6,7 +6,6 @@ import {
     IonButtons,
     IonContent,
     IonHeader,
-    IonIcon,
     IonLabel,
     IonPage,
     IonRefresher,
@@ -19,7 +18,7 @@ import {
     onIonViewWillEnter,
     type RefresherCustomEvent,
 } from '@ionic/vue';
-import { chevronBack, chevronForward } from 'ionicons/icons';
+import { chevronBack, chevronForward } from '@/lib/icons';
 import { household, meals, recipes as recipesApi } from '@/api/bably';
 import { useToast } from '@/composables/useToast';
 import { CookingInterface } from '@/interfaces/CookingInterface';
@@ -199,11 +198,11 @@ const cookRecipe = (identifier: string): void => {
                 <ion-title>Eten</ion-title>
                 <ion-buttons v-if="activeTab === 'menu'" slot="end">
                     <ion-button aria-label="Vorige week" @click="showWeek(-1)">
-                        <ion-icon slot="icon-only" :icon="chevronBack" aria-hidden="true" />
+                        <i slot="icon-only" :class="chevronBack" aria-hidden="true"></i>
                     </ion-button>
                     <ion-button v-if="!isThisWeek" @click="showWeek(null)">Deze week</ion-button>
                     <ion-button aria-label="Volgende week" @click="showWeek(1)">
-                        <ion-icon slot="icon-only" :icon="chevronForward" aria-hidden="true" />
+                        <i slot="icon-only" :class="chevronForward" aria-hidden="true"></i>
                     </ion-button>
                 </ion-buttons>
             </ion-toolbar>

@@ -1,0 +1,63 @@
+.confirm-dialog-overlay {
+    @apply bg-overlay fixed inset-0 z-30 backdrop-blur-[2px];
+}
+
+.confirm-dialog-content {
+    @apply rounded-card bg-background fixed top-1/2 left-1/2 z-30 flex w-[calc(100%-2.5rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 flex-col gap-1 p-5 shadow-[0_14px_34px_oklch(0.24_0.026_88/0.26)] outline-none;
+
+    .title {
+        @apply font-display text-foreground text-[1.3125rem] font-bold tracking-[-0.025rem];
+    }
+
+    .description {
+        @apply text-secondary-foreground text-[0.875rem] leading-normal;
+    }
+
+    .actions {
+        @apply mt-4 flex gap-2;
+
+        button {
+            @apply rounded-row h-12.5 flex-1 cursor-pointer text-[0.9375rem] font-semibold transition-colors;
+
+            &:focus-visible {
+                @apply outline-ring outline-2 outline-offset-2;
+            }
+        }
+
+        .cancel {
+            @apply bg-muted text-secondary-foreground;
+
+            &:hover {
+                @apply bg-muted-hover;
+            }
+        }
+
+        .confirm {
+            @apply bg-destructive text-destructive-foreground;
+
+            &:hover {
+                @apply opacity-90;
+            }
+
+            &:disabled {
+                @apply opacity-50;
+            }
+        }
+    }
+
+    .secondary {
+        @apply rounded-row bg-accent-soft text-accent-strong mt-2 h-12.5 w-full cursor-pointer text-[0.9375rem] font-semibold;
+
+        &:hover {
+            @apply bg-accent-soft-hover;
+        }
+
+        &:disabled {
+            @apply opacity-50;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+}

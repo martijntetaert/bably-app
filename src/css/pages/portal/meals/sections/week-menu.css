@@ -1,0 +1,75 @@
+.section-portal-meals-week-menu {
+    @apply flex flex-col gap-2;
+
+    .day {
+        @apply border-border/50 bg-card flex items-start gap-3 rounded-[1.125rem] border px-3.5 py-3.25;
+
+        &.is-empty {
+            @apply bg-card/40;
+
+            .number {
+                @apply text-faint;
+            }
+        }
+
+        &.is-today .number {
+            @apply text-accent;
+        }
+
+        &.is-past {
+            @apply opacity-60;
+        }
+    }
+
+    .date {
+        @apply flex w-10 shrink-0 flex-col items-center pt-0.5;
+
+        .weekday {
+            @apply text-faint text-[0.71875rem] font-semibold tracking-[0.05rem] uppercase;
+        }
+
+        .number {
+            @apply font-display text-xl font-bold tracking-[-0.03rem];
+        }
+    }
+
+    .dishes {
+        @apply flex min-w-0 flex-1 flex-col gap-2;
+    }
+
+    .dish {
+        @apply flex items-center gap-2.5;
+
+        .what {
+            @apply min-w-0 flex-1 cursor-pointer text-left;
+        }
+    }
+
+    .name {
+        @apply block text-[0.96875rem] font-semibold tracking-[-0.01rem];
+    }
+
+    .for {
+        @apply text-muted-foreground mt-0.75 block text-[0.78125rem];
+    }
+
+    .empty {
+        @apply cursor-pointer py-1 text-left;
+
+        .name {
+            @apply text-faint;
+        }
+    }
+
+    .add {
+        @apply text-accent cursor-pointer self-start py-0.5 text-[0.78125rem] font-semibold;
+
+        &:hover {
+            @apply underline;
+        }
+    }
+
+    .hint {
+        @apply text-faint mt-2.5 px-6 text-center text-[0.78125rem] leading-normal;
+    }
+}

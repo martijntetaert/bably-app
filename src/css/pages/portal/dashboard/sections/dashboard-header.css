@@ -1,0 +1,25 @@
+.section-portal-dashboard-dashboard-header {
+    @apply pb-2;
+
+    .avatars {
+        @apply flex items-center rounded-full pl-2;
+
+        -webkit-tap-highlight-color: transparent;
+
+        .component-avatar-component {
+            @apply -ml-2;
+        }
+
+        .settings {
+            @apply border-border bg-card text-muted-foreground ml-1.5 inline-flex size-8 items-center justify-center rounded-full border text-sm transition-colors;
+        }
+
+        &:hover .settings {
+            @apply text-foreground border-input;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+}

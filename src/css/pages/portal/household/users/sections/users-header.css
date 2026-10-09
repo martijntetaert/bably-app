@@ -1,0 +1,17 @@
+.section-portal-household-users-users-header {
+    .rename {
+        @apply inline-flex cursor-pointer items-center gap-1.5 rounded-sm;
+
+        i {
+            @apply text-faint text-[0.6875rem];
+        }
+
+        &:hover i {
+            @apply text-foreground;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+}

@@ -1,0 +1,21 @@
+.section-portal-meals-recipe-bar {
+    @apply sticky z-10 mt-auto -mb-6 lg:-mb-10;
+
+    bottom: var(--portal-nav-height);
+
+    .form {
+        @apply flex items-center gap-2;
+
+        :deep(.component-button-component button) {
+            @apply rounded-field h-12 w-auto px-4 text-[0.90625rem];
+        }
+    }
+
+    .input {
+        @apply min-w-0 flex-1;
+    }
+
+    .error {
+        @apply text-destructive px-1.5 text-[0.8125rem];
+    }
+}

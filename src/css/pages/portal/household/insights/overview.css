@@ -1,0 +1,80 @@
+#page-portal-household-insights-overview {
+    @apply gap-page flex flex-1 flex-col;
+
+    .period {
+        @apply inline-flex items-center gap-2;
+
+        .month {
+            @apply first-letter:uppercase;
+        }
+
+        .step {
+            @apply text-faint flex size-6 items-center justify-center rounded-full text-[0.6875rem] transition-colors;
+
+            &:hover {
+                @apply bg-muted text-foreground;
+            }
+
+            &:focus-visible {
+                @apply outline-ring outline-2 outline-offset-2;
+            }
+        }
+    }
+
+    .skeleton,
+    .cards {
+        @apply gap-page grid grid-cols-1 md:grid-cols-2 lg:gap-5;
+    }
+
+    .skeleton .card {
+        @apply rounded-row bg-card h-40 animate-pulse;
+    }
+
+    .bars {
+        @apply flex flex-col gap-2.5;
+
+        li {
+            @apply flex items-center gap-2.5;
+        }
+
+        .who {
+            @apply text-foreground w-20 shrink-0 truncate text-sm font-semibold;
+        }
+
+        .bar {
+            @apply bg-muted h-2 flex-1 overflow-hidden rounded-full;
+
+            .fill {
+                @apply bg-primary block h-full rounded-full;
+            }
+        }
+    }
+
+    .count {
+        @apply text-muted-foreground shrink-0 text-[0.8125rem] font-semibold tabular-nums;
+    }
+
+    .figure {
+        @apply font-display text-foreground text-3xl font-bold;
+
+        span {
+            @apply text-muted-foreground font-sans text-sm font-medium;
+        }
+    }
+
+    .ranking {
+        @apply mt-2 flex flex-col;
+
+        li {
+            @apply flex justify-between gap-3 py-1.5 text-sm;
+
+            & + li {
+                @apply border-border/50 border-t;
+            }
+        }
+    }
+
+    .empty {
+        @apply text-muted-foreground mt-1 text-sm;
+    }
+}

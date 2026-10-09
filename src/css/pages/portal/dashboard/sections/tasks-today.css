@@ -1,0 +1,17 @@
+.section-portal-dashboard-tasks-today {
+    .link {
+        @apply text-accent text-[0.78125rem] font-semibold;
+
+        &:hover {
+            @apply underline;
+        }
+    }
+
+    .content {
+        @apply flex flex-col gap-1;
+    }
+
+    .empty {
+        @apply text-muted-foreground text-sm;
+    }
+}

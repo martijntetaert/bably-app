@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
-import { IonButton, IonButtons, IonCheckbox, IonContent, IonFooter, IonHeader, IonIcon, IonModal, IonTitle, IonToolbar } from '@ionic/vue';
-import { close, notifications, stopwatchOutline } from 'ionicons/icons';
+import { IonButton, IonButtons, IonCheckbox, IonContent, IonFooter, IonHeader, IonModal, IonTitle, IonToolbar } from '@ionic/vue';
+import { close, notifications, stopwatchOutline } from '@/lib/icons';
 import { CookingInterface } from '@/interfaces/CookingInterface';
 import { useCookingTimers } from '@/views/meals/composables/useCookingTimers';
 import { useKeepAwake } from '@/composables/useKeepAwake';
@@ -68,7 +68,7 @@ const startTimer = (label: string, seconds: number): void => {
                 </ion-title>
                 <ion-buttons slot="end">
                     <ion-button aria-label="Kookmodus sluiten" @click="open = false">
-                        <ion-icon slot="icon-only" :icon="close" aria-hidden="true" />
+                        <i slot="icon-only" :class="close" aria-hidden="true"></i>
                     </ion-button>
                 </ion-buttons>
             </ion-toolbar>
@@ -112,7 +112,7 @@ const startTimer = (label: string, seconds: number): void => {
                                 class="chip"
                                 @click="startTimer(duration.label, duration.seconds)"
                             >
-                                <ion-icon :icon="stopwatchOutline" aria-hidden="true" />
+                                <i :class="stopwatchOutline" aria-hidden="true"></i>
                                 {{ duration.label }} starten
                             </button>
                         </div>
@@ -134,7 +134,7 @@ const startTimer = (label: string, seconds: number): void => {
                 <div class="bottom">
                     <div v-if="timers.length > 0" class="timers" role="status">
                         <div v-for="timer in timers" :key="timer.id" class="timer" :class="{ 'is-done': timer.isDone }">
-                            <ion-icon :icon="timer.isDone ? notifications : stopwatchOutline" aria-hidden="true" />
+                            <i :class="timer.isDone ? notifications : stopwatchOutline" aria-hidden="true"></i>
                             <span class="label">{{ timer.label }}</span>
                             <span class="remaining">{{ timer.isDone ? 'Klaar!' : formatRemaining(timer.remaining) }}</span>
                             <button
@@ -142,7 +142,7 @@ const startTimer = (label: string, seconds: number): void => {
                                 :aria-label="timer.isDone ? `${timer.label} wegtikken` : `${timer.label} stoppen`"
                                 @click="stop(timer.id)"
                             >
-                                <ion-icon :icon="close" aria-hidden="true" />
+                                <i :class="close" aria-hidden="true"></i>
                             </button>
                         </div>
                     </div>

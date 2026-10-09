@@ -1,0 +1,244 @@
+@import 'tailwindcss';
+
+
+
+@custom-variant dark (&:is(.dark *));
+
+/* The rhythm between the sections of a page. Every page uses this one gap, so they all
+   breathe the same way: gap-page, and p-page or space-y-page where those fit better. */
+@theme {
+    --spacing-page: 0.625rem;
+}
+
+/* Iris, olive, clay and dusk each belong to one section of the app: Vandaag, Lijst, Eten
+   and Huis; iris is also the brand purple of the logo. Ocean only marks success. Mist is
+   the cool neutral the whole app is built on. The scales are the same in
+   both themes; which step carries the text is decided by the section tokens below. */
+@theme {
+    --color-ocean-50: oklch(0.975 0.018 172);
+    --color-ocean-100: oklch(0.939 0.054 168);
+    --color-ocean-200: oklch(0.885 0.072 172);
+    --color-ocean-300: oklch(0.81 0.085 174);
+    --color-ocean-400: oklch(0.75 0.09 176);
+    --color-ocean-500: oklch(0.697 0.091 177);
+    --color-ocean-600: oklch(0.575 0.078 172);
+    --color-ocean-700: oklch(0.457 0.054 166);
+    --color-ocean-800: oklch(0.38 0.048 166);
+    --color-ocean-900: oklch(0.3 0.04 166);
+
+    --color-olive-50: oklch(0.975 0.014 125);
+    --color-olive-100: oklch(0.95 0.03 125);
+    --color-olive-200: oklch(0.9 0.055 124);
+    --color-olive-300: oklch(0.835 0.075 123);
+    --color-olive-400: oklch(0.755 0.09 122);
+    --color-olive-500: oklch(0.665 0.095 121);
+    --color-olive-600: oklch(0.565 0.09 120);
+    --color-olive-700: oklch(0.47 0.075 120);
+    --color-olive-800: oklch(0.39 0.06 119);
+    --color-olive-900: oklch(0.32 0.05 118);
+
+    --color-clay-50: oklch(0.975 0.012 50);
+    --color-clay-100: oklch(0.95 0.028 48);
+    --color-clay-200: oklch(0.9 0.05 45);
+    --color-clay-300: oklch(0.84 0.07 43);
+    --color-clay-400: oklch(0.75 0.09 41);
+    --color-clay-500: oklch(0.66 0.105 40);
+    --color-clay-600: oklch(0.575 0.11 38);
+    --color-clay-700: oklch(0.49 0.1 36);
+    --color-clay-800: oklch(0.41 0.085 34);
+    --color-clay-900: oklch(0.33 0.07 33);
+
+    --color-dusk-50: oklch(0.975 0.01 255);
+    --color-dusk-100: oklch(0.948 0.022 255);
+    --color-dusk-200: oklch(0.9 0.04 254);
+    --color-dusk-300: oklch(0.83 0.06 253);
+    --color-dusk-400: oklch(0.745 0.08 252);
+    --color-dusk-500: oklch(0.655 0.095 251);
+    --color-dusk-600: oklch(0.555 0.1 250);
+    --color-dusk-700: oklch(0.465 0.09 250);
+    --color-dusk-800: oklch(0.385 0.075 250);
+    --color-dusk-900: oklch(0.31 0.06 250);
+
+    --color-iris-50: oklch(0.975 0.012 281);
+    --color-iris-100: oklch(0.945 0.03 281);
+    --color-iris-200: oklch(0.895 0.055 281);
+    --color-iris-300: oklch(0.82 0.08 281);
+    --color-iris-400: oklch(0.735 0.1 281);
+    --color-iris-500: oklch(0.635 0.115 281);
+    --color-iris-600: oklch(0.528 0.112 281);
+    --color-iris-700: oklch(0.455 0.1 281);
+    --color-iris-800: oklch(0.385 0.085 281);
+    --color-iris-900: oklch(0.31 0.065 281);
+
+    --color-mist-50: oklch(0.98 0.006 283);
+    --color-mist-100: oklch(0.955 0.01 283);
+    --color-mist-200: oklch(0.91 0.014 283);
+    --color-mist-300: oklch(0.84 0.018 283);
+    --color-mist-400: oklch(0.72 0.022 283);
+    --color-mist-500: oklch(0.6 0.026 283);
+    --color-mist-600: oklch(0.5 0.03 283);
+    --color-mist-700: oklch(0.386 0.037 283);
+    --color-mist-800: oklch(0.332 0.035 283);
+    --color-mist-900: oklch(0.24 0.028 283);
+}
+
+@theme {
+    --radius-card: 1.25rem;
+    --radius-row: 1rem;
+    --radius-field: 0.875rem;
+    --radius-sheet: 1.625rem;
+}
+
+@theme inline {
+    --font-sans: 'Figtree', system-ui, sans-serif;
+    --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary-hover: var(--primary-hover);
+
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-hover: var(--muted-hover);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-faint: var(--faint);
+    --color-track: var(--track);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent-strong: var(--accent-strong);
+    --color-accent-soft: var(--accent-soft);
+    --color-accent-soft-hover: var(--accent-soft-hover);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-destructive-soft: var(--destructive-soft);
+    --color-warning: var(--warning);
+    --color-warning-soft: var(--warning-soft);
+    --color-success: var(--success);
+    --color-success-soft: var(--success-soft);
+    --color-info: var(--info);
+    --color-info-soft: var(--info-soft);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-overlay: var(--overlay);
+
+    --color-today: var(--today);
+    --color-groceries: var(--groceries);
+    --color-meals: var(--meals);
+    --color-home: var(--home);
+}
+
+/* The design adds roles the original palette did not name yet (a hover, a faint text, a
+   segmented track, soft status fills). They are all taken from the scales above, never new hues. */
+:root {
+    --background: oklch(0.982 0.008 285);
+    --foreground: var(--color-mist-800);
+    --card: oklch(1 0 0);
+    --card-foreground: var(--color-mist-800);
+    --primary: var(--color-iris-600);
+    --primary-foreground: oklch(0.985 0.01 285);
+    --primary-hover: var(--color-iris-700);
+    --secondary-foreground: var(--color-mist-600);
+    --muted: oklch(0.962 0.01 285);
+    --muted-hover: oklch(0.935 0.012 285);
+    --muted-foreground: oklch(0.54 0.025 285);
+    --faint: var(--color-mist-400);
+    --track: oklch(0.935 0.012 285);
+    --accent: var(--color-iris-600);
+    --accent-foreground: oklch(0.985 0.01 285);
+    --accent-strong: var(--color-iris-700);
+    --accent-soft: var(--color-iris-100);
+    --accent-soft-hover: var(--color-iris-200);
+    --destructive: oklch(0.55 0.19 22);
+    --destructive-foreground: oklch(0.985 0.01 22);
+    --destructive-soft: oklch(0.55 0.19 22 / 0.1);
+    --warning: var(--color-clay-700);
+    --warning-soft: var(--color-clay-100);
+    --success: var(--color-ocean-600);
+    --success-soft: var(--color-ocean-100);
+    --info: var(--color-dusk-700);
+    --info-soft: var(--color-dusk-100);
+    --border: oklch(0.915 0.012 285);
+    --input: oklch(0.935 0.012 285);
+    --ring: var(--color-iris-500);
+    --overlay: oklch(0.24 0.026 283 / 0.4);
+
+    --today: var(--color-iris-700);
+    --groceries: var(--color-olive-700);
+    --meals: var(--color-clay-700);
+    --home: var(--color-dusk-700);
+}
+
+.dark {
+    --background: oklch(0.225 0.018 285);
+    --foreground: oklch(0.955 0.012 285);
+    --card: oklch(0.275 0.018 285);
+    --card-foreground: oklch(0.955 0.012 285);
+    --primary: var(--color-iris-400);
+    --primary-foreground: oklch(0.22 0.03 285);
+    --primary-hover: var(--color-iris-300);
+    --secondary-foreground: var(--color-mist-300);
+    --muted: oklch(0.31 0.018 285);
+    --muted-hover: oklch(0.35 0.018 285);
+    --muted-foreground: oklch(0.72 0.02 285);
+    --faint: var(--color-mist-500);
+    --track: oklch(0.31 0.018 285);
+    --accent: var(--color-iris-400);
+    --accent-foreground: oklch(0.22 0.03 285);
+    --accent-strong: var(--color-iris-300);
+    --accent-soft: var(--color-iris-900);
+    --accent-soft-hover: var(--color-iris-800);
+    --destructive: oklch(0.68 0.16 25);
+    --destructive-foreground: oklch(0.18 0.03 25);
+    --destructive-soft: oklch(0.68 0.16 25 / 0.15);
+    --warning: var(--color-clay-300);
+    --warning-soft: var(--color-clay-900);
+    --success: var(--color-ocean-300);
+    --success-soft: var(--color-ocean-900);
+    --info: var(--color-dusk-300);
+    --info-soft: var(--color-dusk-900);
+    --border: oklch(0.35 0.018 285);
+    --input: oklch(0.37 0.018 285);
+    --ring: var(--color-iris-400);
+    /* A dark page needs a deeper scrim than a light one before a sheet reads as raised. */
+    --overlay: oklch(0.1 0.012 285 / 0.65);
+
+    --today: var(--color-iris-300);
+    --groceries: var(--color-olive-300);
+    --meals: var(--color-clay-300);
+    --home: var(--color-dusk-300);
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    html {
+        /* Panning is all this app needs; no double tap and no pinch zoom, so it reads as
+           an app instead of a web page. */
+        touch-action: pan-x pan-y;
+
+        -webkit-text-size-adjust: 100%;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+    ::selection {
+        @apply bg-ocean-200 text-ocean-900;
+    }
+}
+
+/* vue-sonner renders the toasts outside every component, so their look lives here. */
+.portal-toast {
+    @apply bg-foreground text-background flex items-center gap-3 rounded-[1.125rem] px-4 py-3.5 text-[0.84375rem] leading-snug shadow-[0_14px_34px_oklch(0.24_0.026_88/0.26)];
+}

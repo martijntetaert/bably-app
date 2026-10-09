@@ -2,7 +2,6 @@
 import { computed, ref } from 'vue';
 import {
     alertController,
-    IonIcon,
     IonItem,
     IonItemOption,
     IonItemOptions,
@@ -26,7 +25,7 @@ import {
     notificationsOutline,
     pencil,
     trashOutline,
-} from 'ionicons/icons';
+} from '@/lib/icons';
 import { shopping as shoppingApi } from '@/api/bably';
 import { useConfirm } from '@/composables/useConfirm';
 import { useToast } from '@/composables/useToast';
@@ -200,8 +199,8 @@ const openActions = async (item: GroceryItemInterface): Promise<void> => {
     const sheet = await actionSheetController.create({
         header: item.name,
         buttons: [
-            { text: item.note ? 'Notitie aanpassen' : 'Notitie schrijven', icon: pencil, handler: () => openNote(item) },
-            { text: 'Van de lijst halen', icon: trashOutline, role: 'destructive', handler: () => void askToRemove(item) },
+            { text: item.note ? 'Notitie aanpassen' : 'Notitie schrijven', handler: () => openNote(item) },
+            { text: 'Van de lijst halen', role: 'destructive', handler: () => void askToRemove(item) },
             { text: 'Annuleren', role: 'cancel' },
         ],
     });
@@ -216,7 +215,7 @@ const closeAndRun = async (event: Event, action: () => unknown): Promise<void> =
 <template>
     <section class="grocery-list" :class="{ 'is-shopping': isShopping }">
         <p v-if="pendingCount > 0 && !isOnline" class="waiting" role="status">
-            <ion-icon :icon="cloudOfflineOutline" aria-hidden="true"></ion-icon>
+            <i :class="cloudOfflineOutline" aria-hidden="true"></i>
             {{ waitingMessage }}
         </p>
         <div v-for="group in visibleGroups" :key="group.key" class="group" :class="`group-${group.key}`">
@@ -235,17 +234,17 @@ const closeAndRun = async (event: Event, action: () => unknown): Promise<void> =
                         :aria-checked="item.checked"
                         @click="tick(item)"
                     >
-                        <ion-icon slot="start" class="check" :icon="item.checked ? checkmarkCircle : ellipseOutline" aria-hidden="true"></ion-icon>
+                        <i slot="start" class="check" :class="item.checked ? checkmarkCircle : ellipseOutline" aria-hidden="true"></i>
                         <ion-label>
                             <span class="name">{{ item.name }}</span>
                             <span v-if="item.note || item.reason || askedFor(item)" class="meta">
                                 <span v-if="askedFor(item)" class="asked">
-                                    <ion-icon :icon="notificationsOutline" aria-hidden="true"></ion-icon>
+                                    <i :class="notificationsOutline" aria-hidden="true"></i>
                                     Nieuw · {{ askedFor(item) }}
                                 </span>
                                 <span v-if="item.reason">{{ item.reason }}</span>
                                 <span v-if="item.note" class="note">
-                                    <ion-icon :icon="pencil" aria-hidden="true"></ion-icon>
+                                    <i :class="pencil" aria-hidden="true"></i>
                                     {{ item.note }}
                                 </span>
                             </span>
@@ -260,7 +259,7 @@ const closeAndRun = async (event: Event, action: () => unknown): Promise<void> =
                             :aria-label="item.missing ? `${item.name} toch gevonden` : `${item.name} niet gevonden`"
                             @click.stop="setMissing(item, !item.missing)"
                         >
-                            <ion-icon :icon="item.missing ? arrowUndoOutline : eyeOffOutline" aria-hidden="true"></ion-icon>
+                            <i :class="item.missing ? arrowUndoOutline : eyeOffOutline" aria-hidden="true"></i>
                         </button>
                         <button
                             v-else
@@ -270,15 +269,15 @@ const closeAndRun = async (event: Event, action: () => unknown): Promise<void> =
                             :aria-label="`Acties voor ${item.name}`"
                             @click.stop="openActions(item)"
                         >
-                            <ion-icon :icon="ellipsisVertical" aria-hidden="true"></ion-icon>
+                            <i :class="ellipsisVertical" aria-hidden="true"></i>
                         </button>
                     </ion-item>
                     <ion-item-options v-if="!isShopping" side="end">
                         <ion-item-option color="medium" @click="closeAndRun($event, () => openNote(item))">
-                            <ion-icon slot="icon-only" :icon="pencil" :aria-label="`Notitie bij ${item.name}`"></ion-icon>
+                            <i slot="icon-only" :class="pencil" :aria-label="`Notitie bij ${item.name}`" aria-hidden="true"></i>
                         </ion-item-option>
                         <ion-item-option color="danger" @click="closeAndRun($event, () => askToRemove(item))">
-                            <ion-icon slot="icon-only" :icon="trashOutline" :aria-label="`${item.name} van de lijst halen`"></ion-icon>
+                            <i slot="icon-only" :class="trashOutline" :aria-label="`${item.name} van de lijst halen`" aria-hidden="true"></i>
                         </ion-item-option>
                     </ion-item-options>
                 </ion-item-sliding>
@@ -286,9 +285,9 @@ const closeAndRun = async (event: Event, action: () => unknown): Promise<void> =
         </div>
         <div v-if="basket.length > 0" class="basket">
             <button type="button" class="basket-toggle" :aria-expanded="isBasketOpen" @click="isBasketOpen = !isBasketOpen">
-                <ion-icon :icon="basketOutline" aria-hidden="true"></ion-icon>
+                <i :class="basketOutline" aria-hidden="true"></i>
                 <span>In je mandje ({{ basket.length }})</span>
-                <ion-icon :icon="isBasketOpen ? chevronUp : chevronDown" aria-hidden="true"></ion-icon>
+                <i :class="isBasketOpen ? chevronUp : chevronDown" aria-hidden="true"></i>
             </button>
             <ion-list v-if="isBasketOpen" lines="none" class="rows">
                 <ion-item
@@ -301,7 +300,7 @@ const closeAndRun = async (event: Event, action: () => unknown): Promise<void> =
                     :aria-checked="true"
                     @click="tick(item)"
                 >
-                    <ion-icon slot="start" class="check" :icon="checkmarkCircle" aria-hidden="true"></ion-icon>
+                    <i slot="start" class="check" :class="checkmarkCircle" aria-hidden="true"></i>
                     <ion-label><span class="name">{{ item.name }}</span></ion-label>
                     <span v-if="item.quantity" slot="end" class="quantity">{{ item.quantity }}</span>
                 </ion-item>
@@ -336,7 +335,7 @@ const closeAndRun = async (event: Event, action: () => unknown): Promise<void> =
     font-size: 0.875rem;
 }
 
-.waiting ion-icon {
+.waiting i {
     flex-shrink: 0;
     margin-top: 0.125rem;
 }
@@ -421,7 +420,7 @@ ion-item-sliding {
     white-space: normal;
 }
 
-.meta ion-icon {
+.meta i {
     vertical-align: -0.125rem;
 }
 

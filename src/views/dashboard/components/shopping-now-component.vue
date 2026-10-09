@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { IonIcon, IonRippleEffect } from '@ionic/vue';
-import { cart, chevronForward } from 'ionicons/icons';
+import { IonRippleEffect } from '@ionic/vue';
+import { cart, chevronForward } from '@/lib/icons';
 import { ShoppingTripInterface } from '@/interfaces/ShoppingTripInterface';
 
 const props = defineProps<{
@@ -16,7 +16,7 @@ const who = computed(() => (isYou.value ? 'Je bent' : `${props.trip.startedBy?.d
 <template>
     <router-link class="shopping-now-component ion-activatable" to="/tabs/shopping">
         <span class="pin">
-            <ion-icon :icon="cart" aria-hidden="true"></ion-icon>
+            <i :class="cart" aria-hidden="true"></i>
         </span>
         <span class="what">
             <span class="title">{{ who }} in de {{ props.trip.store.name }}</span>
@@ -24,7 +24,7 @@ const who = computed(() => (isYou.value ? 'Je bent' : `${props.trip.startedBy?.d
                 {{ isYou ? 'Ga verder met je lijst' : 'Nog iets nodig? Zet het op de lijst.' }}
             </span>
         </span>
-        <ion-icon class="chevron" :icon="chevronForward" aria-hidden="true"></ion-icon>
+        <i class="chevron" :class="chevronForward" aria-hidden="true"></i>
         <ion-ripple-effect></ion-ripple-effect>
     </router-link>
 </template>

@@ -1,0 +1,3 @@
+#page-portal-meals-overview {
+    @apply gap-page flex flex-1 flex-col;
+}

@@ -1,0 +1,4 @@
+/* Bleeds to the edges of the page padding; the section around it makes it sticky above the tab bar. */
+.component-action-bar-component {
+    @apply bg-background/96 -mr-[calc(0.875rem+env(safe-area-inset-right))] -ml-[calc(0.875rem+env(safe-area-inset-left))] flex flex-col gap-2.25 py-2.5 pr-[calc(0.875rem+env(safe-area-inset-right))] pl-[calc(0.875rem+env(safe-area-inset-left))] shadow-[inset_0_1px_0_var(--border)] backdrop-blur-[14px] lg:-mx-10 lg:px-10;
+}

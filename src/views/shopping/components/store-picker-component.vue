@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { IonButton, IonIcon, IonInput, IonModal, IonSpinner } from '@ionic/vue';
+import { IonButton, IonInput, IonModal, IonSpinner } from '@ionic/vue';
 import { Geolocation } from '@capacitor/geolocation';
-import { add, chevronForward, locationOutline } from 'ionicons/icons';
+import { add, chevronForward, locationOutline } from '@/lib/icons';
 import { shopping, stores as storesApi } from '@/api/bably';
 import { ApiError } from '@/api/client';
 import { useToast } from '@/composables/useToast';
@@ -154,7 +154,7 @@ const saveAndStart = async (): Promise<void> => {
             <p class="description">{{ description }}</p>
 
             <div v-if="step === 'locating'" class="locating" aria-live="polite">
-                <span class="pin"><ion-icon :icon="locationOutline" aria-hidden="true"></ion-icon></span>
+                <span class="pin"><i :class="locationOutline" aria-hidden="true"></i></span>
             </div>
 
             <template v-else-if="step === 'known' && recognisedStore">
@@ -216,10 +216,10 @@ const saveAndStart = async (): Promise<void> => {
                             <span v-if="store.place" class="place">{{ store.place }}</span>
                         </span>
                         <span class="start">Start</span>
-                        <ion-icon :icon="chevronForward" aria-hidden="true"></ion-icon>
+                        <i :class="chevronForward" aria-hidden="true"></i>
                     </button>
                     <button v-if="step !== 'manual'" type="button" class="add" @click="addManually()">
-                        <ion-icon :icon="add" aria-hidden="true"></ion-icon>
+                        <i :class="add" aria-hidden="true"></i>
                         Winkel handmatig toevoegen
                     </button>
                 </div>

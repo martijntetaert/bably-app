@@ -1,0 +1,199 @@
+.section-portal-meals-recipe-editor {
+}
+
+.form {
+    @apply flex flex-col gap-4 pb-1;
+}
+
+.field {
+    @apply flex flex-col gap-2;
+}
+
+.servings {
+    @apply rounded-row border-border/50 bg-card flex items-center gap-3 border px-4 py-3.5;
+
+    .what {
+        @apply flex min-w-0 flex-1 flex-col;
+    }
+
+    .title {
+        @apply text-foreground text-[0.90625rem] font-semibold;
+    }
+
+    .meta {
+        @apply text-muted-foreground mt-0.5 text-[0.78125rem];
+    }
+}
+
+.ingredients {
+    @apply rounded-row border-border/50 bg-card overflow-hidden border;
+
+    li {
+        @apply flex items-center gap-2 px-2 py-1.5;
+
+        & + li {
+            @apply border-border/50 border-t;
+        }
+    }
+
+    input {
+        @apply text-foreground placeholder:text-faint h-10 min-w-0 rounded-lg bg-transparent px-2 text-[0.875rem];
+
+        &:focus-visible {
+            @apply bg-muted outline-none;
+        }
+    }
+}
+
+.name {
+    @apply flex-1;
+}
+
+.amount {
+    @apply text-secondary-foreground w-24 shrink-0 text-right font-semibold;
+}
+
+.remove {
+    @apply text-faint flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg;
+
+    &:hover {
+        @apply bg-destructive-soft text-destructive;
+    }
+}
+
+.add {
+    @apply flex items-center gap-2;
+
+    input,
+    textarea {
+        @apply rounded-field border-input bg-card text-foreground placeholder:text-faint h-12 min-w-0 border px-3.5 text-[0.9375rem];
+
+        &:focus-visible {
+            @apply border-accent outline-none;
+        }
+    }
+
+    .amount {
+        @apply w-28 text-left font-normal;
+    }
+
+    .plus {
+        @apply rounded-field bg-muted text-foreground flex size-12 shrink-0 cursor-pointer items-center justify-center;
+
+        &:hover {
+            @apply bg-muted-hover;
+        }
+    }
+}
+
+.error {
+    @apply text-destructive text-[0.8125rem];
+}
+
+.actions {
+    @apply flex flex-col gap-2;
+}
+
+.unit-hint {
+    @apply bg-warning-soft text-warning rounded-row flex items-center gap-3 px-3.5 py-2.5 text-[0.8125rem] leading-snug;
+
+    span {
+        @apply flex-1;
+    }
+
+    button {
+        @apply bg-card text-foreground shrink-0 cursor-pointer rounded-lg px-3 py-1.5 font-semibold;
+
+        &:hover {
+            @apply bg-muted;
+        }
+    }
+}
+
+.photo {
+    @apply rounded-row border-border bg-muted/50 relative flex min-h-28 flex-col items-center justify-center gap-2 overflow-hidden border border-dashed p-4;
+
+    &.has-photo {
+        @apply aspect-[16/10] min-h-0 border-0 p-0;
+    }
+
+    img {
+        @apply absolute inset-0 size-full object-cover;
+    }
+
+    .photo-actions {
+        @apply relative flex gap-2;
+    }
+
+    &.has-photo .photo-actions {
+        @apply absolute right-2.5 bottom-2.5;
+    }
+
+    .photo-button {
+        @apply bg-card/92 text-foreground flex cursor-pointer items-center gap-2 rounded-full px-3.5 py-2 text-[0.8125rem] font-semibold shadow-sm backdrop-blur;
+
+        &:hover {
+            @apply bg-card;
+        }
+
+        &:disabled {
+            @apply cursor-wait opacity-60;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+
+    .photo-input {
+        @apply sr-only;
+    }
+}
+
+.steps {
+    @apply rounded-row border-border/50 bg-card overflow-hidden border;
+
+    li {
+        @apply flex items-start gap-2 px-2 py-2;
+
+        & + li {
+            @apply border-border/50 border-t;
+        }
+    }
+
+    .number {
+        @apply bg-accent-soft text-accent-strong mt-2 flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-bold;
+    }
+
+    textarea {
+        @apply text-foreground field-sizing-content min-h-16 min-w-0 flex-1 resize-none rounded-lg bg-transparent px-2 py-1.5 text-[0.875rem] leading-snug;
+
+        &:focus-visible {
+            @apply bg-muted outline-none;
+        }
+    }
+
+    .step-actions {
+        @apply flex shrink-0 flex-col;
+
+        button {
+            @apply text-faint flex size-7 cursor-pointer items-center justify-center rounded-lg text-xs;
+
+            &:hover {
+                @apply bg-muted text-foreground;
+            }
+
+            &:disabled {
+                @apply cursor-default opacity-30;
+            }
+        }
+
+        .remove:hover {
+            @apply bg-destructive-soft text-destructive;
+        }
+    }
+}
+
+.add textarea {
+    @apply field-sizing-content h-auto min-h-12 resize-none py-3 leading-snug;
+}

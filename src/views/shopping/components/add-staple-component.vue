@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { IonButton, IonIcon, IonInput, IonSpinner } from '@ionic/vue';
-import { add } from 'ionicons/icons';
+import { IonButton, IonInput, IonSpinner } from '@ionic/vue';
+import { add } from '@/lib/icons';
 import { shopping } from '@/api/bably';
 import { ApiError } from '@/api/client';
 import { useToast } from '@/composables/useToast';
@@ -52,7 +52,7 @@ const submit = async (): Promise<void> => {
             ></ion-input>
             <ion-button type="submit" :disabled="busy || name.trim() === ''" aria-label="Aan je voorraad toevoegen">
                 <ion-spinner v-if="busy" name="crescent"></ion-spinner>
-                <ion-icon v-else slot="icon-only" :icon="add"></ion-icon>
+                <i v-else slot="icon-only" :class="add" aria-hidden="true"></i>
             </ion-button>
         </form>
         <p v-if="errors.name" class="error">{{ errors.name[0] }}</p>

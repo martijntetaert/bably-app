@@ -1,0 +1,19 @@
+.section-portal-meals-recipes {
+    @apply flex flex-col gap-2;
+
+    .thumbnail {
+        @apply size-12 shrink-0 rounded-xl object-cover;
+
+        &.is-empty {
+            @apply bg-muted text-faint flex items-center justify-center text-base;
+        }
+    }
+
+    .chevron {
+        @apply text-faint text-xs;
+    }
+
+    .empty {
+        @apply text-muted-foreground px-6 py-6 text-center text-[0.84375rem] leading-normal;
+    }
+}

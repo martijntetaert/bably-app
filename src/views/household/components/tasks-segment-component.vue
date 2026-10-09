@@ -3,7 +3,6 @@ import { computed, ref } from 'vue';
 import {
     actionSheetController,
     IonCheckbox,
-    IonIcon,
     IonItem,
     IonItemOption,
     IonItemOptions,
@@ -14,7 +13,7 @@ import {
     toastController,
 } from '@ionic/vue';
 import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
-import { personOutline, repeat, swapHorizontal, trashOutline } from 'ionicons/icons';
+import { personOutline, repeat, swapHorizontal, trashOutline } from '@/lib/icons';
 import { household, tasks as tasksApi } from '@/api/bably';
 import { useConfirm } from '@/composables/useConfirm';
 import { useToast } from '@/composables/useToast';
@@ -225,7 +224,7 @@ void refresh();
                             <ion-label>
                                 <h3 class="title">{{ task.title }}</h3>
                                 <p class="meta">
-                                    <ion-icon v-if="task.recurrence.value !== 'none'" :icon="repeat" aria-hidden="true"></ion-icon>
+                                    <i v-if="task.recurrence.value !== 'none'" :class="repeat" aria-hidden="true"></i>
                                     {{ taskMeta(task) }}
                                 </p>
                             </ion-label>
@@ -237,17 +236,17 @@ void refresh();
                                 :aria-label="`${task.title} doorgeven, nu bij ${task.user.displayName}`"
                                 @click.stop="handOff(task)"
                             >
-                                <ion-icon :icon="personOutline" aria-hidden="true"></ion-icon>
+                                <i :class="personOutline" aria-hidden="true"></i>
                                 {{ task.user.displayName }}
                             </button>
                         </ion-item>
                         <ion-item-options side="end">
                             <ion-item-option v-if="members.length > 1" color="medium" @click="handOff(task, $event)">
-                                <ion-icon slot="top" :icon="swapHorizontal"></ion-icon>
+                                <i slot="top" :class="swapHorizontal" aria-hidden="true"></i>
                                 Doorgeven
                             </ion-item-option>
                             <ion-item-option v-if="task.can.delete" color="danger" @click="destroy(task, $event)">
-                                <ion-icon slot="top" :icon="trashOutline"></ion-icon>
+                                <i slot="top" :class="trashOutline" aria-hidden="true"></i>
                                 Verwijderen
                             </ion-item-option>
                         </ion-item-options>

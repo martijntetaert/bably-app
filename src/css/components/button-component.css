@@ -1,0 +1,63 @@
+.component-button-component {
+    button {
+        @apply rounded-row bg-primary text-primary-foreground flex h-13.5 w-full cursor-pointer items-center justify-center gap-2.5 px-4 text-base font-semibold transition-colors;
+
+        -webkit-tap-highlight-color: transparent;
+
+        &:hover {
+            @apply bg-primary-hover;
+        }
+
+        &:active {
+            @apply scale-[0.985];
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+
+        &:disabled {
+            @apply pointer-events-none opacity-50;
+        }
+    }
+
+    &.component-button-component-secondary button {
+        @apply bg-muted text-foreground;
+
+        &:hover {
+            @apply bg-muted-hover;
+        }
+    }
+
+    &.component-button-component-soft button {
+        @apply bg-accent-soft text-accent-strong;
+
+        &:hover {
+            @apply bg-accent-soft-hover;
+        }
+    }
+
+    &.component-button-component-ghost button {
+        @apply text-muted-foreground h-12.5 bg-transparent;
+
+        &:hover {
+            @apply text-foreground bg-transparent;
+        }
+    }
+
+    &.component-button-component-danger button {
+        @apply rounded-row border-border bg-card text-destructive h-auto justify-start border px-4 py-3.75 text-[0.90625rem];
+
+        &:hover {
+            @apply bg-destructive-soft;
+        }
+    }
+
+    &.component-button-component-icon-only button {
+        @apply rounded-field size-12 shrink-0 p-0;
+
+        i {
+            @apply text-lg;
+        }
+    }
+}

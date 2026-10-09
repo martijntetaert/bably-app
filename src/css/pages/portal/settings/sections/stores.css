@@ -1,0 +1,9 @@
+.section-portal-settings-stores {
+    .chevron {
+        @apply text-faint text-xs;
+    }
+
+    .add {
+        @apply text-accent;
+    }
+}

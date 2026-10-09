@@ -1,0 +1,13 @@
+/* The page-content of the web portal layout; the tab bar is Ionic's, so only the top has to
+   clear the status bar. */
+.component-portal-page-component {
+    @apply flex min-h-full flex-col;
+
+    .page-content {
+        @apply mx-auto flex w-full max-w-6xl flex-1 flex-col pt-[calc(1.5rem+env(safe-area-inset-top))] pr-[calc(0.875rem+env(safe-area-inset-right))] pb-6 pl-[calc(0.875rem+env(safe-area-inset-left))];
+    }
+
+    .bottom {
+        @apply sticky bottom-0 z-10 px-[calc(0.875rem+env(safe-area-inset-right))];
+    }
+}

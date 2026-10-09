@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonNote } from '@ionic/vue';
-import { openOutline, shieldCheckmarkOutline } from 'ionicons/icons';
+import { IonItem, IonLabel, IonList, IonListHeader, IonNote } from '@ionic/vue';
+import { openOutline, shieldCheckmarkOutline } from '@/lib/icons';
 import { App } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
 import { Capacitor } from '@capacitor/core';
@@ -30,9 +30,9 @@ const openPrivacy = async (): Promise<void> => {
                 <ion-label>Over Bably</ion-label>
             </ion-list-header>
             <ion-item button :lines="version ? undefined : 'none'" @click="openPrivacy()">
-                <ion-icon slot="start" :icon="shieldCheckmarkOutline" aria-hidden="true"></ion-icon>
+                <i slot="start" :class="shieldCheckmarkOutline" aria-hidden="true"></i>
                 <ion-label>Privacybeleid</ion-label>
-                <ion-icon slot="end" class="external" :icon="openOutline" aria-hidden="true"></ion-icon>
+                <i slot="end" class="external" :class="openOutline" aria-hidden="true"></i>
             </ion-item>
             <ion-item v-if="version" lines="none">
                 <ion-label>Versie</ion-label>
@@ -42,7 +42,7 @@ const openPrivacy = async (): Promise<void> => {
     </section>
 </template>
 <style scoped>
-ion-icon[slot='start'] {
+i[slot='start'] {
     color: var(--ion-color-primary);
 }
 

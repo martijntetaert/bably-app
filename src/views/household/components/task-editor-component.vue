@@ -5,7 +5,6 @@ import {
     IonButtons,
     IonContent,
     IonHeader,
-    IonIcon,
     IonInput,
     IonModal,
     IonNote,
@@ -15,7 +14,7 @@ import {
     IonTitle,
     IonToolbar,
 } from '@ionic/vue';
-import { add, remove, trashOutline } from 'ionicons/icons';
+import { add, remove, trashOutline } from '@/lib/icons';
 import { tasks, TaskFields } from '@/api/bably';
 import { ApiError } from '@/api/client';
 import { useConfirm } from '@/composables/useConfirm';
@@ -280,7 +279,7 @@ const firstError = (field: string): string | undefined => errors.value[field]?.[
                                     :disabled="form.recurrenceInterval <= 1"
                                     @click="stepInterval(-1)"
                                 >
-                                    <ion-icon slot="icon-only" :icon="remove"></ion-icon>
+                                    <i slot="icon-only" :class="remove" aria-hidden="true"></i>
                                 </ion-button>
                                 <span class="value">{{ form.recurrenceInterval }}</span>
                                 <ion-button
@@ -290,7 +289,7 @@ const firstError = (field: string): string | undefined => errors.value[field]?.[
                                     :disabled="form.recurrenceInterval >= 30"
                                     @click="stepInterval(1)"
                                 >
-                                    <ion-icon slot="icon-only" :icon="add"></ion-icon>
+                                    <i slot="icon-only" :class="add" aria-hidden="true"></i>
                                 </ion-button>
                             </div>
                         </div>
@@ -315,7 +314,7 @@ const firstError = (field: string): string | undefined => errors.value[field]?.[
                 </div>
 
                 <ion-button v-if="task?.can.delete" expand="block" fill="clear" color="danger" :disabled="busy" @click="destroy">
-                    <ion-icon slot="start" :icon="trashOutline"></ion-icon>
+                    <i slot="start" :class="trashOutline" aria-hidden="true"></i>
                     Taak verwijderen
                 </ion-button>
             </form>

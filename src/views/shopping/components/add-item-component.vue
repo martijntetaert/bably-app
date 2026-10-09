@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { IonButton, IonIcon, IonInput, IonSpinner } from '@ionic/vue';
-import { add, cartOutline } from 'ionicons/icons';
+import { IonButton, IonInput, IonSpinner } from '@ionic/vue';
+import { add, cartOutline } from '@/lib/icons';
 import { shopping as shoppingApi } from '@/api/bably';
 import { ApiError } from '@/api/client';
 import { useToast } from '@/composables/useToast';
@@ -146,13 +146,13 @@ const finishShopping = async (): Promise<void> => {
             </li>
             <li v-if="isSeveral">
                 <button type="button" class="new" @click="addTyped()">
-                    <ion-icon :icon="add" aria-hidden="true"></ion-icon>
+                    <i :class="add" aria-hidden="true"></i>
                     {{ pieceCount }} producten toevoegen
                 </button>
             </li>
             <li v-if="isNewProduct">
                 <button type="button" class="new" @click="addTyped()">
-                    <ion-icon :icon="add" aria-hidden="true"></ion-icon>
+                    <i :class="add" aria-hidden="true"></i>
                     ‘{{ name.trim() }}’ toevoegen als nieuw product
                 </button>
             </li>
@@ -183,12 +183,12 @@ const finishShopping = async (): Promise<void> => {
             ></ion-input>
             <ion-button type="submit" class="submit" color="primary" :disabled="isAdding || name.trim() === ''" aria-label="Op de lijst zetten">
                 <ion-spinner v-if="isAdding" name="crescent"></ion-spinner>
-                <ion-icon v-else slot="icon-only" :icon="add"></ion-icon>
+                <i v-else slot="icon-only" :class="add" aria-hidden="true"></i>
             </ion-button>
         </form>
         <p v-if="error || errors.quantity" class="error">{{ error ?? errors.quantity?.[0] }}</p>
         <ion-button v-if="!shopping" expand="block" class="action" @click="emit('startShopping')">
-            <ion-icon slot="start" :icon="cartOutline"></ion-icon>
+            <i slot="start" :class="cartOutline" aria-hidden="true"></i>
             Ik begin met winkelen
         </ion-button>
         <ion-button v-else expand="block" class="action" color="success" :disabled="isFinishing || isWaitingForNetwork" @click="finishShopping()">

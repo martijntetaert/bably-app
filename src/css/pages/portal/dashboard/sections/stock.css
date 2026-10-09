@@ -1,0 +1,29 @@
+.section-portal-dashboard-stock {
+    a {
+        @apply rounded-card block h-full;
+
+        &:hover :deep(.component-portlet-component) {
+            @apply border-border;
+        }
+
+        :deep(.component-portlet-component) {
+            @apply h-full px-4 py-3.75 transition-colors;
+        }
+    }
+
+    .total {
+        @apply font-display text-warning text-[1.5625rem] font-bold tracking-[-0.038rem];
+    }
+
+    .total.is-calm {
+        @apply text-foreground;
+    }
+
+    .title {
+        @apply mt-0.5 text-[0.8125rem] font-semibold;
+    }
+
+    .subtitle {
+        @apply text-muted-foreground mt-0.5 text-xs;
+    }
+}

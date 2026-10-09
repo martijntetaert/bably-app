@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { IonIcon } from '@ionic/vue';
-import { add as addIcon, close } from 'ionicons/icons';
+import { add as addIcon, close } from '@/lib/icons';
 import { shopping } from '@/api/bably';
 import { useToast } from '@/composables/useToast';
 import { RegularGroceryInterface } from '@/interfaces/RegularGroceryInterface';
@@ -51,12 +50,12 @@ const snooze = (suggestion: RegularGroceryInterface): Promise<void> => run(sugge
         <ul>
             <li v-for="suggestion in suggestions" :key="suggestion.identifier" :class="{ 'is-busy': busy === suggestion.identifier }">
                 <button type="button" class="add" :disabled="busy !== null" @click="add(suggestion)">
-                    <ion-icon :icon="addIcon" aria-hidden="true"></ion-icon>
+                    <i :class="addIcon" aria-hidden="true"></i>
                     <span class="name">{{ suggestion.name }}</span>
                     <span class="rhythm">{{ rhythm(suggestion.intervalDays) }}</span>
                 </button>
                 <button type="button" class="snooze" :disabled="busy !== null" :aria-label="`${suggestion.name} nu niet`" @click="snooze(suggestion)">
-                    <ion-icon :icon="close" aria-hidden="true"></ion-icon>
+                    <i :class="close" aria-hidden="true"></i>
                 </button>
             </li>
         </ul>
@@ -113,7 +112,7 @@ button {
     font-size: 0.875rem;
 }
 
-.add ion-icon {
+.add i {
     color: var(--bably-groceries);
 }
 

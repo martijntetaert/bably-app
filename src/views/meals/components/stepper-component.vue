@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { IonButton, IonIcon } from '@ionic/vue';
-import { add, remove } from 'ionicons/icons';
+import { IonButton } from '@ionic/vue';
+import { add, remove } from '@/lib/icons';
 
 const props = defineProps<{
     modelValue: number;
@@ -21,14 +21,14 @@ const change = (by: number): void => {
 <template>
     <div class="stepper" role="group" :aria-label="label">
         <ion-button fill="clear" size="small" :disabled="modelValue <= min" :aria-label="`${label}: minder`" @click.stop="change(-1)">
-            <ion-icon slot="icon-only" :icon="remove" aria-hidden="true" />
+            <i slot="icon-only" :class="remove" aria-hidden="true"></i>
         </ion-button>
         <span class="value" aria-live="polite">
             <strong>{{ modelValue }}</strong>
             <span v-if="unit" class="unit">{{ unit }}</span>
         </span>
         <ion-button fill="clear" size="small" :disabled="modelValue >= max" :aria-label="`${label}: meer`" @click.stop="change(1)">
-            <ion-icon slot="icon-only" :icon="add" aria-hidden="true" />
+            <i slot="icon-only" :class="add" aria-hidden="true"></i>
         </ion-button>
     </div>
 </template>

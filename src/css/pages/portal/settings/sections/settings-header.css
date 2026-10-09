@@ -1,0 +1,15 @@
+.section-portal-settings-settings-header {
+    @apply flex flex-col gap-3 pb-2;
+
+    .back {
+        @apply text-accent flex items-center gap-1.5 self-start text-[0.8125rem] font-semibold;
+
+        i {
+            @apply text-[0.6875rem];
+        }
+
+        &:hover {
+            @apply underline;
+        }
+    }
+}

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { DateTime } from 'luxon';
-import { IonButton, IonButtons, IonContent, IonDatetime, IonHeader, IonIcon, IonModal, IonTitle, IonToolbar } from '@ionic/vue';
-import { calendarOutline, chevronForward, flame } from 'ionicons/icons';
+import { IonButton, IonButtons, IonContent, IonDatetime, IonHeader, IonModal, IonTitle, IonToolbar } from '@ionic/vue';
+import { calendarOutline, chevronForward, flame } from '@/lib/icons';
 import { meals, shopping, type MealFields } from '@/api/bably';
 import { useConfirm } from '@/composables/useConfirm';
 import { useToast } from '@/composables/useToast';
@@ -157,7 +157,7 @@ const remove = async (): Promise<void> => {
                 <p class="description">{{ description }}</p>
                 <img v-if="meal.photoUrl" class="photo" :src="meal.photoUrl" :alt="`Foto van ${meal.name}`" />
                 <ion-button v-if="meal.recipeIdentifier && !meal.leftoverOf" expand="block" @click="emit('cook', meal)">
-                    <ion-icon slot="start" :icon="flame" aria-hidden="true" />
+                    <i slot="start" :class="flame" aria-hidden="true"></i>
                     {{ meal.steps.length > 0 ? `Koken · ${meal.steps.length} ${meal.steps.length === 1 ? 'stap' : 'stappen'}` : 'Koken' }}
                 </ion-button>
 
@@ -233,21 +233,21 @@ const remove = async (): Promise<void> => {
                             <span class="title">Verplaats naar morgen</span>
                             <span class="meta">De lijst schuift mee</span>
                         </span>
-                        <ion-icon :icon="chevronForward" aria-hidden="true" />
+                        <i :class="chevronForward" aria-hidden="true"></i>
                     </button>
                     <button type="button" class="action" @click="isChoosingDay = true">
                         <span class="what">
                             <span class="title">Andere dag kiezen</span>
                             <span class="meta">De lijst schuift mee</span>
                         </span>
-                        <ion-icon :icon="calendarOutline" aria-hidden="true" />
+                        <i :class="calendarOutline" aria-hidden="true"></i>
                     </button>
                     <button v-if="meal.recipeIdentifier" type="button" class="action" @click="emit('editRecipe', meal.recipeIdentifier)">
                         <span class="what">
                             <span class="title">Recept aanpassen</span>
                             <span class="meta">Naam, porties en ingrediënten</span>
                         </span>
-                        <ion-icon :icon="chevronForward" aria-hidden="true" />
+                        <i :class="chevronForward" aria-hidden="true"></i>
                     </button>
                 </div>
 
@@ -362,7 +362,7 @@ button {
     width: 100%;
 }
 
-.action ion-icon {
+.action i {
     color: var(--bably-muted-text);
 }
 

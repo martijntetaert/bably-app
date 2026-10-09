@@ -1,0 +1,11 @@
+#page-portal-household-tasks-overview {
+    @apply gap-page flex flex-1 flex-col;
+
+    .tasks-skeleton {
+        @apply flex flex-col gap-1.5 pt-1.5;
+
+        .row {
+            @apply rounded-row bg-card h-16 animate-pulse;
+        }
+    }
+}

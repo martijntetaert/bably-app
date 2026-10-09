@@ -40,7 +40,7 @@ const greeting = computed(() => {
                 v-for="member in props.members"
                 :key="member.identifier"
                 :name="member.firstname"
-                :photo-url="member.photoUrl"
+                :photo="member.photoUrl"
                 size="sm"
             ></avatar-component>
         </div>

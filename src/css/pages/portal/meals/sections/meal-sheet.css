@@ -1,0 +1,118 @@
+.section-portal-meals-meal-sheet {
+}
+
+.sheet {
+    @apply flex flex-col gap-4.5 pb-1;
+}
+
+.field {
+    @apply flex flex-col gap-2;
+}
+
+.people {
+    @apply flex flex-wrap gap-1.75;
+
+    button {
+        @apply border-input bg-card text-secondary-foreground cursor-pointer rounded-full border px-3.75 py-2.5 text-sm font-semibold transition-colors;
+
+        &.is-active {
+            @apply border-primary bg-primary text-primary-foreground;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+}
+
+.guests {
+    @apply rounded-row border-border/50 bg-card flex items-center gap-3 border px-4 py-3.5;
+
+    .what {
+        @apply flex min-w-0 flex-1 flex-col;
+    }
+}
+
+.title {
+    @apply text-foreground text-[0.90625rem] font-semibold;
+}
+
+.meta {
+    @apply text-muted-foreground mt-0.5 text-[0.78125rem];
+}
+
+.hint {
+    @apply rounded-row bg-warning-soft text-warning px-4 py-3.5 text-[0.84375rem] leading-normal;
+}
+
+.ingredients {
+    @apply rounded-row border-border/50 bg-card overflow-hidden border;
+
+    li {
+        @apply flex justify-between gap-3 px-4 py-2.75 text-[0.875rem];
+
+        & + li {
+            @apply border-border/50 border-t;
+        }
+    }
+
+    .amount {
+        @apply text-secondary-foreground font-semibold whitespace-nowrap;
+    }
+
+    li:has(.to-list) span:first-child {
+        @apply flex-1;
+    }
+
+    .to-list {
+        @apply text-accent cursor-pointer text-[0.78125rem] font-semibold whitespace-nowrap;
+
+        &:hover {
+            @apply underline;
+        }
+    }
+}
+
+.actions {
+    @apply flex flex-col gap-2;
+
+    .action {
+        @apply rounded-row border-border/50 bg-card flex cursor-pointer flex-col border px-4 py-3.5 text-left;
+
+        &:hover {
+            @apply border-border;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+}
+
+.leftover-note {
+    @apply bg-accent-soft text-accent-strong rounded-row px-4 py-3.5 text-[0.84375rem] leading-normal;
+}
+
+.later-days {
+    @apply flex flex-wrap gap-1.75;
+
+    .planned {
+        @apply bg-primary text-primary-foreground rounded-full px-3.75 py-2.5 text-sm font-semibold;
+    }
+
+    button {
+        @apply border-input bg-card text-secondary-foreground cursor-pointer rounded-full border border-dashed px-3.75 py-2.5 text-sm font-semibold;
+
+        &:hover {
+            @apply border-accent text-accent;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+}
+
+.photo {
+    @apply rounded-row aspect-[16/9] w-full object-cover;
+}

@@ -8,42 +8,77 @@ defineProps<{
 </script>
 <template>
     <ion-page>
-        <ion-content class="ion-padding">
+        <ion-content>
             <div class="auth-card-component">
-                <wordmark-component></wordmark-component>
-                <p class="subtitle">{{ subtitle }}</p>
-                <slot></slot>
+                <div class="card">
+                    <wordmark-component></wordmark-component>
+                    <p class="subtitle">{{ subtitle }}</p>
+                    <slot></slot>
+                </div>
             </div>
         </ion-content>
     </ion-page>
 </template>
 <style scoped>
 .auth-card-component {
-    max-width: 26rem;
-    margin: 0 auto;
-    padding-top: max(4rem, calc(env(safe-area-inset-top) + 2rem));
+    display: flex;
+    min-height: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: calc(2.5rem + env(safe-area-inset-top)) calc(1.25rem + env(safe-area-inset-right))
+        calc(2.5rem + env(safe-area-inset-bottom)) calc(1.25rem + env(safe-area-inset-left));
+}
+
+.card {
+    width: 100%;
+    max-width: 24rem;
+    padding: 2rem 1.5rem;
+    border-radius: 1.5rem;
+    background: var(--bably-card);
+    box-shadow:
+        0 0 0 1px var(--bably-border),
+        0 10px 15px -3px rgb(43 44 80 / 0.1),
+        0 4px 6px -4px rgb(43 44 80 / 0.1);
 }
 
 .subtitle {
+    margin: 0.25rem 0 1.5rem;
     color: var(--bably-muted-text);
-    margin: 0.5rem 0 2rem;
+    font-size: 0.875rem;
 }
 
-:slotted(ion-input) {
-    margin-bottom: 1rem;
+:slotted(form) {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+:slotted(form ion-button) {
+    margin-top: 0.5rem;
+    height: 2.875rem;
+    --border-radius: 0.75rem;
+    font-weight: 500;
+}
+
+.card :deep(.native-wrapper) {
+    background: var(--bably-muted);
+}
+
+.card :deep(.has-focus .native-wrapper) {
+    background: var(--bably-card);
 }
 
 :slotted(.links) {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.75rem;
-    margin-top: 1.5rem;
-    font-size: 0.9rem;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+    font-size: 0.875rem;
 }
 
 :slotted(.links a) {
-    color: var(--ion-color-primary);
+    color: var(--bably-muted-text);
     text-decoration: none;
 }
 </style>
