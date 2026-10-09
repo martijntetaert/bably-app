@@ -73,7 +73,15 @@ export function usePush() {
 
         await Preferences.remove({ key: OPT_OUT_KEY });
         await listen();
-        await PushNotifications.createChannel({ id: 'default', name: 'Bably', importance: 4 });
+        await PushNotifications.deleteChannel({ id: 'default' }).catch(() => undefined);
+        await PushNotifications.createChannel({
+            id: 'household',
+            name: 'Huishouden',
+            description: 'Wie gaat winkelen, wat er nog bij moet en je taken van de dag',
+            importance: 4,
+            visibility: 1,
+            vibration: true,
+        });
 
         const { receive } = await PushNotifications.requestPermissions();
 
