@@ -29,7 +29,7 @@ export function appPathFor(portalUrl: string): string {
 let listening = false;
 
 export function usePush() {
-    const isAvailable = Capacitor.isNativePlatform();
+    const isAvailable = Capacitor.isNativePlatform() && __HAS_FIREBASE__;
 
     const listen = async (): Promise<void> => {
         if (listening) {
