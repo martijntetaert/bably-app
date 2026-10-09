@@ -94,6 +94,14 @@ export function usePush() {
         return true;
     };
 
+    /**
+     * Android's permission question pauses the WebView; asked during a page transition it
+     * freezes the animation and leaves the screen blank, so it waits until the page is in.
+     */
+    const enableAfterNavigation = (): void => {
+        window.setTimeout(() => void enable(), 800);
+    };
+
     const resume = async (): Promise<void> => {
         if (await isEnabled()) {
             await enable();
@@ -118,5 +126,5 @@ export function usePush() {
         await Preferences.set({ key: OPT_OUT_KEY, value: '1' });
     };
 
-    return { isAvailable, isAllowed, isEnabled, enable, disable, resume, forget };
+    return { isAvailable, isAllowed, isEnabled, enable, enableAfterNavigation, disable, resume, forget };
 }

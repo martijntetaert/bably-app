@@ -24,11 +24,11 @@ const submit = async (): Promise<void> => {
     try {
         await session.signIn(email.value, password.value);
 
-        if (session.isVerified.value) {
-            await push.enable();
-        }
-
         ionRouter.navigate(session.isVerified.value ? '/tabs/dashboard' : '/verify-email', 'root', 'replace');
+
+        if (session.isVerified.value) {
+            push.enableAfterNavigation();
+        }
     } catch (error) {
         if (error instanceof ApiError && error.status === 422) {
             errors.value = error.errors;

@@ -24,8 +24,8 @@ const check = async (): Promise<void> => {
         await session.refreshProfile();
 
         if (session.isVerified.value) {
-            await push.enable();
             ionRouter.navigate('/tabs/dashboard', 'root', 'replace');
+            push.enableAfterNavigation();
         } else {
             await toast.info('Je adres is nog niet bevestigd. Kijk in je mailbox.');
         }
