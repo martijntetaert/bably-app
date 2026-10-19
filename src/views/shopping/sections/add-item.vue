@@ -19,6 +19,7 @@ const props = defineProps<{
 const emit = defineEmits<{
     startShopping: [];
     changed: [parts?: ShoppingPart[]];
+    added: [single: string | null];
 }>();
 
 const MAX_SUGGESTIONS = 5;
@@ -81,6 +82,8 @@ watch(name, () => {
     highlighted.value = -1;
 });
 
+// One product gets its row opened afterwards, so the quantity can be set; several at once
+// would mean a drawer per product.
 const submit = async (fields: { name?: string; productIdentifier?: string }): Promise<void> => {
     if (isAdding.value) {
         return;
@@ -88,11 +91,17 @@ const submit = async (fields: { name?: string; productIdentifier?: string }): Pr
 
     isAdding.value = true;
     errors.value = {};
+    const single = isSeveral.value ? null : name.value.trim();
 
     try {
         const message = addedSummary(await shoppingApi.add(fields));
         name.value = '';
-        emit('changed', ['list', 'products', 'suggestions']);
+
+        if (single) {
+            input.value?.blur();
+        }
+
+        emit('added', single);
 
         if (message !== null) {
             toast.info(message);

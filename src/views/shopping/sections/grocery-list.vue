@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 import { toast } from 'vue-sonner';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import CheckboxComponent from '@/components/checkbox-component.vue';
 import ListRowComponent from '@/components/list-row-component.vue';
 import ConfirmDialogComponent from '@/components/confirm-dialog-component.vue';
-import ItemNote from '@/views/shopping/sections/item-note.vue';
+import ItemEditor from '@/views/shopping/sections/item-editor.vue';
 import { shopping as shoppingApi } from '@/api/bably';
 import { useToast } from '@/composables/useToast';
 import { useOfflineChecks } from '@/views/shopping/composables/useOfflineChecks';
@@ -28,8 +28,8 @@ const notify = useToast();
 
 const itemToRemove = ref<GroceryItemInterface | null>(null);
 const isBasketOpen = ref(false);
-const itemWithNote = ref<GroceryItemInterface | null>(null);
-const isNoteOpen = ref(false);
+const itemToEdit = ref<GroceryItemInterface | null>(null);
+const isEditorOpen = ref(false);
 const isConfirmOpen = ref(false);
 const isRemoving = ref(false);
 
@@ -141,10 +141,33 @@ const waitingMessage = computed(() => {
     return `Geen bereik: ${ticks}. Bably stuurt ze zodra je weer verbinding hebt.`;
 });
 
-const openNote = (item: GroceryItemInterface): void => {
-    itemWithNote.value = item;
-    isNoteOpen.value = true;
+const openEditor = (item: GroceryItemInterface): void => {
+    itemToEdit.value = item;
+    isEditorOpen.value = true;
 };
+
+const plain = (value: string): string => value.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+
+// Right after something is put on the list, its row opens so the quantity can be set. What
+// was typed may hold a quantity in front ("2 melk"), so the name only has to end it.
+const editAdded = async (typed: string): Promise<void> => {
+    await nextTick();
+
+    const wanted = plain(typed);
+    const item = props.groups
+        .flatMap((group) => group.items)
+        .find(
+            (candidate) =>
+                !candidate.checked &&
+                (wanted === plain(candidate.name) || wanted.endsWith(` ${plain(candidate.name)}`))
+        );
+
+    if (item) {
+        openEditor(item);
+    }
+};
+
+defineExpose({ editAdded });
 
 const askToRemove = (item: GroceryItemInterface): void => {
     itemToRemove.value = item;
@@ -223,7 +246,7 @@ const markAsStaple = (): Promise<void> =>
                         <span class="meta-stack">
                             <span v-if="askedFor(item)" class="asked">
                                 <i class="fa-solid fa-bell" aria-hidden="true"></i>
-                                Nieuw · {{ askedFor(item) }}
+                                Nieuw Â· {{ askedFor(item) }}
                             </span>
                             <span v-if="item.reason">{{ item.reason }}</span>
                             <span v-if="item.note" class="note">
@@ -252,10 +275,8 @@ const markAsStaple = (): Promise<void> =>
                             type="button"
                             class="edit-note"
                             :class="{ 'has-note': item.note }"
-                            :aria-label="
-                                item.note ? `Notitie bij ${item.name} aanpassen` : `Notitie bij ${item.name} schrijven`
-                            "
-                            @click.stop="openNote(item)"
+                            :aria-label="`Hoeveelheid of notitie bij ${item.name} aanpassen`"
+                            @click.stop="openEditor(item)"
                         >
                             <i class="fa-solid fa-pen" aria-hidden="true"></i>
                         </button>
@@ -315,7 +336,7 @@ const markAsStaple = (): Promise<void> =>
             }}
         </p>
 
-        <item-note v-model:open="isNoteOpen" :item="itemWithNote" @saved="emit('changed', ['list'])"></item-note>
+        <item-editor v-model:open="isEditorOpen" :item="itemToEdit" @saved="emit('changed', ['list'])"></item-editor>
 
         <confirm-dialog-component
             v-model:open="isConfirmOpen"

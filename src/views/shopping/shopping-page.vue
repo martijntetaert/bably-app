@@ -34,6 +34,7 @@ const activeTab = ref<Tab>('list');
 const isVisible = ref(false);
 const isPickerOpen = ref(false);
 const addItem = ref<InstanceType<typeof AddItem> | null>(null);
+const groceryList = ref<InstanceType<typeof GroceryList> | null>(null);
 let pollTimer: number | undefined;
 
 useKeepAwake(computed(() => isVisible.value && activeTrip.value !== null));
@@ -81,6 +82,14 @@ const load = async (parts?: ShoppingPart[], quietly = false): Promise<void> => {
 };
 
 const reload = (): Promise<void> => load();
+
+const openAdded = async (single: string | null): Promise<void> => {
+    await load(['list', 'products', 'suggestions']);
+
+    if (single) {
+        await groceryList.value?.editAdded(single);
+    }
+};
 
 const stopPolling = (): void => {
     window.clearInterval(pollTimer);
@@ -145,6 +154,7 @@ onIonViewWillLeave(() => {
                     @changed="load"
                 ></regular-groceries>
                 <grocery-list
+                    ref="groceryList"
                     v-if="activeTrip || activeTab === 'list'"
                     :groups="displayedGroups"
                     :shopping="activeTrip !== null"
@@ -160,6 +170,7 @@ onIonViewWillLeave(() => {
                 :products="products"
                 @start-shopping="isPickerOpen = true"
                 @changed="load"
+                @added="openAdded"
             ></add-item>
             <store-picker
                 v-model:open="isPickerOpen"

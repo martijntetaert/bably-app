@@ -62,6 +62,8 @@ export const shopping = {
     check: (identifier: string, checked: boolean) => request<void>('PATCH', `grocery-items/${identifier}/check`, { checked }),
     markMissing: (identifier: string, missing: boolean) => request<void>('PATCH', `grocery-items/${identifier}/missing`, { missing }),
     note: (identifier: string, note: string | null) => request<void>('PATCH', `grocery-items/${identifier}/note`, { note }),
+    quantity: (identifier: string, quantity: string, identifiers: string[]) =>
+        request<void>('PATCH', `grocery-items/${identifier}/quantity`, { quantity, identifiers }),
     remove: (identifier: string) => request<void>('DELETE', `grocery-items/${identifier}`),
     products: () => request<ProductInterface[]>('GET', 'products'),
     suggestions: () => request<RegularGroceryInterface[]>('GET', 'products/suggestions'),

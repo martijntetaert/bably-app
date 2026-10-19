@@ -1,0 +1,18 @@
+.section-portal-shopping-item-editor {
+}
+
+.form {
+    @apply flex flex-col gap-3.5 pb-1;
+
+    .field {
+        @apply flex flex-col gap-1.5;
+
+        > span {
+            @apply text-muted-foreground px-1 text-[0.8125rem] font-semibold;
+        }
+    }
+
+    .error {
+        @apply text-destructive text-[0.8125rem];
+    }
+}
