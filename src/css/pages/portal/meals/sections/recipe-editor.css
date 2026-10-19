@@ -50,7 +50,7 @@
 }
 
 .amount {
-    @apply text-secondary-foreground w-24 shrink-0 text-right font-semibold;
+    @apply text-secondary-foreground w-24 shrink-0 font-semibold;
 }
 
 .remove {

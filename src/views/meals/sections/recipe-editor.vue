@@ -129,6 +129,7 @@ const moveStep = (index: number, by: number): void => {
 
 const newName = ref('');
 const newAmount = ref('');
+const newNameInput = ref<HTMLInputElement | null>(null);
 
 // Nobody buys 57 pieces of butter: a bare number this large was meant as grams.
 const looksLikeGrams = (amount: string): boolean => /^\d+$/.test(amount.trim()) && Number(amount) > 20;
@@ -295,17 +296,17 @@ const destroy = async (): Promise<void> => {
                     <ul v-if="recipeForm.ingredients.length > 0" class="ingredients">
                         <li v-for="(ingredient, index) in recipeForm.ingredients" :key="index">
                             <input
-                                v-model="ingredient.name"
-                                class="name"
-                                type="text"
-                                :aria-label="`Ingrediënt ${index + 1}`"
-                            />
-                            <input
                                 v-model="ingredient.amount"
                                 class="amount"
                                 type="text"
                                 placeholder="naar smaak"
                                 :aria-label="`Hoeveelheid van ${ingredient.name}`"
+                            />
+                            <input
+                                v-model="ingredient.name"
+                                class="name"
+                                type="text"
+                                :aria-label="`Ingrediënt ${index + 1}`"
                             />
                             <button
                                 type="button"
@@ -331,20 +332,21 @@ const destroy = async (): Promise<void> => {
                     </p>
                     <div class="add">
                         <input
-                            v-model="newName"
-                            class="name"
-                            type="text"
-                            placeholder="Ingrediënt"
-                            aria-label="Nieuw ingrediënt"
-                            enterkeyhint="next"
-                            @keydown.enter.prevent="addIngredient()"
-                        />
-                        <input
                             v-model="newAmount"
                             class="amount"
                             type="text"
                             placeholder="250 g"
                             aria-label="Hoeveelheid van het nieuwe ingrediënt"
+                            enterkeyhint="next"
+                            @keydown.enter.prevent="newNameInput?.focus()"
+                        />
+                        <input
+                            ref="newNameInput"
+                            v-model="newName"
+                            class="name"
+                            type="text"
+                            placeholder="gehakt"
+                            aria-label="Nieuw ingrediënt"
                             enterkeyhint="done"
                             @keydown.enter.prevent="addIngredient()"
                         />
