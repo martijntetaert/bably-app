@@ -43,6 +43,14 @@
         }
     }
 
+    .shopping-actions {
+        @apply flex items-center gap-2;
+
+        .finish {
+            @apply min-w-0 flex-1;
+        }
+    }
+
     .error {
         @apply text-destructive px-1.5 text-[0.8125rem];
     }

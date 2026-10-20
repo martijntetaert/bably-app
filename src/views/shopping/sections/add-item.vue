@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import ActionBarComponent from '@/components/action-bar-component.vue';
 import ButtonComponent from '@/components/button-component.vue';
 import FormComponent from '@/components/form/form-component.vue';
@@ -29,11 +29,18 @@ const name = ref('');
 const errors = ref<Record<string, string[]>>({});
 const isAdding = ref(false);
 const isFinishing = ref(false);
+const isAddingWhileShopping = ref(false);
 const input = ref<HTMLInputElement | null>(null);
 
-defineExpose({
-    focus: (): void => input.value?.focus(),
-});
+const showsForm = computed(() => !props.shopping || isAddingWhileShopping.value);
+
+// Focused within the tap itself, or a phone keeps its keyboard closed.
+const focus = (): void => {
+    isAddingWhileShopping.value = props.shopping;
+    void nextTick(() => input.value?.focus());
+};
+
+defineExpose({ focus });
 
 const { pendingCount, isOnline, flush } = useOfflineChecks();
 
@@ -82,8 +89,23 @@ watch(name, () => {
     highlighted.value = -1;
 });
 
+const closeWhileShopping = (): void => {
+    isAddingWhileShopping.value = false;
+};
+
+watch(() => props.shopping, closeWhileShopping);
+
+// Typed text survives a stray tap; only an empty field folds back to the finish button.
+const blur = (): void => {
+    isFocused.value = false;
+
+    if (name.value.trim() === '') {
+        closeWhileShopping();
+    }
+};
+
 // One product gets its row opened afterwards, so the quantity can be set; several at once
-// would mean a drawer per product.
+// would mean a drawer per product. In the store it only has to be on the list, quickly.
 const submit = async (fields: { name?: string; productIdentifier?: string }): Promise<void> => {
     if (isAdding.value) {
         return;
@@ -91,11 +113,12 @@ const submit = async (fields: { name?: string; productIdentifier?: string }): Pr
 
     isAdding.value = true;
     errors.value = {};
-    const single = isSeveral.value ? null : name.value.trim();
+    const single = isSeveral.value || props.shopping ? null : name.value.trim();
 
     try {
         const message = addedSummary(await shoppingApi.add(fields));
         name.value = '';
+        closeWhileShopping();
 
         if (single) {
             input.value?.blur();
@@ -166,7 +189,7 @@ const finishShopping = async (): Promise<void> => {
 <template>
     <section class="section-portal-shopping-add-item">
         <action-bar-component>
-            <template v-if="!shopping">
+            <template v-if="showsForm">
                 <ul
                     v-if="showsSuggestions"
                     id="product-suggestions"
@@ -220,10 +243,13 @@ const finishShopping = async (): Promise<void> => {
                         :aria-activedescendant="highlighted >= 0 ? `product-suggestion-${highlighted}` : undefined"
                         required
                         @focus="isFocused = true"
-                        @blur="isFocused = false"
+                        @blur="blur()"
                         @keydown.down.prevent="move(1)"
                         @keydown.up.prevent="move(-1)"
-                        @keydown.esc="isFocused = false"
+                        @keydown.esc="
+                            isFocused = false;
+                            closeWhileShopping();
+                        "
                     />
                     <button-component
                         icon="fa-solid fa-plus"
@@ -236,18 +262,26 @@ const finishShopping = async (): Promise<void> => {
                 <p v-if="error" class="error">
                     {{ error }}
                 </p>
-                <button-component class="start" icon="fa-solid fa-cart-shopping" @click="emit('startShopping')">
+                <button-component
+                    v-if="!shopping"
+                    class="start"
+                    icon="fa-solid fa-cart-shopping"
+                    @click="emit('startShopping')"
+                >
                     Ik begin met winkelen
                 </button-component>
             </template>
-            <button-component
-                v-else
-                variant="soft"
-                :disabled="isFinishing || isWaitingForNetwork"
-                @click="finishShopping()"
-            >
-                {{ isWaitingForNetwork ? 'Afronden zodra je weer bereik hebt' : 'Winkelen afronden' }}
-            </button-component>
+            <div v-else class="shopping-actions">
+                <button-component
+                    class="finish"
+                    variant="soft"
+                    :disabled="isFinishing || isWaitingForNetwork"
+                    @click="finishShopping()"
+                >
+                    {{ isWaitingForNetwork ? 'Afronden zodra je weer bereik hebt' : 'Winkelen afronden' }}
+                </button-component>
+                <button-component icon="fa-solid fa-plus" variant="secondary" label="Iets toevoegen" @click="focus()" />
+            </div>
         </action-bar-component>
     </section>
 </template>
