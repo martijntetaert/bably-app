@@ -60,6 +60,9 @@ const setChecked = (item: GroceryItemInterface, checked: boolean): void => {
     item.identifiers.forEach((identifier) => queueCheck(identifier, checked));
 };
 
+// Ticking needs a trip under way, because at finish a tick becomes a purchase. At home only a
+// tick left from before can be taken back.
+
 // In the store a tick moves the product out of sight into the basket, so a mistap gets a
 // way back and a buzz to say it landed.
 const tick = (item: GroceryItemInterface): void => {
@@ -231,9 +234,9 @@ const markAsStaple = (): Promise<void> =>
                         'is-missing': item.missing,
                     }"
                     clickable
-                    @click="tick(item)"
+                    @click="shopping ? tick(item) : openEditor(item)"
                 >
-                    <template #leading>
+                    <template v-if="shopping || item.checked" #leading>
                         <span @click.stop>
                             <checkbox-component
                                 :model-value="item.checked"
