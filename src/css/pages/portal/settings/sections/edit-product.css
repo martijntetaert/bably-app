@@ -1,0 +1,26 @@
+.section-portal-settings-edit-product {
+}
+
+.form {
+    @apply flex flex-col gap-4 pb-1;
+
+    .field {
+        @apply flex flex-col gap-1.75;
+    }
+
+    .error {
+        @apply text-destructive text-[0.8125rem];
+    }
+
+    .no-match {
+        @apply text-muted-foreground text-[0.8125rem];
+    }
+
+    .merge {
+        @apply text-faint text-xs;
+    }
+
+    .actions {
+        @apply flex flex-col gap-1;
+    }
+}

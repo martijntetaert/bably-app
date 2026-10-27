@@ -66,6 +66,9 @@ export const shopping = {
         request<void>('PATCH', `grocery-items/${identifier}/quantity`, { quantity, identifiers }),
     remove: (identifier: string) => request<void>('DELETE', `grocery-items/${identifier}`),
     products: () => request<ProductInterface[]>('GET', 'products'),
+    renameProduct: (identifier: string, name: string) => request<ProductInterface>('PATCH', `products/${identifier}`, { name }),
+    mergeProduct: (identifier: string, target: string) =>
+        request<ProductInterface>('POST', `products/${identifier}/merge`, { target }),
     suggestions: () => request<RegularGroceryInterface[]>('GET', 'products/suggestions'),
     stock: () => request<StockItemInterface[]>('GET', 'products/stock'),
     addStaple: (name: string) => request<void>('POST', 'products/staples', { name }),

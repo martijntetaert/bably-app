@@ -1,0 +1,19 @@
+.section-portal-settings-products {
+    @apply flex flex-col gap-2;
+
+    .hint {
+        @apply text-muted-foreground px-1.5 text-[0.78125rem] leading-normal;
+    }
+
+    .chevron {
+        @apply text-faint text-xs;
+    }
+
+    .more {
+        @apply text-accent;
+    }
+
+    .empty {
+        @apply text-muted-foreground px-1.5 text-[0.8125rem];
+    }
+}
