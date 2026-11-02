@@ -144,3 +144,8 @@
         @apply text-faint mt-4 px-6 text-center text-[0.78125rem] leading-normal;
     }
 }
+
+/* On an iPhone editing and removing sit behind a swipe on the row instead. */
+:root[data-platform='ios'] .section-portal-shopping-grocery-list :is(.edit-note, .remove) {
+    @apply hidden;
+}

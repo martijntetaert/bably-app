@@ -40,3 +40,46 @@
         @apply border-border/50 border-t;
     }
 }
+
+/* An iPhone row that slides: the actions sit behind it, inside the same rounded shape. */
+.swipe-row {
+    @apply rounded-[0.875rem] overflow-hidden;
+}
+
+.swipe-item {
+    --padding-start: 0;
+    --padding-end: 0;
+    --inner-padding-start: 0;
+    --inner-padding-end: 0;
+    --min-height: 0;
+    --background: transparent;
+    --background-activated: transparent;
+    --border-width: 0;
+    --inner-border-width: 0;
+
+    .component-list-row-component {
+        @apply w-full;
+    }
+}
+
+.swipe-action {
+    @apply text-[0.9375rem] font-semibold;
+
+    text-transform: none;
+    min-width: 5rem;
+
+    &.tone-primary {
+        --background: var(--primary);
+        --color: var(--primary-foreground);
+    }
+
+    &.tone-neutral {
+        --background: var(--muted-foreground);
+        --color: var(--background);
+    }
+
+    &.tone-destructive {
+        --background: var(--destructive);
+        --color: var(--destructive-foreground);
+    }
+}

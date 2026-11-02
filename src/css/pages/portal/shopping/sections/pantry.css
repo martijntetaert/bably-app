@@ -127,3 +127,8 @@
         @apply min-w-0 flex-1;
     }
 }
+
+/* On an iPhone removing sits behind a swipe on the row instead. */
+:root[data-platform='ios'] .section-portal-shopping-pantry .remove {
+    @apply hidden;
+}

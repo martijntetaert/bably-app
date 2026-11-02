@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import { DateTime } from 'luxon';
 import ListRowComponent from '@/components/list-row-component.vue';
 import CheckboxComponent from '@/components/checkbox-component.vue';
+import { SwipeActionInterface } from '@/interfaces/SwipeActionInterface';
 import { TaskInterface } from '@/interfaces/TaskInterface';
 import { UserInterface } from '@/interfaces/UserInterface';
 import { tasks as tasksApi } from '@/api/bably';
@@ -25,6 +26,15 @@ const { replaceTask } = useHouseholdTasks();
 const toast = useToast();
 
 // A tap on the name passes the chore to the next person, in the order of the household.
+const finishSwipeFor = (task: TaskInterface): SwipeActionInterface | undefined =>
+    task.can.update
+        ? {
+              label: task.finished ? 'Niet klaar' : 'Klaar',
+              tone: 'primary',
+              run: () => void setFinished(task, !task.finished),
+          }
+        : undefined;
+
 const passOn = async (task: TaskInterface): Promise<void> => {
     const members = props.members ?? [];
 
@@ -101,6 +111,7 @@ const meta = (task: TaskInterface): string => {
                         'is-finished': task.finished,
                         'is-overdue': task.overdue,
                     }"
+                    :leading-swipe-action="finishSwipeFor(task)"
                     @click="task.can.update && emit('edit', task)"
                 >
                     <template #leading>

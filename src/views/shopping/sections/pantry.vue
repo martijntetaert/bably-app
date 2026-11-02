@@ -10,6 +10,7 @@ import { shopping } from '@/api/bably';
 import { useToast } from '@/composables/useToast';
 import { ShoppingPart } from '@/views/shopping/composables/useShoppingData';
 import { StockItemInterface, StockLevel } from '@/interfaces/StockItemInterface';
+import { SwipeActionInterface } from '@/interfaces/SwipeActionInterface';
 
 defineOptions({ name: 'ShoppingPantry' });
 
@@ -109,6 +110,15 @@ const add = async (): Promise<void> => {
     }
 };
 
+const levelSwipeFor = (product: StockItemInterface): SwipeActionInterface =>
+    product.level === 'in'
+        ? { label: 'Op de lijst', tone: 'primary', run: () => setLevel(product, 'low') }
+        : { label: 'Weer genoeg', tone: 'primary', run: () => setLevel(product, 'in') };
+
+const removeSwipeFor = (product: StockItemInterface): SwipeActionInterface[] => [
+    { label: 'Niet bijhouden', tone: 'destructive', run: () => askToRemove(product) },
+];
+
 const askToRemove = (product: StockItemInterface): void => {
     productToRemove.value = product;
     isConfirmOpen.value = true;
@@ -152,6 +162,8 @@ const remove = async (): Promise<void> => {
                     :title="product.name"
                     :meta="meta(product)"
                     :class="`is-${product.level}`"
+                    :leading-swipe-action="levelSwipeFor(product)"
+                    :swipe-actions="removeSwipeFor(product)"
                 >
                     <template v-if="isProbablyLow(product)" #trailing>
                         <button type="button" class="ask still-enough" @click="stillEnough(product)">Nog genoeg</button>

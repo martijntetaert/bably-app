@@ -12,6 +12,7 @@ import { useOfflineChecks } from '@/views/shopping/composables/useOfflineChecks'
 import { ShoppingPart } from '@/views/shopping/composables/useShoppingData';
 import { GroceryGroupInterface } from '@/interfaces/GroceryGroupInterface';
 import { GroceryItemInterface } from '@/interfaces/GroceryItemInterface';
+import { SwipeActionInterface } from '@/interfaces/SwipeActionInterface';
 import { ShoppingTripInterface } from '@/interfaces/ShoppingTripInterface';
 
 const props = defineProps<{
@@ -172,6 +173,20 @@ const editAdded = async (typed: string): Promise<void> => {
 
 defineExpose({ editAdded });
 
+const swipeActionsFor = (item: GroceryItemInterface): SwipeActionInterface[] =>
+    props.shopping
+        ? [
+              {
+                  label: item.missing ? 'Toch gevonden' : 'Niet gevonden',
+                  tone: 'neutral',
+                  run: () => setMissing(item, !item.missing),
+              },
+          ]
+        : [
+              { label: 'Aanpassen', tone: 'neutral', run: () => openEditor(item) },
+              { label: 'Van de lijst', tone: 'destructive', run: () => askToRemove(item) },
+          ];
+
 const askToRemove = (item: GroceryItemInterface): void => {
     itemToRemove.value = item;
     isConfirmOpen.value = true;
@@ -234,6 +249,7 @@ const markAsStaple = (): Promise<void> =>
                         'is-missing': item.missing,
                     }"
                     clickable
+                    :swipe-actions="swipeActionsFor(item)"
                     @click="shopping ? tick(item) : openEditor(item)"
                 >
                     <template v-if="shopping || item.checked" #leading>
