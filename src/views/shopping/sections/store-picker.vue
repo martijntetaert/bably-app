@@ -76,8 +76,26 @@ const routeMeta = computed(() => {
     }.`;
 });
 
+// On iOS a position asked while the permission question is still open never resolves, so
+// the permission is settled first.
+const mayLocate = async (): Promise<boolean> => {
+    let permissions = await Geolocation.checkPermissions();
+
+    if (permissions.location.startsWith('prompt')) {
+        permissions = await Geolocation.requestPermissions();
+    }
+
+    return permissions.location === 'granted' || permissions.coarseLocation === 'granted';
+};
+
 const locate = async (): Promise<void> => {
     try {
+        if (!(await mayLocate())) {
+            step.value = 'unavailable';
+
+            return;
+        }
+
         const { coords } = await Geolocation.getCurrentPosition({
             enableHighAccuracy: true,
             timeout: 10000,
