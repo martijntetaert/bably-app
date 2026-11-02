@@ -10,9 +10,10 @@ import { defineConfig, type Plugin } from 'vite';
 
 export default defineConfig({
     // Registering for pushes without the Firebase config crashes the app natively, so the
-    // build only offers pushes when android/app/google-services.json is there.
+    // build only offers pushes on a platform whose Firebase config file is there.
     define: {
-        __HAS_FIREBASE__: JSON.stringify(fs.existsSync(path.resolve(__dirname, 'android/app/google-services.json'))),
+        __HAS_FIREBASE_ANDROID__: JSON.stringify(fs.existsSync(path.resolve(__dirname, 'android/app/google-services.json'))),
+        __HAS_FIREBASE_IOS__: JSON.stringify(fs.existsSync(path.resolve(__dirname, 'ios/App/App/GoogleService-Info.plist'))),
     },
     plugins: [tailwindReferencePlugin() as unknown as Plugin, tailwindcss(), vue(), legacy()],
     resolve: {

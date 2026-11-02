@@ -29,7 +29,8 @@ export function appPathFor(portalUrl: string): string {
 let listening = false;
 
 export function usePush() {
-    const isAvailable = Capacitor.isNativePlatform() && __HAS_FIREBASE__;
+    const platform = Capacitor.getPlatform();
+    const isAvailable = (platform === 'android' && __HAS_FIREBASE_ANDROID__) || (platform === 'ios' && __HAS_FIREBASE_IOS__);
 
     const listen = async (): Promise<void> => {
         if (listening) {
@@ -73,15 +74,18 @@ export function usePush() {
 
         await Preferences.remove({ key: OPT_OUT_KEY });
         await listen();
-        await PushNotifications.deleteChannel({ id: 'default' }).catch(() => undefined);
-        await PushNotifications.createChannel({
-            id: 'household',
-            name: 'Huishouden',
-            description: 'Wie gaat winkelen, wat er nog bij moet en je taken van de dag',
-            importance: 4,
-            visibility: 1,
-            vibration: true,
-        });
+
+        if (platform === 'android') {
+            await PushNotifications.deleteChannel({ id: 'default' }).catch(() => undefined);
+            await PushNotifications.createChannel({
+                id: 'household',
+                name: 'Huishouden',
+                description: 'Wie gaat winkelen, wat er nog bij moet en je taken van de dag',
+                importance: 4,
+                visibility: 1,
+                vibration: true,
+            });
+        }
 
         const { receive } = await PushNotifications.requestPermissions();
 
