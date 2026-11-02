@@ -1,5 +1,6 @@
 import { onBeforeUnmount, watch, type Ref } from 'vue';
 import { Capacitor, registerPlugin, type PluginListenerHandle } from '@capacitor/core';
+import { Keyboard } from '@capacitor/keyboard';
 
 interface NativeTab {
     id: string;
@@ -20,20 +21,36 @@ export const NativeTabBar = registerPlugin<NativeTabBarPlugin>('NativeTabBar');
 
 let isOnTabs = false;
 let openOverlays = 0;
+let isKeyboardOpen = false;
 let height = 0;
 
 /**
  * The bar lies over the web view, so it steps aside for whatever covers the screen: a page
- * outside the tabs, a sheet or a dialog. While it shows, pages keep room for it at the bottom.
+ * outside the tabs, a sheet, a dialog or the keyboard. While it shows, pages keep room for it
+ * at the bottom; under the keyboard a page's bottom bar rests on the keys instead.
  */
 const applyVisibility = (): void => {
-    const isVisible = isOnTabs && openOverlays === 0;
+    const isVisible = isOnTabs && openOverlays === 0 && !isKeyboardOpen;
+    const room = isOnTabs && !isKeyboardOpen ? height : 0;
 
-    document.documentElement.style.setProperty('--native-tab-bar-height', isOnTabs ? `${height}px` : '0px');
+    document.documentElement.style.setProperty('--native-tab-bar-height', `${room}px`);
     void NativeTabBar.setVisible({ visible: isVisible }).catch(() => undefined);
 };
 
+const followKeyboard = (isOpen: boolean): void => {
+    isKeyboardOpen = isOpen;
+    applyVisibility();
+};
+
+let isFollowingKeyboard = false;
+
 export const configureNativeTabBar = async (tabs: NativeTab[], selected?: string): Promise<void> => {
+    if (!isFollowingKeyboard) {
+        isFollowingKeyboard = true;
+        await Keyboard.addListener('keyboardWillShow', () => followKeyboard(true));
+        await Keyboard.addListener('keyboardWillHide', () => followKeyboard(false));
+    }
+
     height = (await NativeTabBar.configure({ tabs, selected })).height;
     applyVisibility();
 };
