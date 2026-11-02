@@ -12,7 +12,7 @@ import { ApiError } from '@/api/client';
 import { useToast } from '@/composables/useToast';
 import { IngredientLineInterface } from '@/interfaces/IngredientLineInterface';
 import { RecipeDraftInterface } from '@/interfaces/RecipeInterface';
-import { pickPhoto } from '@/views/meals/lib/photo';
+import { pickPhoto, PhotoSource } from '@/views/meals/lib/photo';
 
 const props = defineProps<{
     draft: RecipeDraftInterface | null;
@@ -79,12 +79,12 @@ const forgetChosenPhoto = (): void => {
 
 onBeforeUnmount(forgetChosenPhoto);
 
-const choosePhoto = async (): Promise<void> => {
+const choosePhoto = async (source: PhotoSource): Promise<void> => {
     photoError.value = '';
     isProcessingPhoto.value = true;
 
     try {
-        const photo = await pickPhoto(PHOTO_LONGEST_SIDE);
+        const photo = await pickPhoto(source, PHOTO_LONGEST_SIDE);
 
         if (photo === null) {
             return;
@@ -250,13 +250,32 @@ const destroy = async (): Promise<void> => {
                 <div class="photo" :class="{ 'has-photo': photoPreview }">
                     <img v-if="photoPreview" :src="photoPreview" :alt="`Foto van ${recipeForm.name || 'het recept'}`" />
                     <div class="photo-actions">
-                        <button type="button" class="photo-button" :disabled="isProcessingPhoto" @click="choosePhoto()">
+                        <button
+                            type="button"
+                            class="photo-button"
+                            :disabled="isProcessingPhoto"
+                            @click="choosePhoto('camera')"
+                        >
                             <i class="fa-solid fa-camera" aria-hidden="true"></i>
-                            {{ photoPreview ? 'Andere foto' : 'Foto toevoegen' }}
+                            Foto nemen
                         </button>
-                        <button v-if="photoPreview" type="button" class="photo-button" @click="removePhoto()">
+                        <button
+                            type="button"
+                            class="photo-button"
+                            :disabled="isProcessingPhoto"
+                            @click="choosePhoto('gallery')"
+                        >
+                            <i class="fa-solid fa-image" aria-hidden="true"></i>
+                            Foto kiezen
+                        </button>
+                        <button
+                            v-if="photoPreview"
+                            type="button"
+                            class="photo-button"
+                            aria-label="Foto weghalen"
+                            @click="removePhoto()"
+                        >
                             <i class="fa-solid fa-trash" aria-hidden="true"></i>
-                            Foto weghalen
                         </button>
                     </div>
                 </div>

@@ -1,23 +1,6 @@
 import { Camera, MediaTypeSelection } from '@capacitor/camera';
-import { actionSheetController } from '@ionic/vue';
 
-type PhotoSource = 'camera' | 'gallery';
-
-const askSource = async (): Promise<PhotoSource | null> => {
-    const sheet = await actionSheetController.create({
-        header: 'Foto van het recept',
-        buttons: [
-            { text: 'Foto maken', data: 'camera' },
-            { text: "Kies uit je foto's", data: 'gallery' },
-            { text: 'Annuleren', role: 'cancel' },
-        ],
-    });
-    await sheet.present();
-
-    const { data, role } = await sheet.onDidDismiss<PhotoSource>();
-
-    return role === 'cancel' || role === 'backdrop' || data === undefined ? null : data;
-};
+export type PhotoSource = 'camera' | 'gallery';
 
 const isCancelled = (error: unknown): boolean => error instanceof Error && /cancel/i.test(error.message);
 
@@ -44,13 +27,7 @@ export const resizePhoto = async (photo: Blob, longestSide: number): Promise<Blo
 /**
  * Lets the cook take or choose a photo; null when they changed their mind on the way.
  */
-export const pickPhoto = async (longestSide: number): Promise<Blob | null> => {
-    const source = await askSource();
-
-    if (source === null) {
-        return null;
-    }
-
+export const pickPhoto = async (source: PhotoSource, longestSide: number): Promise<Blob | null> => {
     try {
         const result =
             source === 'camera'
