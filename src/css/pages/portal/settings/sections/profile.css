@@ -67,3 +67,22 @@
         @apply flex flex-col gap-1;
     }
 }
+
+/* On an iPhone the photo sits as in Contacts: centred, with its actions underneath. */
+:root[data-platform='ios'] .form {
+    .photo {
+        @apply flex-col gap-3;
+    }
+
+    .photo-actions {
+        @apply flex-row flex-wrap items-center justify-center gap-2;
+    }
+
+    .choose {
+        @apply bg-accent-soft text-accent-strong rounded-full px-3.5 py-1.5 text-[0.875rem] no-underline;
+    }
+
+    .remove {
+        @apply text-destructive w-full text-center text-[0.875rem];
+    }
+}
