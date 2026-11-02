@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { DateTime } from 'luxon';
 import AvatarComponent from '@/components/avatar-component.vue';
 import PageHeaderComponent from '@/components/page-header-component.vue';
+import PlusTeaserComponent from '@/components/plus-teaser-component.vue';
 import PortletComponent from '@/components/portlet-component.vue';
 import SectionLabelComponent from '@/components/section-label-component.vue';
 import HouseholdNavigation from '@/views/household/sections/household-navigation.vue';
 import { household } from '@/api/bably';
+import { usePlus } from '@/composables/usePlus';
 import { useToast } from '@/composables/useToast';
 import { now } from '@/composables/useDateTime';
 import { InsightsInterface } from '@/interfaces/HouseholdOverviewInterface';
 
 const toast = useToast();
+const { hasPlus } = usePlus();
 
 const result = ref<InsightsInterface | null>(null);
 const month = ref(now().toFormat('yyyy-MM'));
@@ -23,6 +26,10 @@ const shown = computed(() => DateTime.fromFormat(month.value, 'yyyy-MM'));
 const title = computed(() => shown.value.setLocale('nl-BE').toFormat('LLLL yyyy'));
 
 const load = async (): Promise<void> => {
+    if (!hasPlus.value) {
+        return;
+    }
+
     try {
         result.value = await household.insights(month.value);
     } catch (error) {
@@ -42,6 +49,8 @@ const mostTasks = computed(() => Math.max(1, ...(insights.value?.tasks.map((memb
 const times = (count: number): string => `${count} keer`;
 
 defineExpose({ refresh: load });
+
+watch(hasPlus, (isPlus) => isPlus && void load());
 
 void load();
 </script>
@@ -69,7 +78,14 @@ void load();
         </page-header-component>
         <household-navigation></household-navigation>
 
-        <div v-if="!insights" class="skeleton">
+        <plus-teaser-component
+            v-if="!hasPlus"
+            icon="fa-solid fa-chart-simple"
+            title="Overzicht is Bably Plus"
+            text="Zie per maand wie welke taken afwerkte, wat jullie kookten en hoe vaak er boodschappen werden gedaan."
+        ></plus-teaser-component>
+
+        <div v-else-if="!insights" class="skeleton">
             <div v-for="card in 4" :key="card" class="card"></div>
         </div>
 

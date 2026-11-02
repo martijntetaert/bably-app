@@ -8,10 +8,11 @@ import InputComponent from '@/components/form/input-component.vue';
 import SectionLabelComponent from '@/components/section-label-component.vue';
 import { shopping, stores as storesApi } from '@/api/bably';
 import { ApiError } from '@/api/client';
+import { usePlus } from '@/composables/usePlus';
 import { useToast } from '@/composables/useToast';
 import { StoreInterface } from '@/interfaces/StoreInterface';
 
-type Step = 'locating' | 'known' | 'unknown' | 'manual' | 'unavailable';
+type Step = 'locating' | 'known' | 'unknown' | 'manual' | 'unavailable' | 'choose';
 
 const props = defineProps<{
     stores: StoreInterface[];
@@ -24,6 +25,7 @@ const emit = defineEmits<{
 const open = defineModel<boolean>('open', { required: true });
 
 const toast = useToast();
+const { hasPlus } = usePlus();
 const step = ref<Step>('locating');
 const recognisedStore = ref<StoreInterface | null>(null);
 const isShowingOtherStores = ref(false);
@@ -59,10 +61,14 @@ const description = computed(() => {
             return 'Bably kent deze plek nog niet. Geef ze een naam en ze wordt volgende keer herkend.';
         case 'manual':
             return 'Zonder locatie: je kiest deze winkel zelf als je begint.';
+        case 'choose':
+            return 'Kies de winkel waar je bent.';
         default:
             return 'Je locatie is niet beschikbaar. Kies de winkel zelf.';
     }
 });
+
+const isPicking = computed(() => step.value === 'unavailable' || step.value === 'choose');
 
 const routeMeta = computed(() => {
     const store = recognisedStore.value;
@@ -126,7 +132,13 @@ watch(open, (isOpen) => {
     place.value = '';
     position.value = null;
     errors.value = {};
-    void locate();
+
+    // Recognising the store is Plus; without it you simply pick one.
+    if (hasPlus.value) {
+        void locate();
+    } else {
+        step.value = 'choose';
+    }
 });
 
 const startIn = async (store: StoreInterface): Promise<void> => {
@@ -228,7 +240,7 @@ const otherStores = computed(() =>
 
                 <template v-if="step !== 'locating'">
                     <button
-                        v-if="step !== 'unavailable'"
+                        v-if="!isPicking"
                         type="button"
                         class="toggle-other"
                         :aria-expanded="isShowingOtherStores"
@@ -236,7 +248,7 @@ const otherStores = computed(() =>
                     >
                         {{ isShowingOtherStores ? 'Andere winkels verbergen' : 'Ik sta in een andere winkel' }}
                     </button>
-                    <div v-if="isShowingOtherStores || step === 'unavailable'" class="other-stores">
+                    <div v-if="isShowingOtherStores || isPicking" class="other-stores">
                         <button
                             v-for="store in otherStores"
                             :key="store.identifier"

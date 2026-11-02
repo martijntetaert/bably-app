@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue';
 import { Preferences } from '@capacitor/preferences';
 import { shopping, stores as storesApi } from '@/api/bably';
+import { useSession } from '@/composables/useSession';
 import { ProductInterface } from '@/interfaces/ProductInterface';
 import { RegularGroceryInterface } from '@/interfaces/RegularGroceryInterface';
 import { ShoppingListInterface } from '@/interfaces/ShoppingListInterface';
@@ -37,8 +38,9 @@ export function useShoppingData() {
         suggestions: async () => {
             suggestions.value = await shopping.suggestions();
         },
+        // The pantry is Plus; without it the list must still load.
         stock: async () => {
-            stock.value = await shopping.stock();
+            stock.value = useSession().hasPlus.value ? await shopping.stock() : [];
         },
         stores: async () => {
             stores.value = await storesApi.list();

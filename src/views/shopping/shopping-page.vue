@@ -3,8 +3,10 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { onIonViewDidEnter, onIonViewWillEnter, onIonViewWillLeave } from '@ionic/vue';
 import { ApiError } from '@/api/client';
+import { usePlus } from '@/composables/usePlus';
 import { useToast } from '@/composables/useToast';
 import { useKeepAwake } from '@/composables/useKeepAwake';
+import PlusTeaserComponent from '@/components/plus-teaser-component.vue';
 import PortalPageComponent from '@/components/portal-page-component.vue';
 import SegmentedControlComponent from '@/components/segmented-control-component.vue';
 import ShoppingHeader from '@/views/shopping/sections/shopping-header.vue';
@@ -68,6 +70,14 @@ const subtitle = computed(() => {
 });
 
 const progress = computed(() => (activeTrip.value ? { done: checkedCount.value, total: items.value.length } : null));
+
+const { hasPlus } = usePlus();
+
+watch(hasPlus, (isPlus) => {
+    if (isPlus) {
+        void load(['stock'], true);
+    }
+});
 
 const load = async (parts?: ShoppingPart[], quietly = false): Promise<void> => {
     try {
@@ -161,7 +171,13 @@ onIonViewWillLeave(() => {
                     :trip="activeTrip"
                     @changed="load"
                 ></grocery-list>
-                <pantry v-else v-model:stock="stock" @changed="load"></pantry>
+                <pantry v-else-if="hasPlus" v-model:stock="stock" @changed="load"></pantry>
+                <plus-teaser-component
+                    v-else
+                    icon="fa-solid fa-box-open"
+                    title="Voorraad is Bably Plus"
+                    text="Houd bij wat je in huis hebt. Wat bijna op is, zet Bably vanzelf op de lijst."
+                ></plus-teaser-component>
             </template>
             <add-item
                 ref="addItem"

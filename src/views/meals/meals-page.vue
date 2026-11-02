@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue';
 import { DateTime } from 'luxon';
 import { onIonViewWillEnter, onIonViewWillLeave } from '@ionic/vue';
 import { household, meals, recipes as recipesApi } from '@/api/bably';
+import { usePlus } from '@/composables/usePlus';
 import { useToast } from '@/composables/useToast';
 import PortalPageComponent from '@/components/portal-page-component.vue';
 import SegmentedControlComponent from '@/components/segmented-control-component.vue';
@@ -23,6 +24,7 @@ import CookMode from '@/views/meals/sections/cook-mode.vue';
 type Tab = 'menu' | 'recipes';
 
 const toast = useToast();
+const { hasPlus, showPaywall } = usePlus();
 
 const tabs: { value: Tab; label: string }[] = [
     { value: 'menu', label: 'Weekmenu' },
@@ -147,7 +149,14 @@ const editRecipeByIdentifier = (identifier: string): void => {
     }
 };
 
+// Cook mode is Plus; it runs on the phone alone, so the app is what keeps it closed.
 const cook = (dish: CookingInterface): void => {
+    if (!hasPlus.value) {
+        showPaywall();
+
+        return;
+    }
+
     cooking.value = dish;
     isMealOpen.value = false;
     isEditorOpen.value = false;

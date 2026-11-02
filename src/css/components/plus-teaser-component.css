@@ -1,0 +1,15 @@
+.component-plus-teaser-component {
+    @apply rounded-card bg-card flex flex-col items-center gap-2 px-6 py-7 text-center;
+
+    .icon {
+        @apply bg-accent-soft text-accent-strong mb-1 flex size-12 items-center justify-center rounded-full text-lg;
+    }
+
+    .title {
+        @apply font-display text-foreground text-[1.1875rem] font-bold;
+    }
+
+    .text {
+        @apply text-muted-foreground mb-2 text-[0.875rem] leading-normal;
+    }
+}
