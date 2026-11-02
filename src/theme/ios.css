@@ -35,12 +35,9 @@
         }
     }
 
-    /* A page's bottom bar lies still above the tab bar, as an iOS toolbar does, instead of
-       bouncing along with the page; the .ion-page around it is what it is fixed to. */
+    /* The bottom bar is moved out of the page, so it has no page padding to bleed over. */
     .component-action-bar-component.component-action-bar-component {
-        @apply fixed inset-x-0 z-10 m-0;
-
-        bottom: var(--native-tab-bar-height, 0px);
+        @apply m-0;
     }
 
     /* Pages have no navigation bar, so the spinner would hide behind the Dynamic Island. */

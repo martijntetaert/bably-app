@@ -17,3 +17,14 @@
         @apply shrink-0;
     }
 }
+
+/* On an iPhone the large title shrinks towards the top left while the page scrolls up, until
+   it is the size of the bar's title (--title-min-scale) and the bar takes over; it swells a
+   little while the page is pulled down. The page sets the variables as the finger moves. */
+:root[data-platform='ios'] .component-page-header-component .title {
+    transform-origin: left top;
+    transform: scale(
+        calc(1 - var(--title-progress, 0) * (1 - var(--title-min-scale, 0.63)) + var(--title-stretch, 0) * 0.08)
+    );
+    opacity: clamp(0, calc((1 - var(--title-progress, 0)) * 50), 1);
+}

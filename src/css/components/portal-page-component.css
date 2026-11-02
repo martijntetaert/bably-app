@@ -14,3 +14,36 @@
         @apply sticky bottom-0 z-10 px-[calc(0.875rem+env(safe-area-inset-right))];
     }
 }
+
+/* The iPhone's navigation bar gathers its glass as the page scrolls (--title-progress from 0
+   to 1). Its title sits exactly where the shrinking large title ends up, in the same font, so
+   the hand-over at the end is invisible. */
+.compact-bar {
+    @apply pointer-events-none absolute inset-x-0 top-0 z-20 flex items-end pb-2.5;
+
+    height: calc(env(safe-area-inset-top) + 2.75rem);
+    padding-left: calc(0.875rem + env(safe-area-inset-left));
+    padding-right: calc(0.875rem + env(safe-area-inset-right));
+    background-color: color-mix(in oklab, var(--background) calc(var(--title-progress, 0) * 72%), transparent);
+    box-shadow: 0 0.5px 0 color-mix(in oklab, var(--border) calc(var(--title-progress, 0) * 100%), transparent);
+    backdrop-filter: saturate(180%) blur(calc(var(--title-progress, 0) * 20px));
+    -webkit-backdrop-filter: saturate(180%) blur(calc(var(--title-progress, 0) * 20px));
+
+    .compact-title {
+        @apply font-display text-foreground truncate text-[1.0625rem] font-bold tracking-[-0.028rem];
+
+        opacity: clamp(0, calc((var(--title-progress, 0) - 0.98) * 50), 1);
+    }
+}
+
+/* Outside the scrolling content, so a page's bottom bar lies still. Its background runs on
+   behind the floating tab bar, so nothing scrolls through the gap between the two. */
+.fixed-bottom-bar {
+    @apply bg-background absolute inset-x-0 bottom-0 z-10;
+
+    padding-bottom: var(--native-tab-bar-height, 0px);
+
+    &:not(:has(.component-action-bar-component)) {
+        @apply hidden;
+    }
+}
