@@ -26,9 +26,18 @@
     .component-portal-page-component {
         padding-bottom: var(--native-tab-bar-height, 0px);
 
+        /* iOS only bounces a page that can scroll, and pulling to refresh rides on that
+           bounce, so even a short page is a pixel taller than the screen. */
+        min-height: calc(100% + 1px);
+
         .bottom {
             bottom: var(--native-tab-bar-height, 0px);
         }
+    }
+
+    /* Pages have no navigation bar, so the spinner would hide behind the Dynamic Island. */
+    ion-refresher {
+        top: env(safe-area-inset-top);
     }
 
     /* Sheets focus their first button on opening; only a keyboard user needs to see that. */
