@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useCloseOnBack } from '@/composables/useCloseOnBack';
+import { hideNativeTabBarWhile } from '@/lib/nativeTabBar';
 import {
     DrawerContent,
     DrawerDescription,
@@ -20,6 +21,7 @@ const props = defineProps<{
 const open = defineModel<boolean>('open', { required: true });
 
 useCloseOnBack(open);
+hideNativeTabBarWhile(open);
 
 const descriptionAttributes = computed(() =>
     props.description ? {} : { 'aria-describedby': undefined },

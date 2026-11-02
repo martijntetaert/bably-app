@@ -18,6 +18,19 @@
         user-select: text;
     }
 
+    ion-tab-bar.is-replaced-natively {
+        display: none;
+    }
+
+    /* The native tab bar floats over the web view, so the page scrolls on underneath it. */
+    .component-portal-page-component {
+        padding-bottom: var(--native-tab-bar-height, 0px);
+
+        .bottom {
+            bottom: var(--native-tab-bar-height, 0px);
+        }
+    }
+
     /* Sheets focus their first button on opening; only a keyboard user needs to see that. */
     :is(a, button, [role='button']):focus-visible {
         outline: none;

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useCloseOnBack } from '@/composables/useCloseOnBack';
+import { hideNativeTabBarWhile } from '@/lib/nativeTabBar';
 import {
     DialogClose,
     DialogContent,
@@ -24,6 +25,7 @@ const props = defineProps<{
 const open = defineModel<boolean>('open', { required: true });
 
 useCloseOnBack(open);
+hideNativeTabBarWhile(open);
 
 const current = ref(0);
 const stepCard = useTemplateRef<HTMLElement>('stepCard');
