@@ -30,7 +30,7 @@ export function trackKeyboardInset(): void {
         if (
             field instanceof HTMLElement &&
             field.matches('input, textarea, select') &&
-            field.closest('.drawer-content')
+            field.closest('.drawer-content, .drawer-sheet')
         ) {
             field.scrollIntoView({ block: 'nearest' });
         }
