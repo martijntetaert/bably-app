@@ -9,6 +9,7 @@ import { ProductInterface } from '@/interfaces/ProductInterface';
 import { StoreInterface } from '@/interfaces/StoreInterface';
 import SettingsHeader from '@/views/settings/sections/settings-header.vue';
 import Integrations from '@/views/settings/sections/integrations.vue';
+import Plus from '@/views/settings/sections/plus.vue';
 import Stores from '@/views/settings/sections/stores.vue';
 import Products from '@/views/settings/sections/products.vue';
 import Notifications from '@/views/settings/sections/notifications.vue';
@@ -64,6 +65,7 @@ onIonViewWillEnter(reload);
                     :profile="session.profile.value.user"
                     :is-last-member="session.profile.value.isLastMember"
                 ></profile>
+                <plus v-if="session.profile.value.plus" :plus="session.profile.value.plus"></plus>
                 <notifications :wants-task-reminder="session.profile.value.wantsTaskReminder"></notifications>
                 <integrations :calendar-url="session.profile.value.calendarUrl"></integrations>
                 <stores :stores="storeList" @changed="reloadStores()"></stores>

@@ -1,0 +1,9 @@
+.section-portal-settings-plus {
+    .badge {
+        @apply bg-accent-soft text-accent-strong flex size-8.5 items-center justify-center rounded-[0.6875rem];
+    }
+
+    .chevron {
+        @apply text-faint text-xs;
+    }
+}

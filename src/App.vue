@@ -6,8 +6,10 @@ import { App as CapacitorApp } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { StatusBar, Style } from '@capacitor/status-bar';
-import { whenUnauthenticated } from '@/api/client';
+import { whenPlusRequired, whenUnauthenticated } from '@/api/client';
 import { profile } from '@/api/bably';
+import PlusPaywallComponent from '@/components/plus-paywall-component.vue';
+import { usePlus } from '@/composables/usePlus';
 import { usePush } from '@/composables/usePush';
 import { useSession } from '@/composables/useSession';
 import router from '@/router';
@@ -21,10 +23,17 @@ const toastOffset = {
 
 const session = useSession();
 const push = usePush();
+const plus = usePlus();
 
 whenUnauthenticated(async () => {
     await session.forget();
     await router.replace('/login');
+});
+
+// The free month or a subscription may have run out since the profile was loaded.
+whenPlusRequired(() => {
+    void session.refreshProfile().catch(() => undefined);
+    plus.showPaywall();
 });
 
 /**
@@ -60,6 +69,7 @@ onMounted(async () => {
 <template>
     <ion-app>
         <ion-router-outlet />
+        <plus-paywall-component v-model:open="plus.isPaywallOpen.value" />
         <Toaster
             position="bottom-center"
             :offset="toastOffset"

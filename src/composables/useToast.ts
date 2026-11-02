@@ -14,6 +14,10 @@ export function useToast() {
      * Validation errors belong next to their field; everything else ends up here.
      */
     const failure = (error: unknown): void => {
+        if (error instanceof ApiError && error.isPlusRequired) {
+            return;
+        }
+
         toast.error(error instanceof ApiError ? error.message : 'Er ging iets mis. Probeer het opnieuw.');
     };
 

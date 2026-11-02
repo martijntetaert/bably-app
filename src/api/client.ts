@@ -9,8 +9,16 @@ export class ApiError extends Error {
         public status: number,
         message: string,
         public errors: Record<string, string[]> = {},
+        public code: string | null = null,
     ) {
         super(message);
+    }
+
+    /**
+     * The household has no Plus for this; the paywall explains it, so no toast is needed.
+     */
+    get isPlusRequired(): boolean {
+        return this.status === 402 && this.code === 'plus_required';
     }
 
     firstError(field: string): string | null {
@@ -23,9 +31,11 @@ export class ApiError extends Error {
 }
 
 type Unauthenticated = () => void;
+type PlusRequired = () => void;
 
 let token: string | null = null;
 let onUnauthenticated: Unauthenticated = () => {};
+let onPlusRequired: PlusRequired = () => {};
 
 export async function loadToken(): Promise<string | null> {
     token = (await Preferences.get({ key: TOKEN_KEY })).value;
@@ -45,6 +55,10 @@ export async function storeToken(value: string | null): Promise<void> {
 
 export function whenUnauthenticated(callback: Unauthenticated): void {
     onUnauthenticated = callback;
+}
+
+export function whenPlusRequired(callback: PlusRequired): void {
+    onPlusRequired = callback;
 }
 
 type Body = Record<string, unknown> | FormData | undefined;
@@ -87,7 +101,18 @@ export async function request<T>(method: 'GET' | 'POST' | 'PATCH' | 'DELETE', pa
         onUnauthenticated();
     }
 
-    throw new ApiError(response.status, payload.message ?? 'Er ging iets mis. Probeer het opnieuw.', payload.errors ?? {});
+    const error = new ApiError(
+        response.status,
+        payload.message ?? 'Er ging iets mis. Probeer het opnieuw.',
+        payload.errors ?? {},
+        payload.code ?? null,
+    );
+
+    if (error.isPlusRequired) {
+        onPlusRequired();
+    }
+
+    throw error;
 }
 
 /**

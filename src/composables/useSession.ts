@@ -13,6 +13,8 @@ export function useSession() {
     const isSignedIn = computed(() => token.value !== null);
     const isVerified = computed(() => profile.value?.emailVerified === true);
     const user = computed(() => profile.value?.user ?? null);
+    // A server from before Plus sends no plus at all.
+    const hasPlus = computed(() => profile.value?.plus?.active === true);
 
     const restore = async (): Promise<void> => {
         if (restored.value) {
@@ -58,5 +60,5 @@ export function useSession() {
         await forget();
     };
 
-    return { token, profile, user, isSignedIn, isVerified, restore, refreshProfile, signIn, register, signOut, forget };
+    return { token, profile, user, hasPlus, isSignedIn, isVerified, restore, refreshProfile, signIn, register, signOut, forget };
 }

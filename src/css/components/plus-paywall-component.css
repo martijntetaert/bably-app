@@ -1,0 +1,39 @@
+.component-plus-paywall-component {
+    @apply contents;
+}
+
+.paywall {
+    @apply flex flex-col gap-4 pb-1;
+
+    .perks {
+        @apply flex flex-col gap-3.5;
+
+        li {
+            @apply flex items-start gap-3;
+        }
+
+        .perk-icon {
+            @apply bg-accent-soft text-accent-strong flex size-9 shrink-0 items-center justify-center rounded-[0.6875rem];
+        }
+
+        .perk-text {
+            @apply flex flex-col gap-0.5 text-[0.875rem];
+
+            strong {
+                @apply text-foreground font-semibold;
+            }
+
+            span {
+                @apply text-muted-foreground;
+            }
+        }
+    }
+
+    .offers {
+        @apply flex flex-col gap-2.5;
+    }
+
+    .note {
+        @apply text-muted-foreground text-center text-[0.875rem];
+    }
+}
