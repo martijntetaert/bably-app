@@ -24,7 +24,7 @@
 
     /* The native tab bar floats over the web view, so the page scrolls on underneath it. */
     .component-portal-page-component {
-        padding-bottom: var(--native-tab-bar-height, 0px);
+        padding-bottom: calc(var(--native-tab-bar-height, 0px) + var(--action-bar-height, 0px));
 
         /* iOS only bounces a page that can scroll, and pulling to refresh rides on that
            bounce, so even a short page is a pixel taller than the screen. */
@@ -33,6 +33,14 @@
         .bottom {
             bottom: var(--native-tab-bar-height, 0px);
         }
+    }
+
+    /* A page's bottom bar lies still above the tab bar, as an iOS toolbar does, instead of
+       bouncing along with the page; the .ion-page around it is what it is fixed to. */
+    .component-action-bar-component.component-action-bar-component {
+        @apply fixed inset-x-0 z-10 m-0;
+
+        bottom: var(--native-tab-bar-height, 0px);
     }
 
     /* Pages have no navigation bar, so the spinner would hide behind the Dynamic Island. */
