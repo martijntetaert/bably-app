@@ -1,0 +1,80 @@
+@reference '@css/app.css';
+
+/* The iPhone follows Apple's metrics and behaviour: the system font for reading, a glass tab
+   bar, inset grouped lists and press states. Colours stay Bably's; only Android keeps the
+   look of the web portal. */
+
+:root[data-platform='ios'] {
+    --ion-font-family: -apple-system, system-ui, sans-serif;
+
+    body {
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+    }
+
+    :is(input, textarea, [contenteditable='true']) {
+        -webkit-user-select: text;
+        user-select: text;
+    }
+
+    /* Sheets focus their first button on opening; only a keyboard user needs to see that. */
+    :is(a, button, [role='button']):focus-visible {
+        outline: none;
+    }
+
+    .component-list-group-component.component-list-group-component {
+        @apply rounded-[0.875rem] border-0;
+    }
+
+    .component-list-row-component.component-list-row-component {
+        @apply min-h-11 rounded-[0.875rem] border-0;
+
+        .title {
+            @apply text-[1.0625rem] font-medium tracking-[-0.01rem];
+        }
+
+        .meta {
+            @apply text-[0.8125rem];
+        }
+
+        &.is-clickable {
+            transition: background-color 250ms ease-out;
+
+            &:active {
+                @apply bg-foreground/[0.07];
+                transition-duration: 0ms;
+            }
+        }
+
+        &.is-grouped {
+            @apply rounded-none;
+        }
+
+        /* Apple's separator starts where the text does, not at the edge of the group. */
+        &.is-grouped + .is-grouped {
+            @apply border-0;
+            box-shadow: inset 1rem 0.5px 0 var(--card), inset 0 0.5px 0 var(--border);
+        }
+    }
+
+    .component-portlet-component {
+        @apply border-0;
+    }
+
+    :is(a, button, [role='button']):not(:disabled) {
+        transition:
+            opacity 200ms ease-out,
+            transform 200ms ease-out;
+    }
+
+    :is(a, button, [role='button']):not(:disabled):active {
+        opacity: 0.55;
+        transition-duration: 0ms;
+    }
+
+    .component-button-component button:not(:disabled):active {
+        opacity: 0.8;
+        transform: scale(0.97);
+    }
+}

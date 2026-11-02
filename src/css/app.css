@@ -90,7 +90,7 @@
 }
 
 @theme inline {
-    --font-sans: 'Figtree Variable', 'Figtree', system-ui, sans-serif;
+    --font-sans: var(--ion-font-family);
     --font-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', system-ui, sans-serif;
 
     --color-background: var(--background);
