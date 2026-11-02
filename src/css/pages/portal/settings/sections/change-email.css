@@ -1,4 +1,6 @@
 .section-portal-settings-change-email {
+    /* Only holds overlays, so it may take no room or gap in the page around it. */
+    @apply contents;
 }
 
 .form {
