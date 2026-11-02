@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core';
 import { formData, request } from '@/api/client';
 import { AuthInterface } from '@/interfaces/AuthInterface';
 import { DashboardInterface } from '@/interfaces/DashboardInterface';
@@ -31,7 +32,7 @@ export const auth = {
 };
 
 export const devices = {
-    register: (token: string) => request<void>('POST', 'devices', { token, platform: 'android' }),
+    register: (token: string) => request<void>('POST', 'devices', { token, platform: Capacitor.getPlatform() }),
     forget: (token: string) => request<void>('DELETE', 'devices', { token }),
 };
 
