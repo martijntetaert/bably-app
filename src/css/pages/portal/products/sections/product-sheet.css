@@ -1,0 +1,93 @@
+.section-portal-products-product-sheet {
+    /* Only holds overlays, so it may take no room or gap in the page around it. */
+    @apply contents;
+}
+
+.form {
+    @apply flex flex-col gap-4 pb-1;
+
+    .field {
+        @apply flex flex-col gap-1.75;
+    }
+
+    .error {
+        @apply text-destructive text-[0.8125rem];
+    }
+
+    .hint,
+    .no-match {
+        @apply text-muted-foreground text-[0.78125rem] leading-normal;
+    }
+
+    .select {
+        @apply rounded-field border-input bg-card text-foreground h-12 w-full cursor-pointer border px-3.5 text-[0.9375rem];
+
+        &:focus-visible {
+            @apply border-accent outline-none;
+        }
+
+        &:disabled {
+            @apply opacity-50;
+        }
+    }
+
+    .panel {
+        @apply rounded-row border-border/50 bg-card overflow-hidden border;
+
+        .line {
+            @apply flex items-center gap-3 px-4 py-3.5;
+
+            & + .line {
+                @apply border-border/50 border-t;
+            }
+        }
+
+        .what {
+            @apply flex min-w-0 flex-1 flex-col;
+        }
+
+        .name {
+            @apply text-[0.90625rem] font-semibold;
+        }
+
+        .meta {
+            @apply text-muted-foreground mt-0.5 text-[0.78125rem];
+        }
+
+        .levels {
+            @apply flex-1;
+        }
+    }
+
+    .small {
+        @apply bg-muted shrink-0 cursor-pointer rounded-[0.6875rem] px-3.25 py-2.25 text-[0.8125rem] font-semibold;
+
+        &:hover {
+            @apply bg-muted-hover;
+        }
+
+        &:disabled {
+            @apply opacity-50;
+        }
+    }
+
+    .unlink {
+        @apply text-faint flex size-8.5 cursor-pointer items-center justify-center rounded-[0.6875rem] text-sm;
+
+        &:hover {
+            @apply bg-destructive-soft text-destructive;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+
+    .merge {
+        @apply text-faint text-xs;
+    }
+
+    .actions {
+        @apply flex flex-col gap-1;
+    }
+}

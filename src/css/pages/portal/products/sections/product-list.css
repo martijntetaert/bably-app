@@ -1,0 +1,63 @@
+.section-portal-products-product-list {
+    @apply flex flex-col gap-2;
+
+    .chips {
+        @apply -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1;
+
+        scrollbar-width: none;
+    }
+
+    .chip {
+        @apply border-border bg-card text-secondary-foreground shrink-0 cursor-pointer rounded-full border px-3.5 py-2 text-[0.8125rem] font-semibold whitespace-nowrap transition-colors;
+
+        -webkit-tap-highlight-color: transparent;
+
+        &.is-active {
+            @apply border-accent bg-accent-soft text-accent-strong;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+
+    .hint {
+        @apply text-muted-foreground px-1.5 text-[0.78125rem] leading-normal;
+    }
+
+    .group-header {
+        @apply flex items-center gap-2.5 px-1.5 pt-3.5 pb-2;
+
+        h2 {
+            @apply font-display flex-1 text-[0.9375rem] font-semibold tracking-[-0.0125rem];
+        }
+
+        span {
+            @apply text-faint text-[0.78125rem];
+        }
+    }
+
+    .rows {
+        @apply flex flex-col gap-1.5;
+    }
+
+    .sort {
+        @apply rounded-field border-input bg-card text-foreground h-10 max-w-40 cursor-pointer border px-2.5 text-[0.8125rem];
+
+        &:focus-visible {
+            @apply border-accent outline-none;
+        }
+
+        &:disabled {
+            @apply opacity-50;
+        }
+    }
+
+    .chevron {
+        @apply text-faint text-xs;
+    }
+
+    .empty {
+        @apply text-muted-foreground px-1.5 text-[0.8125rem];
+    }
+}

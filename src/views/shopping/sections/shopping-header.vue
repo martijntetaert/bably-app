@@ -22,8 +22,13 @@ const percentage = computed(() => {
             <template #subtitle>
                 {{ props.subtitle }}
             </template>
-            <template v-if="props.progress" #right>
-                <span class="progress-label">{{ props.progress.done }}/{{ props.progress.total }} in de kar</span>
+            <template #right>
+                <span v-if="props.progress" class="progress-label">
+                    {{ props.progress.done }}/{{ props.progress.total }} in de kar
+                </span>
+                <router-link v-else class="products" to="/products" aria-label="Producten">
+                    <i class="fa-solid fa-tags" aria-hidden="true"></i>
+                </router-link>
             </template>
         </page-header-component>
         <div

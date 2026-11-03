@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { onIonViewWillEnter } from '@ionic/vue';
-import { shopping as shoppingApi, stores as storesApi } from '@/api/bably';
+import { stores as storesApi } from '@/api/bably';
 import { useSession } from '@/composables/useSession';
 import { useToast } from '@/composables/useToast';
 import PortalPageComponent from '@/components/portal-page-component.vue';
-import { ProductInterface } from '@/interfaces/ProductInterface';
 import { StoreInterface } from '@/interfaces/StoreInterface';
 import SettingsHeader from '@/views/settings/sections/settings-header.vue';
 import Integrations from '@/views/settings/sections/integrations.vue';
@@ -20,19 +19,14 @@ const session = useSession();
 const toast = useToast();
 
 const storeList = ref<StoreInterface[]>([]);
-const productList = ref<ProductInterface[]>([]);
 
 const loadStores = async (): Promise<void> => {
     storeList.value = await storesApi.list();
 };
 
-const loadProducts = async (): Promise<void> => {
-    productList.value = await shoppingApi.products();
-};
-
 const reload = async (): Promise<void> => {
     try {
-        await Promise.all([session.refreshProfile(), loadStores(), loadProducts()]);
+        await Promise.all([session.refreshProfile(), loadStores()]);
     } catch (error) {
         toast.failure(error);
     }
@@ -41,14 +35,6 @@ const reload = async (): Promise<void> => {
 const reloadStores = async (): Promise<void> => {
     try {
         await loadStores();
-    } catch (error) {
-        toast.failure(error);
-    }
-};
-
-const reloadProducts = async (): Promise<void> => {
-    try {
-        await loadProducts();
     } catch (error) {
         toast.failure(error);
     }
@@ -69,7 +55,7 @@ onIonViewWillEnter(reload);
                 <notifications :wants-task-reminder="session.profile.value.wantsTaskReminder"></notifications>
                 <integrations :calendar-url="session.profile.value.calendarUrl"></integrations>
                 <stores :stores="storeList" @changed="reloadStores()"></stores>
-                <products :products="productList" @changed="reloadProducts()"></products>
+                <products></products>
                 <about></about>
             </template>
             <template v-else>

@@ -1,12 +1,16 @@
 import { Capacitor } from '@capacitor/core';
 import { formData, request } from '@/api/client';
 import { AuthInterface } from '@/interfaces/AuthInterface';
+import { BarcodeInterface } from '@/interfaces/BarcodeInterface';
 import { DashboardInterface } from '@/interfaces/DashboardInterface';
 import { HouseholdInterface } from '@/interfaces/HouseholdInterface';
 import { HouseholdInvitationInterface } from '@/interfaces/HouseholdInvitationInterface';
 import { HouseholdOverviewInterface, InsightsInterface } from '@/interfaces/HouseholdOverviewInterface';
 import { IngredientLineInterface } from '@/interfaces/IngredientLineInterface';
 import { MealInterface } from '@/interfaces/MealInterface';
+import { MicroCategoryInterface } from '@/interfaces/MicroCategoryInterface';
+import { NearbyPlaceInterface } from '@/interfaces/NearbyPlaceInterface';
+import { PlaceSuggestionInterface } from '@/interfaces/PlaceSuggestionInterface';
 import { ProductInterface } from '@/interfaces/ProductInterface';
 import { ProfileInterface } from '@/interfaces/ProfileInterface';
 import { RecipeInterface } from '@/interfaces/RecipeInterface';
@@ -58,7 +62,7 @@ export const dashboard = {
 
 export const shopping = {
     list: () => request<ShoppingListInterface>('GET', 'shopping-list'),
-    add: (fields: { name?: string; productIdentifier?: string; quantity?: string | null }) =>
+    add: (fields: { name?: string; productIdentifier?: string; barcode?: string; quantity?: string | null }) =>
         request<AddedGroceriesInterface>('POST', 'grocery-items', fields),
     check: (identifier: string, checked: boolean) => request<void>('PATCH', `grocery-items/${identifier}/check`, { checked }),
     markMissing: (identifier: string, missing: boolean) => request<void>('PATCH', `grocery-items/${identifier}/missing`, { missing }),
@@ -70,6 +74,13 @@ export const shopping = {
     renameProduct: (identifier: string, name: string) => request<ProductInterface>('PATCH', `products/${identifier}`, { name }),
     mergeProduct: (identifier: string, target: string) =>
         request<ProductInterface>('POST', `products/${identifier}/merge`, { target }),
+    setCategory: (identifier: string, category: string | null) =>
+        request<ProductInterface>('PATCH', `products/${identifier}/category`, { category }),
+    microCategories: () => request<MicroCategoryInterface[]>('GET', 'micro-categories'),
+    linkBarcode: (identifier: string, ean: string) => request<ProductInterface>('POST', `products/${identifier}/barcodes`, { ean }),
+    unlinkBarcode: (identifier: string, ean: string) =>
+        request<ProductInterface>('DELETE', `products/${identifier}/barcodes/${ean}`),
+    lookUpBarcode: (ean: string) => request<BarcodeInterface>('POST', 'barcodes/lookup', { ean }),
     suggestions: () => request<RegularGroceryInterface[]>('GET', 'products/suggestions'),
     stock: () => request<StockItemInterface[]>('GET', 'products/stock'),
     addStaple: (name: string) => request<void>('POST', 'products/staples', { name }),
@@ -80,11 +91,40 @@ export const shopping = {
     finishTrip: () => request<FinishedTripInterface>('POST', 'shopping-trips/finish'),
 };
 
+export interface StoreFields {
+    name: string;
+    place?: string | null;
+    latitude?: number | null;
+    longitude?: number | null;
+    startShopping?: boolean;
+    googlePlaceId?: string | null;
+    sessionToken?: string;
+}
+
+/**
+ * Leaving googlePlaceId out of an update keeps the store's place; null unlinks it.
+ */
 export const stores = {
     list: () => request<StoreInterface[]>('GET', 'stores'),
-    create: (fields: { name: string; place?: string | null; latitude?: number | null; longitude?: number | null; startShopping?: boolean }) =>
-        request<StoreInterface>('POST', 'stores', fields),
-    update: (identifier: string, name: string, place: string | null) => request<StoreInterface>('PATCH', `stores/${identifier}`, { name, place }),
+    create: (fields: StoreFields) => request<StoreInterface>('POST', 'stores', { ...fields }),
+    update: (identifier: string, fields: Pick<StoreFields, 'name' | 'place' | 'googlePlaceId' | 'sessionToken'>) =>
+        request<StoreInterface>('PATCH', `stores/${identifier}`, { ...fields }),
+    places: (search: string, sessionToken: string, near: { latitude: number; longitude: number } | null) =>
+        request<PlaceSuggestionInterface[]>(
+            'GET',
+            `stores/places?${new URLSearchParams({
+                search,
+                sessionToken,
+                ...(near ? { latitude: String(near.latitude), longitude: String(near.longitude) } : {}),
+            })}`
+        ),
+    nearby: (latitude: number, longitude: number) =>
+        request<NearbyPlaceInterface[]>(
+            'GET',
+            `stores/places/nearby?${new URLSearchParams({ latitude: String(latitude), longitude: String(longitude) })}`
+        ),
+    answerLocationSuggestion: (identifier: string, isThisStore: boolean) =>
+        request<StoreInterface>('PATCH', `stores/${identifier}/location-suggestion`, { isThisStore }),
     remove: (identifier: string) => request<void>('DELETE', `stores/${identifier}`),
     resetRoute: (identifier: string) => request<void>('DELETE', `stores/${identifier}/route`),
     recognize: (latitude: number, longitude: number) => request<{ store: StoreInterface | null }>('POST', 'stores/recognition', { latitude, longitude }),

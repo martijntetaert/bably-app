@@ -5,6 +5,20 @@
         @apply font-display text-accent text-[0.9375rem] font-semibold whitespace-nowrap;
     }
 
+    .products {
+        @apply border-border bg-card text-muted-foreground inline-flex size-8 items-center justify-center rounded-full border text-sm transition-colors;
+
+        -webkit-tap-highlight-color: transparent;
+
+        &:hover {
+            @apply text-foreground border-input;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+
     .bar {
         @apply bg-foreground/8 mt-3 h-1.5 overflow-hidden rounded-full;
 

@@ -17,6 +17,7 @@ const routes: RouteRecordRaw[] = [
     { path: '/forgot-password', component: () => import('@/views/auth/forgot-password-page.vue'), meta: { guest: true } },
     { path: '/verify-email', component: () => import('@/views/auth/verify-email-page.vue'), meta: { unverified: true } },
     { path: '/settings', component: () => import('@/views/settings/settings-page.vue') },
+    { path: '/products', component: () => import('@/views/products/products-page.vue') },
     {
         path: '/tabs/',
         component: TabsPage,

@@ -6,15 +6,19 @@ import { ApiError } from '@/api/client';
 import { usePlus } from '@/composables/usePlus';
 import { useToast } from '@/composables/useToast';
 import { useKeepAwake } from '@/composables/useKeepAwake';
+import { useBarcodeScanner } from '@/composables/useBarcodeScanner';
+import { findRowForBarcode } from '@/lib/barcodes';
 import PlusTeaserComponent from '@/components/plus-teaser-component.vue';
 import PortalPageComponent from '@/components/portal-page-component.vue';
 import SegmentedControlComponent from '@/components/segmented-control-component.vue';
+import StoreLocationQuestionComponent from '@/components/store-location-question-component.vue';
 import ShoppingHeader from '@/views/shopping/sections/shopping-header.vue';
 import GroceryList from '@/views/shopping/sections/grocery-list.vue';
 import Pantry from '@/views/shopping/sections/pantry.vue';
 import AddItem from '@/views/shopping/sections/add-item.vue';
 import StorePicker from '@/views/shopping/sections/store-picker.vue';
 import RegularGroceries from '@/views/shopping/sections/regular-groceries.vue';
+import ScanMatch from '@/views/shopping/sections/scan-match.vue';
 import { useOfflineChecks } from '@/views/shopping/composables/useOfflineChecks';
 import { ShoppingPart, useShoppingData } from '@/views/shopping/composables/useShoppingData';
 
@@ -37,6 +41,8 @@ const isVisible = ref(false);
 const isPickerOpen = ref(false);
 const addItem = ref<InstanceType<typeof AddItem> | null>(null);
 const groceryList = ref<InstanceType<typeof GroceryList> | null>(null);
+const scanMatch = ref<InstanceType<typeof ScanMatch> | null>(null);
+const { scan } = useBarcodeScanner();
 let pollTimer: number | undefined;
 
 useKeepAwake(computed(() => isVisible.value && activeTrip.value !== null));
@@ -101,6 +107,32 @@ const openAdded = async (single: string | null): Promise<void> => {
     }
 };
 
+// Matched on the phone first, so ticking by scan works in a store without signal.
+const scanToTick = async (): Promise<void> => {
+    const ean = await scan();
+
+    if (ean === null) {
+        return;
+    }
+
+    const row = findRowForBarcode(displayedGroups.value, ean);
+
+    if (row) {
+        groceryList.value?.tickScanned(row);
+    } else {
+        await scanMatch.value?.resolve(ean);
+    }
+};
+
+const tickAddedByScan = async (ean: string): Promise<void> => {
+    await load(['list', 'products']);
+    const row = findRowForBarcode(displayedGroups.value, ean);
+
+    if (row) {
+        groceryList.value?.tickScanned(row);
+    }
+};
+
 const stopPolling = (): void => {
     window.clearInterval(pollTimer);
     pollTimer = undefined;
@@ -153,6 +185,12 @@ onIonViewWillLeave(() => {
     <portal-page-component :refresh="reload">
         <div id="page-portal-shopping-overview">
             <shopping-header :subtitle="subtitle" :progress="progress"></shopping-header>
+            <store-location-question-component
+                v-if="activeTrip && !activeTrip.store.location && activeTrip.store.suggestedLocation"
+                :store="activeTrip.store"
+                :suggestion="activeTrip.store.suggestedLocation"
+                @answered="load(['list', 'stores'])"
+            />
             <segmented-control-component v-if="!activeTrip" v-model="activeTab" :options="tabs" label="Boodschappen" />
             <div v-if="list === null" class="skeleton" aria-busy="true">
                 <span v-for="row in 5" :key="row" class="row"></span>
@@ -187,7 +225,14 @@ onIonViewWillLeave(() => {
                 @start-shopping="isPickerOpen = true"
                 @changed="load"
                 @added="openAdded"
+                @scan-to-tick="scanToTick()"
             ></add-item>
+            <scan-match
+                ref="scanMatch"
+                :groups="displayedGroups"
+                @tick="groceryList?.tickScanned($event)"
+                @added="tickAddedByScan"
+            ></scan-match>
             <store-picker
                 v-model:open="isPickerOpen"
                 :stores="stores"
