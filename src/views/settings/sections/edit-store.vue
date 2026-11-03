@@ -7,9 +7,13 @@ import DrawerComponent from '@/components/drawer-component.vue';
 import ButtonComponent from '@/components/button-component.vue';
 import FormComponent from '@/components/form/form-component.vue';
 import InputComponent from '@/components/form/input-component.vue';
+import PlaceSearchComponent from '@/components/form/place-search-component.vue';
 import SectionLabelComponent from '@/components/section-label-component.vue';
 import ConfirmDialogComponent from '@/components/confirm-dialog-component.vue';
+import StoreLocationQuestionComponent from '@/components/store-location-question-component.vue';
+import { PlaceSuggestionInterface } from '@/interfaces/PlaceSuggestionInterface';
 import { StoreInterface } from '@/interfaces/StoreInterface';
+import { newSessionToken } from '@/lib/sessionToken';
 
 type Confirmation = 'route' | 'store';
 
@@ -27,6 +31,8 @@ const toast = useToast();
 
 const name = ref('');
 const place = ref('');
+const googlePlace = ref<PlaceSuggestionInterface | null>(null);
+const sessionToken = ref(newSessionToken());
 const errors = ref<Record<string, string[]>>({});
 const processing = ref(false);
 
@@ -52,7 +58,32 @@ watch(open, (isOpen) => {
     errors.value = {};
     name.value = props.store?.name ?? '';
     place.value = props.store?.place ?? '';
+    googlePlace.value = props.store?.location ?? null;
+    sessionToken.value = newSessionToken();
 });
+
+// A confirmed suggestion links the store on the server; the form follows, or saving would unlink it.
+watch(
+    () => props.store?.location?.googlePlaceId,
+    () => {
+        googlePlace.value = props.store?.location ?? null;
+    }
+);
+
+const fillAddress = (suggestion: PlaceSuggestionInterface): void => {
+    place.value = suggestion.address ?? place.value;
+};
+
+// An unchanged link is left out of the request, so the server keeps it as it is.
+const googlePlaceChange = (): { googlePlaceId?: string | null; sessionToken?: string } => {
+    const linked = googlePlace.value?.googlePlaceId ?? null;
+
+    if (props.store && linked === (props.store.location?.googlePlaceId ?? null)) {
+        return {};
+    }
+
+    return { googlePlaceId: linked, sessionToken: sessionToken.value };
+};
 
 const save = async (): Promise<void> => {
     processing.value = true;
@@ -62,9 +93,9 @@ const save = async (): Promise<void> => {
 
     try {
         if (props.store) {
-            await stores.update(props.store.identifier, name.value.trim(), trimmedPlace);
+            await stores.update(props.store.identifier, { name: name.value.trim(), place: trimmedPlace, ...googlePlaceChange() });
         } else {
-            await stores.create({ name: name.value.trim(), place: trimmedPlace });
+            await stores.create({ name: name.value.trim(), place: trimmedPlace, ...googlePlaceChange() });
         }
 
         emit('changed');
@@ -127,10 +158,32 @@ const confirm = async (): Promise<void> => {
             <form-component class="form" @submit="save()">
                 <div class="field">
                     <section-label-component>Naam</section-label-component>
-                    <input-component v-model="name" name="store" placeholder="Colruyt" autocomplete="off" required />
+                    <place-search-component
+                        v-model="name"
+                        v-model:place="googlePlace"
+                        :session-token="sessionToken"
+                        name="store"
+                        placeholder="Colruyt"
+                        required
+                        @picked="fillAddress"
+                    />
                     <p v-if="errors.name" class="error">
                         {{ errors.name[0] }}
                     </p>
+                    <p v-else-if="errors.googlePlaceId" class="error">
+                        {{ errors.googlePlaceId[0] }}
+                    </p>
+                    <p v-else-if="!googlePlace" class="hint">
+                        Typ de naam en kies je winkel uit de lijst, dan gebruikt Bably ook de route van andere
+                        Bably-gebruikers in die winkel.
+                    </p>
+                    <p v-else class="hint">Bably gebruikt ook de route van andere Bably-gebruikers in deze winkel.</p>
+                    <store-location-question-component
+                        v-if="store && !store.location && store.suggestedLocation && !googlePlace"
+                        :store="store"
+                        :suggestion="store.suggestedLocation"
+                        @answered="emit('changed')"
+                    />
                 </div>
                 <div class="field">
                     <section-label-component>Plaats</section-label-component>

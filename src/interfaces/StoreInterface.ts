@@ -5,4 +5,12 @@ export interface StoreInterface {
     recognisable: boolean;
     routeLength: number;
     tripsCount: number;
+    location: StoreLocationInterface | null;
+    suggestedLocation: StoreLocationInterface | null;
+}
+
+export interface StoreLocationInterface {
+    googlePlaceId: string;
+    name: string;
+    address: string | null;
 }

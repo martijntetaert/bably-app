@@ -1,0 +1,67 @@
+.component-place-search-component {
+    @apply flex flex-col gap-2;
+
+    input {
+        @apply rounded-field border-input bg-card text-foreground placeholder:text-faint h-12 w-full border px-3.5 text-[0.9375rem];
+
+        &:focus-visible {
+            @apply border-accent outline-none;
+        }
+    }
+
+    .suggestions {
+        @apply rounded-row border-border/50 bg-card flex flex-col overflow-hidden border shadow-[0_8px_24px_oklch(0.24_0.026_88/0.12)];
+
+        li {
+            @apply flex cursor-pointer items-center gap-3 px-4 py-3;
+
+            &:hover {
+                @apply bg-muted;
+            }
+
+            & + li {
+                @apply border-border/50 border-t;
+            }
+
+            i {
+                @apply text-faint text-xs;
+            }
+        }
+    }
+
+    .what {
+        @apply flex min-w-0 flex-1 flex-col;
+    }
+
+    .name {
+        @apply text-[0.9375rem] font-semibold;
+    }
+
+    .address {
+        @apply text-muted-foreground mt-0.5 truncate text-[0.78125rem];
+    }
+
+    .linked {
+        @apply rounded-row bg-accent-soft text-accent-strong flex items-center gap-3 px-4 py-2.5;
+
+        i {
+            @apply text-xs;
+        }
+
+        .address {
+            @apply text-accent-strong/75;
+        }
+    }
+
+    .unlink {
+        @apply flex size-8.5 shrink-0 cursor-pointer items-center justify-center rounded-[0.6875rem] text-sm;
+
+        &:hover {
+            @apply bg-foreground/5;
+        }
+
+        &:focus-visible {
+            @apply outline-ring outline-2 outline-offset-2;
+        }
+    }
+}

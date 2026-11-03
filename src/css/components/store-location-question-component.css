@@ -1,0 +1,23 @@
+.component-store-location-question-component {
+    @apply rounded-row border-border/50 bg-card flex flex-col gap-3 border px-4 py-3.5;
+
+    .what {
+        @apply flex flex-col;
+    }
+
+    .question {
+        @apply text-[0.9375rem] font-semibold;
+    }
+
+    .address {
+        @apply text-muted-foreground mt-0.5 text-[0.78125rem];
+    }
+
+    .why {
+        @apply text-muted-foreground mt-1.5 text-[0.78125rem] leading-normal;
+    }
+
+    .answers {
+        @apply grid grid-cols-2 gap-2;
+    }
+}

@@ -29,6 +29,50 @@
     .error {
         @apply text-destructive text-[0.8125rem];
     }
+
+    .hint {
+        @apply text-muted-foreground text-[0.78125rem] leading-normal;
+    }
+}
+
+.nearby {
+    @apply flex flex-col gap-2;
+
+    .skeleton {
+        @apply rounded-row bg-muted h-15 animate-pulse motion-reduce:animate-none;
+    }
+
+    .store {
+        @apply rounded-row border-border/50 bg-card flex cursor-pointer items-center gap-3.25 border px-4 py-3.5 text-left;
+
+        &:hover {
+            @apply border-border;
+        }
+
+        &:disabled {
+            @apply opacity-50;
+        }
+
+        .what {
+            @apply flex min-w-0 flex-1 flex-col;
+        }
+
+        .name {
+            @apply text-foreground text-[0.96875rem] font-semibold;
+        }
+
+        .place {
+            @apply text-muted-foreground mt-0.5 truncate text-[0.78125rem];
+        }
+
+        .distance {
+            @apply text-accent text-[0.8125rem] font-semibold whitespace-nowrap;
+        }
+    }
+
+    .error {
+        @apply text-destructive text-[0.8125rem];
+    }
 }
 
 .toggle-other {

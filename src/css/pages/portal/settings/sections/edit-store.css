@@ -14,6 +14,10 @@
         @apply text-destructive text-[0.8125rem];
     }
 
+    .hint {
+        @apply text-muted-foreground text-[0.78125rem] leading-normal;
+    }
+
     .actions {
         @apply flex flex-col gap-1;
     }

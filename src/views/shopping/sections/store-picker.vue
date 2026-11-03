@@ -5,12 +5,16 @@ import DrawerComponent from '@/components/drawer-component.vue';
 import ButtonComponent from '@/components/button-component.vue';
 import FormComponent from '@/components/form/form-component.vue';
 import InputComponent from '@/components/form/input-component.vue';
+import PlaceSearchComponent from '@/components/form/place-search-component.vue';
 import SectionLabelComponent from '@/components/section-label-component.vue';
-import { shopping, stores as storesApi } from '@/api/bably';
+import { shopping, StoreFields, stores as storesApi } from '@/api/bably';
 import { ApiError } from '@/api/client';
 import { usePlus } from '@/composables/usePlus';
 import { useToast } from '@/composables/useToast';
+import { NearbyPlaceInterface } from '@/interfaces/NearbyPlaceInterface';
+import { PlaceSuggestionInterface } from '@/interfaces/PlaceSuggestionInterface';
 import { StoreInterface } from '@/interfaces/StoreInterface';
+import { newSessionToken } from '@/lib/sessionToken';
 
 type Step = 'locating' | 'known' | 'unknown' | 'manual' | 'unavailable' | 'choose';
 
@@ -34,7 +38,19 @@ const isSaving = ref(false);
 const name = ref('');
 const place = ref('');
 const position = ref<{ latitude: number; longitude: number } | null>(null);
+// Only biases the Google search; a store added by hand keeps no coordinates.
+const searchNear = ref<{ latitude: number; longitude: number } | null>(null);
+const googlePlace = ref<PlaceSuggestionInterface | null>(null);
+const sessionToken = ref(newSessionToken());
 const errors = ref<Record<string, string[]>>({});
+const nearbyPlaces = ref<NearbyPlaceInterface[]>([]);
+const isLoadingNearby = ref(false);
+const isTypingOwnStore = ref(false);
+
+// Without stores nearby the form shows at once, as it did before.
+const showsNearby = computed(
+    () => step.value === 'unknown' && !isTypingOwnStore.value && (isLoadingNearby.value || nearbyPlaces.value.length > 0)
+);
 
 const title = computed(() => {
     switch (step.value) {
@@ -43,7 +59,7 @@ const title = computed(() => {
         case 'known':
             return recognisedStore.value?.name ?? '';
         case 'unknown':
-            return 'Welke winkel is dit?';
+            return showsNearby.value ? 'Sta je in een van deze winkels?' : 'Welke winkel is dit?';
         case 'manual':
             return 'Winkel toevoegen';
         default:
@@ -58,7 +74,9 @@ const description = computed(() => {
         case 'known':
             return recognisedStore.value?.place ?? 'Herkend op je locatie';
         case 'unknown':
-            return 'Bably kent deze plek nog niet. Geef ze een naam en ze wordt volgende keer herkend.';
+            return showsNearby.value
+                ? 'Bably kent deze plek nog niet. Tik je winkel aan en ze wordt volgende keer herkend.'
+                : 'Bably kent deze plek nog niet. Geef ze een naam en ze wordt volgende keer herkend.';
         case 'manual':
             return 'Zonder locatie: je kiest deze winkel zelf als je begint.';
         case 'choose':
@@ -94,6 +112,18 @@ const mayLocate = async (): Promise<boolean> => {
     return permissions.location === 'granted' || permissions.coarseLocation === 'granted';
 };
 
+const findNearby = async (latitude: number, longitude: number): Promise<void> => {
+    isLoadingNearby.value = true;
+
+    try {
+        nearbyPlaces.value = await storesApi.nearby(latitude, longitude);
+    } catch {
+        nearbyPlaces.value = [];
+    } finally {
+        isLoadingNearby.value = false;
+    }
+};
+
 const locate = async (): Promise<void> => {
     try {
         if (!(await mayLocate())) {
@@ -114,7 +144,12 @@ const locate = async (): Promise<void> => {
             latitude: coords.latitude,
             longitude: coords.longitude,
         };
+        searchNear.value = position.value;
         step.value = store ? 'known' : 'unknown';
+
+        if (!store) {
+            void findNearby(coords.latitude, coords.longitude);
+        }
     } catch {
         step.value = 'unavailable';
     }
@@ -131,7 +166,13 @@ watch(open, (isOpen) => {
     name.value = '';
     place.value = '';
     position.value = null;
+    searchNear.value = null;
+    googlePlace.value = null;
+    sessionToken.value = newSessionToken();
     errors.value = {};
+    nearbyPlaces.value = [];
+    isLoadingNearby.value = false;
+    isTypingOwnStore.value = false;
 
     // Recognising the store is Plus; without it you simply pick one.
     if (hasPlus.value) {
@@ -161,18 +202,16 @@ const addManually = (): void => {
     step.value = 'manual';
 };
 
-const saveAndStart = async (): Promise<void> => {
+const fillAddress = (suggestion: PlaceSuggestionInterface): void => {
+    place.value = suggestion.address ?? place.value;
+};
+
+const createAndStart = async (fields: StoreFields): Promise<void> => {
     isSaving.value = true;
     errors.value = {};
 
     try {
-        const store = await storesApi.create({
-            name: name.value.trim(),
-            place: place.value.trim() === '' ? null : place.value.trim(),
-            latitude: position.value?.latitude ?? null,
-            longitude: position.value?.longitude ?? null,
-            startShopping: true,
-        });
+        const store = await storesApi.create(fields);
         toast.success(`${store.name} bewaard. Vink af terwijl je loopt: Bably leert de route.`);
         open.value = false;
         emit('started');
@@ -186,6 +225,28 @@ const saveAndStart = async (): Promise<void> => {
         isSaving.value = false;
     }
 };
+
+const saveAndStart = (): Promise<void> =>
+    createAndStart({
+        name: name.value.trim(),
+        place: place.value.trim() === '' ? null : place.value.trim(),
+        latitude: position.value?.latitude ?? null,
+        longitude: position.value?.longitude ?? null,
+        startShopping: true,
+        googlePlaceId: googlePlace.value?.googlePlaceId ?? null,
+        sessionToken: sessionToken.value,
+    });
+
+// The server already holds what it found nearby, so no session token is needed.
+const startInNearby = (nearby: NearbyPlaceInterface): Promise<void> =>
+    createAndStart({
+        name: nearby.name,
+        place: nearby.address,
+        latitude: position.value?.latitude ?? null,
+        longitude: position.value?.longitude ?? null,
+        startShopping: true,
+        googlePlaceId: nearby.googlePlaceId,
+    });
 
 const otherStores = computed(() =>
     props.stores.filter((store) => store.identifier !== recognisedStore.value?.identifier)
@@ -206,6 +267,34 @@ const otherStores = computed(() =>
                     </button-component>
                 </template>
 
+                <template v-else-if="showsNearby">
+                    <div v-if="isLoadingNearby" class="nearby" aria-busy="true">
+                        <span v-for="row in 3" :key="row" class="skeleton"></span>
+                    </div>
+                    <div v-else class="nearby">
+                        <button
+                            v-for="nearby in nearbyPlaces"
+                            :key="nearby.googlePlaceId"
+                            type="button"
+                            class="store"
+                            :disabled="isSaving"
+                            @click="startInNearby(nearby)"
+                        >
+                            <span class="what">
+                                <span class="name">{{ nearby.name }}</span>
+                                <span v-if="nearby.address" class="place">{{ nearby.address }}</span>
+                            </span>
+                            <span class="distance">{{ Math.round(nearby.distanceMeters) }} m</span>
+                        </button>
+                        <p v-if="errors.name || errors.googlePlaceId" class="error">
+                            {{ (errors.name ?? errors.googlePlaceId)[0] }}
+                        </p>
+                    </div>
+                    <button type="button" class="toggle-other" @click="isTypingOwnStore = true">
+                        Andere winkel? Typ ze zelf
+                    </button>
+                </template>
+
                 <form-component
                     v-else-if="step === 'unknown' || step === 'manual'"
                     class="form"
@@ -213,15 +302,25 @@ const otherStores = computed(() =>
                 >
                     <div class="field">
                         <section-label-component>Naam</section-label-component>
-                        <input-component
+                        <place-search-component
                             v-model="name"
+                            v-model:place="googlePlace"
+                            :session-token="sessionToken"
+                            :near="searchNear"
                             name="store"
                             placeholder="Colruyt"
-                            autocomplete="off"
                             required
+                            @picked="fillAddress"
                         />
                         <p v-if="errors.name" class="error">
                             {{ errors.name[0] }}
+                        </p>
+                        <p v-else-if="errors.googlePlaceId" class="error">
+                            {{ errors.googlePlaceId[0] }}
+                        </p>
+                        <p v-else class="hint">
+                            Kies je winkel uit de lijst, dan gebruikt Bably ook de route van andere Bably-gebruikers in
+                            die winkel.
                         </p>
                     </div>
                     <div class="field">
