@@ -5,6 +5,7 @@ import ButtonComponent from '@/components/button-component.vue';
 import FormComponent from '@/components/form/form-component.vue';
 import { shopping as shoppingApi } from '@/api/bably';
 import { ApiError } from '@/api/client';
+import { useBarcodeScanner } from '@/composables/useBarcodeScanner';
 import { useToast } from '@/composables/useToast';
 import { ProductInterface } from '@/interfaces/ProductInterface';
 import { useOfflineChecks } from '@/views/shopping/composables/useOfflineChecks';
@@ -20,6 +21,7 @@ const emit = defineEmits<{
     startShopping: [];
     changed: [parts?: ShoppingPart[]];
     added: [single: string | null];
+    scanToTick: [];
 }>();
 
 const MAX_SUGGESTIONS = 5;
@@ -31,6 +33,9 @@ const isAdding = ref(false);
 const isFinishing = ref(false);
 const isAddingWhileShopping = ref(false);
 const input = ref<HTMLInputElement | null>(null);
+const { scan, isAvailable: canScan, isScanning } = useBarcodeScanner();
+// A scanned barcode nobody knows yet waits here until the product has a name.
+const unnamedBarcode = ref<string | null>(null);
 
 const showsForm = computed(() => !props.shopping || isAddingWhileShopping.value);
 
@@ -62,7 +67,7 @@ const isSeveral = computed(() => pieceCount.value > 1);
 const suggestions = computed(() => {
     const typed = plain(name.value);
 
-    if (typed === '' || isSeveral.value) {
+    if (typed === '' || isSeveral.value || unnamedBarcode.value !== null) {
         return [];
     }
 
@@ -74,6 +79,7 @@ const suggestions = computed(() => {
 
 const isNewProduct = computed(
     () =>
+        unnamedBarcode.value === null &&
         !isSeveral.value &&
         name.value.trim() !== '' &&
         !props.products.some((product) => plain(product.name) === plain(name.value))
@@ -83,7 +89,9 @@ const showsSuggestions = computed(
     () => isFocused.value && (suggestions.value.length > 0 || isNewProduct.value || isSeveral.value)
 );
 
-const error = computed(() => errors.value.name?.[0] ?? errors.value.productIdentifier?.[0] ?? null);
+const error = computed(
+    () => errors.value.name?.[0] ?? errors.value.productIdentifier?.[0] ?? errors.value.barcode?.[0] ?? null
+);
 
 watch(name, () => {
     highlighted.value = -1;
@@ -106,7 +114,7 @@ const blur = (): void => {
 
 // One product gets its row opened afterwards, so the quantity can be set; several at once
 // would mean a drawer per product. In the store it only has to be on the list, quickly.
-const submit = async (fields: { name?: string; productIdentifier?: string }): Promise<void> => {
+const submit = async (fields: { name?: string; productIdentifier?: string; barcode?: string }): Promise<void> => {
     if (isAdding.value) {
         return;
     }
@@ -118,6 +126,7 @@ const submit = async (fields: { name?: string; productIdentifier?: string }): Pr
     try {
         const message = addedSummary(await shoppingApi.add(fields));
         name.value = '';
+        unnamedBarcode.value = null;
         closeWhileShopping();
 
         if (single) {
@@ -132,6 +141,11 @@ const submit = async (fields: { name?: string; productIdentifier?: string }): Pr
     } catch (failure) {
         if (failure instanceof ApiError && failure.status === 422) {
             errors.value = failure.errors;
+
+            if (fields.barcode !== undefined && failure.firstError('name') !== null) {
+                unnamedBarcode.value = fields.barcode;
+                focus();
+            }
         } else {
             toast.failure(failure);
         }
@@ -158,7 +172,27 @@ const addTyped = (): void => {
         return;
     }
 
+    if (unnamedBarcode.value !== null) {
+        void submit({ barcode: unnamedBarcode.value, name: name.value.trim() });
+
+        return;
+    }
+
     void submit({ name: name.value });
+};
+
+const scanToAdd = async (): Promise<void> => {
+    const barcode = await scan();
+
+    if (barcode !== null) {
+        name.value = '';
+        await submit({ barcode });
+    }
+};
+
+const forgetBarcode = (): void => {
+    unnamedBarcode.value = null;
+    errors.value = {};
 };
 
 const move = (step: number): void => {
@@ -235,7 +269,7 @@ const finishShopping = async (): Promise<void> => {
                         v-model="name"
                         class="input"
                         name="product"
-                        placeholder="melk, brood, 6 eieren…"
+                        :placeholder="unnamedBarcode ? 'Naam van het product' : 'melk, brood, 6 eieren…'"
                         autocomplete="off"
                         role="combobox"
                         aria-controls="product-suggestions"
@@ -252,6 +286,14 @@ const finishShopping = async (): Promise<void> => {
                         "
                     />
                     <button-component
+                        v-if="canScan && unnamedBarcode === null"
+                        icon="fa-solid fa-barcode"
+                        variant="soft"
+                        label="Barcode scannen om op de lijst te zetten"
+                        :disabled="isAdding || isScanning"
+                        @click="scanToAdd()"
+                    />
+                    <button-component
                         icon="fa-solid fa-plus"
                         variant="secondary"
                         type="submit"
@@ -261,6 +303,9 @@ const finishShopping = async (): Promise<void> => {
                 </form-component>
                 <p v-if="error" class="error">
                     {{ error }}
+                    <button v-if="unnamedBarcode" type="button" class="forget" @click="forgetBarcode()">
+                        Niet toevoegen
+                    </button>
                 </p>
                 <button-component
                     v-if="!shopping"
@@ -280,6 +325,14 @@ const finishShopping = async (): Promise<void> => {
                 >
                     {{ isWaitingForNetwork ? 'Afronden zodra je weer bereik hebt' : 'Winkelen afronden' }}
                 </button-component>
+                <button-component
+                    v-if="canScan"
+                    icon="fa-solid fa-barcode"
+                    variant="soft"
+                    label="Barcode scannen om af te vinken"
+                    :disabled="isScanning"
+                    @click="emit('scanToTick')"
+                />
                 <button-component icon="fa-solid fa-plus" variant="secondary" label="Iets toevoegen" @click="focus()" />
             </div>
         </action-bar-component>

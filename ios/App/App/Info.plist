@@ -25,7 +25,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Bably gebruikt de camera voor een foto van je gerecht of je profiel.</string>
+	<string>Bably gebruikt de camera voor een foto van je gerecht of je profiel, en om barcodes van producten te scannen.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Bably zoekt de winkel waar je nu bent.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

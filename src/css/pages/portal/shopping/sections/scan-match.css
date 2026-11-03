@@ -1,0 +1,16 @@
+.section-portal-shopping-scan-match {
+    /* Only holds overlays, so it may take no room or gap in the page around it. */
+    @apply contents;
+}
+
+.match {
+    @apply flex flex-col gap-4 pb-1;
+
+    .tick {
+        @apply text-faint text-xs;
+    }
+
+    .form {
+        @apply flex flex-col gap-1.75;
+    }
+}

@@ -3,6 +3,7 @@ export interface GroceryItemInterface {
     identifiers: string[];
     name: string;
     productIdentifier: string;
+    barcodes: string[];
     quantity: string | null;
     note: string | null;
     reason: string | null;

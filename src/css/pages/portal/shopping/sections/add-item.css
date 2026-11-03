@@ -53,6 +53,10 @@
 
     .error {
         @apply text-destructive px-1.5 text-[0.8125rem];
+
+        .forget {
+            @apply text-secondary-foreground ml-1 cursor-pointer font-semibold underline;
+        }
     }
 
     /* Shopping happens with a phone in hand; behind a mouse and keyboard the button only

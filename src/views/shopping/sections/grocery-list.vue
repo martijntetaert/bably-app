@@ -171,7 +171,18 @@ const editAdded = async (typed: string): Promise<void> => {
     }
 };
 
-defineExpose({ editAdded });
+// A scan only ever puts something in the basket; scanning it again must not take it out.
+const tickScanned = (item: GroceryItemInterface): void => {
+    if (item.checked) {
+        notify.info(`${item.name} zit al in je mandje.`);
+
+        return;
+    }
+
+    tick(item);
+};
+
+defineExpose({ editAdded, tickScanned });
 
 const swipeActionsFor = (item: GroceryItemInterface): SwipeActionInterface[] =>
     props.shopping
